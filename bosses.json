@@ -1,42 +1,133 @@
 {
-  "Silverfrost": [
-    {
-      "name": "Skypetal Plains",
-      "spawns": [
-        "00:00",
-        "03:00",
-        "06:00",
-        "09:00",
-        "12:00",
-        "15:00",
-        "18:00",
-        "21:00"
-      ]
-    },
-    {
-      "name": "Primeval Forest",
-      "spawns": [
-        "01:30",
-        "04:30",
-        "07:30",
-        "10:30",
-        "13:30",
-        "16:30",
-        "19:30",
-        "22:30"
-      ]
-    }
-  ],
-  "Moonwater Plains": [
-    { "name": "Kaari Lord", "spawns": ["00:00", "06:00", "12:00", "18:00"] },
-    { "name": "Sajifi", "spawns": ["01:30", "07:30", "13:30", "19:30"] },
-    {
-      "name": "Profane Jiangshi",
-      "spawns": ["03:00", "09:00", "15:00", "21:00"]
-    },
-    {
-      "name": "Lycan the Mighty",
-      "spawns": ["04:30", "10:30", "16:30", "22:30"]
-    }
-  ]
+  "Silverfrost": {
+    "Monday": [
+      { "time": "00:00", "location": "Primeval Forest" },
+      { "time": "01:22", "location": "Primeval Forest" },
+      { "time": "02:37", "location": "Skypetal Plains" },
+      { "time": "03:55", "location": "Primeval Forest" },
+      { "time": "05:11", "location": "⚠️ Data needed - go scout" },
+      { "time": "06:30", "location": "Primeval Forest" },
+      { "time": "07:49", "location": "Skypetal Plains" },
+      { "time": "09:13", "location": "Primeval Forest" },
+      { "time": "10:36", "location": "Skypetal Plains" },
+      { "time": "12:09", "location": "Primeval Forest" },
+      { "time": "13:43", "location": "⚠️ Data needed - go scout" },
+      { "time": "15:26", "location": "⚠️ Data needed - go scout" },
+      { "time": "17:09", "location": "Primeval Forest" },
+      { "time": "18:39", "location": "Primeval Forest" },
+      { "time": "20:08", "location": "Skypetal Plains" },
+      { "time": "21:49", "location": "Skypetal Plains" },
+      { "time": "23:05", "location": "Primeval Forest" }
+    ],
+    "Tuesday": [
+      { "time": "00:00", "location": "⚠️ Data needed - go scout" },
+      { "time": "01:16", "location": "Primeval Forest" },
+      { "time": "02:39", "location": "⚠️ Data needed - go scout" },
+      { "time": "04:18", "location": "Skypetal Plains" },
+      { "time": "05:57", "location": "Primeval Forest" },
+      { "time": "07:22", "location": "Primeval Forest" },
+      { "time": "08:42", "location": "⚠️ Data needed - go scout" },
+      { "time": "10:16", "location": "Skypetal Plains" },
+      { "time": "11:42", "location": "⚠️ Data needed - go scout" },
+      { "time": "13:20", "location": "Skypetal Plains" },
+      { "time": "14:38", "location": "Skypetal Plains" },
+      { "time": "15:56", "location": "Primeval Forest" },
+      { "time": "17:34", "location": "Skypetal Plains" },
+      { "time": "19:05", "location": "Skypetal Plains" },
+      { "time": "20:31", "location": "⚠️ Data needed - go scout" },
+      { "time": "21:49", "location": "⚠️ Data needed - go scout" },
+      { "time": "23:09", "location": "⚠️ Data needed - go scout" }
+    ],
+    "Wednesday": [
+      { "time": "00:00", "location": "Skypetal Plains" },
+      { "time": "01:36", "location": "Primeval Forest" },
+      { "time": "03:02", "location": "Skypetal Plains" },
+      { "time": "04:30", "location": "Skypetal Plains" },
+      { "time": "10:44", "location": "Primeval Forest" },
+      { "time": "12:11", "location": "Primeval Forest" },
+      { "time": "13:29", "location": "⚠️ Data needed - go scout" },
+      { "time": "14:57", "location": "⚠️ Data needed - go scout" },
+      { "time": "16:40", "location": "Skypetal Plains" },
+      { "time": "18:03", "location": "⚠️ Data needed - go scout" },
+      { "time": "19:42", "location": "Skypetal Plains" },
+      { "time": "21:22", "location": "⚠️ Data needed - go scout" },
+      { "time": "22:37", "location": "Primeval Forest" }
+    ],
+    "Thursday": [
+      { "time": "00:08", "location": "⚠️ Data needed - go scout" },
+      { "time": "01:25", "location": "Primeval Forest" },
+      { "time": "03:08", "location": "Skypetal Plains" },
+      { "time": "04:26", "location": "Skypetal Plains" },
+      { "time": "05:53", "location": "Skypetal Plains" },
+      { "time": "07:17", "location": "Skypetal Plains" },
+      { "time": "08:52", "location": "Skypetal Plains" },
+      { "time": "10:07", "location": "Primeval Forest" },
+      { "time": "11:44", "location": "⚠️ Data needed - go scout" },
+      { "time": "13:14", "location": "Primeval Forest" },
+      { "time": "14:57", "location": "Primeval Forest" },
+      { "time": "16:22", "location": "Primeval Forest" },
+      { "time": "17:53", "location": "Primeval Forest" },
+      { "time": "19:19", "location": "⚠️ Data needed - go scout" },
+      { "time": "20:40", "location": "⚠️ Data needed - go scout" },
+      { "time": "21:56", "location": "Primeval Forest" },
+      { "time": "23:25", "location": "Primeval Forest" }
+    ],
+    "Friday": [
+      { "time": "00:00", "location": "Skypetal Plains" },
+      { "time": "01:44", "location": "Primeval Forest" },
+      { "time": "03:06", "location": "Primeval Forest" },
+      { "time": "04:38", "location": "⚠️ Data needed - go scout" },
+      { "time": "06:10", "location": "Primeval Forest" },
+      { "time": "07:52", "location": "⚠️ Data needed - go scout" },
+      { "time": "09:23", "location": "Skypetal Plains" },
+      { "time": "10:42", "location": "Skypetal Plains" },
+      { "time": "12:09", "location": "Skypetal Plains" },
+      { "time": "13:36", "location": "⚠️ Data needed - go scout" },
+      { "time": "14:57", "location": "Skypetal Plains" },
+      { "time": "16:23", "location": "Skypetal Plains" },
+      { "time": "17:57", "location": "⚠️ Data needed - go scout" },
+      { "time": "19:25", "location": "⚠️ Data needed - go scout" },
+      { "time": "20:59", "location": "Primeval Forest" },
+      { "time": "22:19", "location": "⚠️ Data needed - go scout" },
+      { "time": "23:50", "location": "Primeval Forest" }
+    ],
+    "Saturday": [
+      { "time": "00:52", "location": "⚠️ Data needed - go scout" },
+      { "time": "02:30", "location": "Primeval Forest" },
+      { "time": "03:52", "location": "Primeval Forest" },
+      { "time": "05:28", "location": "Skypetal Plains" },
+      { "time": "06:51", "location": "Skypetal Plains" },
+      { "time": "08:11", "location": "⚠️ Data needed - go scout" },
+      { "time": "09:56", "location": "Skypetal Plains" },
+      { "time": "11:36", "location": "⚠️ Data needed - go scout" },
+      { "time": "12:54", "location": "Skypetal Plains" },
+      { "time": "14:24", "location": "Primeval Forest" },
+      { "time": "16:01", "location": "Primeval Forest" },
+      { "time": "17:25", "location": "Skypetal Plains" },
+      { "time": "19:01", "location": "Skypetal Plains" },
+      { "time": "20:46", "location": "Primeval Forest" },
+      { "time": "22:27", "location": "⚠️ Data needed - go scout" },
+      { "time": "23:57", "location": "Skypetal Plains" }
+    ],
+    "Sunday": [
+      { "time": "01:15", "location": "Primeval Forest" },
+      { "time": "02:30", "location": "Primeval Forest" },
+      { "time": "04:06", "location": "Primeval Forest" },
+      { "time": "05:34", "location": "⚠️ Data needed - go scout" },
+      { "time": "07:06", "location": "Skypetal Plains" },
+      { "time": "08:47", "location": "Skypetal Plains" },
+      { "time": "10:23", "location": "Skypetal Plains" },
+      { "time": "11:55", "location": "⚠️ Data needed - go scout" },
+      { "time": "13:18", "location": "Primeval Forest" },
+      { "time": "14:37", "location": "Primeval Forest" },
+      { "time": "16:00", "location": "Skypetal Plains" },
+      { "time": "17:44", "location": "Primeval Forest" },
+      { "time": "19:10", "location": "Skypetal Plains" },
+      { "time": "20:44", "location": "⚠️ Data needed - go scout" },
+      { "time": "22:23", "location": "Skypetal Plains" }
+    ]
+  },
+  "Moonwater Plains": {
+    "note": "⚠️ Data needed - these are placeholder timers, not real schedules"
+  }
 }

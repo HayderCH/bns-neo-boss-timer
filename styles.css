@@ -81,6 +81,15 @@ main {
   color: #ffd700;
 }
 
+.region-note {
+  color: #f39c12;
+  font-style: italic;
+  padding: 15px;
+  background: rgba(243, 156, 18, 0.1);
+  border-radius: 8px;
+  border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
 .boss-list {
   list-style: none;
   display: flex;
@@ -100,9 +109,20 @@ main {
   transition: all 0.3s ease;
 }
 
+.boss-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
 .boss-name {
   font-weight: 600;
   font-size: 1.1rem;
+}
+
+.boss-time-scheduled {
+  font-size: 0.85rem;
+  color: #888;
 }
 
 .boss-timer {
@@ -183,6 +203,22 @@ main {
 
 .boss-item.next .boss-status {
   color: #3498db;
+  font-size: 0.8rem;
+}
+
+/* Done State - spawn ended */
+.boss-item.done {
+  border-color: rgba(100, 100, 100, 0.2);
+  background: rgba(0, 0, 0, 0.2);
+  opacity: 0.5;
+}
+
+.boss-item.done .boss-timer {
+  color: #666;
+}
+
+.boss-item.done .boss-status {
+  color: #666;
   font-size: 0.8rem;
 }
 

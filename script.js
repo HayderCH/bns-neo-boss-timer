@@ -1,14 +1,18 @@
 // ============================================
 // Blade & Soul Neo EU Field Boss Timer
+// Day-based schedule system
 // ============================================
 
 // State Management
 const state = {
   bosses: {},
-  bossStates: new Map(), // Tracks state per boss: { status, spawningEndTime, nextSpawnTime, alarmPlayed }
+  bossStates: new Map(), // Tracks state per spawn: { status, spawningEndTime, alarmPlayed }
   audioEnabled: false,
   volume: 0.5,
 };
+
+// Day names for schedule lookup
+const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
 // DOM Elements
 let alarmSound;
@@ -148,22 +152,47 @@ async function loadBosses() {
 function renderBossList() {
   bossContainer.innerHTML = "";
 
-  for (const [region, bosses] of Object.entries(state.bosses)) {
+  const now = new Date();
+  const currentDay = DAYS[now.getDay()];
+
+  for (const [region, schedule] of Object.entries(state.bosses)) {
     const section = document.createElement("section");
     section.className = "region-section";
 
     const heading = document.createElement("h2");
-    heading.textContent = region;
+    heading.textContent = `${region} — ${currentDay}`;
     section.appendChild(heading);
+
+    // Check if region has a note (placeholder)
+    if (schedule.note) {
+      const note = document.createElement("p");
+      note.className = "region-note";
+      note.textContent = schedule.note;
+      section.appendChild(note);
+      bossContainer.appendChild(section);
+      continue;
+    }
+
+    // Get today's schedule
+    const todaySchedule = schedule[currentDay] || [];
+
+    if (todaySchedule.length === 0) {
+      const note = document.createElement("p");
+      note.className = "region-note";
+      note.textContent = "No spawns scheduled for today";
+      section.appendChild(note);
+      bossContainer.appendChild(section);
+      continue;
+    }
 
     const list = document.createElement("ul");
     list.className = "boss-list";
 
-    bosses.forEach((boss, index) => {
-      const bossId = `${region}-${index}`;
+    todaySchedule.forEach((spawn, index) => {
+      const spawnId = `${region}-${currentDay}-${index}`;
 
-      // Initialize boss state
-      state.bossStates.set(bossId, {
+      // Initialize spawn state
+      state.bossStates.set(spawnId, {
         status: "normal",
         spawningEndTime: null,
         alarmPlayed: false,
@@ -171,14 +200,19 @@ function renderBossList() {
 
       const li = document.createElement("li");
       li.className = "boss-item normal";
-      li.id = bossId;
+      li.id = spawnId;
+      li.dataset.time = spawn.time;
+      li.dataset.location = spawn.location;
       li.innerHTML = `
-                <span class="boss-name">${boss.name}</span>
-                <div class="timer-display">
-                    <span class="boss-timer">--:--:--</span>
-                    <span class="boss-status"></span>
-                </div>
-            `;
+        <div class="boss-info">
+          <span class="boss-name">${spawn.location}</span>
+          <span class="boss-time-scheduled">${spawn.time}</span>
+        </div>
+        <div class="timer-display">
+          <span class="boss-timer">--:--:--</span>
+          <span class="boss-status"></span>
+        </div>
+      `;
       list.appendChild(li);
     });
 
@@ -194,102 +228,115 @@ function renderBossList() {
 function startTimerLoop() {
   updateAllCountdowns();
   setInterval(updateAllCountdowns, 1000);
+
+  // Re-render at midnight to switch to new day's schedule
+  scheduleMiddnightRefresh();
+}
+
+function scheduleMiddnightRefresh() {
+  const now = new Date();
+  const midnight = new Date(now);
+  midnight.setHours(24, 0, 0, 0);
+  const msUntilMidnight = midnight - now;
+
+  setTimeout(() => {
+    renderBossList();
+    scheduleMiddnightRefresh();
+  }, msUntilMidnight + 1000);
 }
 
 function updateAllCountdowns() {
   const now = new Date();
+  const currentDay = DAYS[now.getDay()];
 
-  for (const [region, bosses] of Object.entries(state.bosses)) {
-    bosses.forEach((boss, index) => {
-      const bossId = `${region}-${index}`;
-      const element = document.getElementById(bossId);
-      const bossState = state.bossStates.get(bossId);
+  for (const [region, schedule] of Object.entries(state.bosses)) {
+    // Skip regions with just notes
+    if (schedule.note) continue;
 
-      if (!element || !bossState) return;
+    const todaySchedule = schedule[currentDay] || [];
+
+    todaySchedule.forEach((spawn, index) => {
+      const spawnId = `${region}-${currentDay}-${index}`;
+      const element = document.getElementById(spawnId);
+      const spawnState = state.bossStates.get(spawnId);
+
+      if (!element || !spawnState) return;
 
       const timerEl = element.querySelector(".boss-timer");
       const statusEl = element.querySelector(".boss-status");
 
-      // Get the next spawn time for this boss
-      const nextSpawn = getNextSpawnTime(boss.spawns, now);
-      const diff = nextSpawn - now;
+      // Parse spawn time
+      const [hours, minutes] = spawn.time.split(":").map(Number);
+      const spawnTime = new Date(now);
+      spawnTime.setHours(hours, minutes, 0, 0);
+
+      const diff = spawnTime - now;
       const diffSeconds = Math.floor(diff / 1000);
 
       // State machine logic
-      if (bossState.status === "spawning") {
-        // Currently in spawning state - show purple timer
-        const spawningRemaining = bossState.spawningEndTime - now;
+      if (spawnState.status === "spawning") {
+        const spawningRemaining = spawnState.spawningEndTime - now;
 
         if (spawningRemaining <= 0) {
-          // Spawning timer ended - transition to next state
-          bossState.status = "next";
-          bossState.spawningEndTime = null;
-          bossState.alarmPlayed = false; // Reset for next cycle
+          // Spawning ended - mark as done
+          spawnState.status = "done";
+          element.className = "boss-item done";
+          timerEl.textContent = "DONE";
+          statusEl.textContent = "Spawn ended";
+          return;
         } else {
-          // Still spawning - show purple countdown
+          // Still spawning
           element.className = "boss-item spawning";
-          timerEl.textContent = formatTime(
-            Math.floor(spawningRemaining / 1000)
-          );
+          timerEl.textContent = formatTime(Math.floor(spawningRemaining / 1000));
           statusEl.textContent = "SPAWNING";
           return;
         }
       }
 
-      if (bossState.status === "next" || diffSeconds <= 0) {
-        if (diffSeconds <= 0 && bossState.status !== "next") {
-          // Timer just hit 0 - start spawning timer
-          bossState.status = "spawning";
-          bossState.spawningEndTime = new Date(now.getTime() + 5 * 60 * 1000); // 5 minutes
-          element.className = "boss-item spawning";
-          timerEl.textContent = "05:00";
-          statusEl.textContent = "SPAWNING";
-          return;
-        }
-
-        if (bossState.status === "next") {
-          // After spawning ended - count down to NEXT boss
-          const futureSpawn = getNextSpawnTime(boss.spawns, now, true);
-          const futureDiff = futureSpawn - now;
-
-          if (futureDiff > 0) {
-            element.className = "boss-item next";
-            timerEl.textContent = formatTime(Math.floor(futureDiff / 1000));
-            statusEl.textContent = "Next spawn";
-
-            // Check if we should transition back to normal/soon
-            const futureSeconds = Math.floor(futureDiff / 1000);
-            if (futureSeconds <= 5 * 60 && futureSeconds > 0) {
-              // Transition to soon state
-              bossState.status = "normal";
-            } else if (futureSeconds > 5 * 60) {
-              // Stay in next but prepare to transition
-              bossState.status = "normal";
-            }
-          }
-          return;
-        }
+      if (spawnState.status === "done") {
+        // Already done, skip
+        return;
       }
 
-      // Normal or Soon state
+      // Check if spawn time passed
+      if (diffSeconds <= 0 && diffSeconds > -5 * 60) {
+        // Within 5 min window after spawn time - start spawning
+        if (spawnState.status !== "spawning") {
+          spawnState.status = "spawning";
+          spawnState.spawningEndTime = new Date(spawnTime.getTime() + 5 * 60 * 1000);
+        }
+        element.className = "boss-item spawning";
+        const spawningRemaining = spawnState.spawningEndTime - now;
+        timerEl.textContent = formatTime(Math.floor(spawningRemaining / 1000));
+        statusEl.textContent = "SPAWNING";
+        return;
+      }
+
+      if (diffSeconds <= -5 * 60) {
+        // Spawn passed more than 5 min ago
+        spawnState.status = "done";
+        element.className = "boss-item done";
+        timerEl.textContent = "DONE";
+        statusEl.textContent = "Spawn ended";
+        return;
+      }
+
+      // Future spawn
       if (diffSeconds <= 5 * 60 && diffSeconds > 0) {
         // Soon state - within 5 minutes (PINK)
         element.className = "boss-item soon";
         timerEl.textContent = formatTime(diffSeconds);
         statusEl.textContent = "Spawning soon!";
 
-        // Play alarm once when entering soon state
-        if (!bossState.alarmPlayed) {
-          bossState.alarmPlayed = true;
+        if (!spawnState.alarmPlayed) {
+          spawnState.alarmPlayed = true;
           playAlarm();
         }
-      } else if (diffSeconds > 5 * 60) {
+      } else {
         // Normal state
         element.className = "boss-item normal";
         timerEl.textContent = formatTime(diffSeconds);
         statusEl.textContent = "";
-        bossState.status = "normal";
-        bossState.alarmPlayed = false;
       }
     });
   }
@@ -298,50 +345,6 @@ function updateAllCountdowns() {
 // ============================================
 // Utility Functions
 // ============================================
-
-function getNextSpawnTime(spawns, now, skipCurrent = false) {
-  const today = new Date(now);
-  const tomorrow = new Date(now);
-  tomorrow.setDate(tomorrow.getDate() + 1);
-
-  let candidates = [];
-
-  // Generate spawn times for today and tomorrow
-  spawns.forEach((timeStr) => {
-    const [hours, minutes] = timeStr.split(":").map(Number);
-
-    const todaySpawn = new Date(today);
-    todaySpawn.setHours(hours, minutes, 0, 0);
-
-    const tomorrowSpawn = new Date(tomorrow);
-    tomorrowSpawn.setHours(hours, minutes, 0, 0);
-
-    candidates.push(todaySpawn, tomorrowSpawn);
-  });
-
-  // Sort by time
-  candidates.sort((a, b) => a - b);
-
-  // Find the next spawn that's in the future
-  for (const spawn of candidates) {
-    if (skipCurrent) {
-      // Skip spawns that are within the current 5-minute window
-      if (spawn > now) {
-        return spawn;
-      }
-    } else {
-      // Include spawns that just passed (within spawning window)
-      const diff = spawn - now;
-      if (diff >= -5 * 60 * 1000) {
-        // Within 5 minutes past
-        return spawn;
-      }
-    }
-  }
-
-  // Fallback to first spawn tomorrow
-  return candidates[0];
-}
 
 function formatTime(totalSeconds) {
   if (totalSeconds < 0) totalSeconds = 0;
