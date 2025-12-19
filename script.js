@@ -12,7 +12,15 @@ const state = {
 };
 
 // Day names for schedule lookup
-const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const DAYS = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+];
 
 // DOM Elements
 let alarmSound;
@@ -287,7 +295,9 @@ function updateAllCountdowns() {
         } else {
           // Still spawning
           element.className = "boss-item spawning";
-          timerEl.textContent = formatTime(Math.floor(spawningRemaining / 1000));
+          timerEl.textContent = formatTime(
+            Math.floor(spawningRemaining / 1000)
+          );
           statusEl.textContent = "SPAWNING";
           return;
         }
@@ -303,7 +313,9 @@ function updateAllCountdowns() {
         // Within 5 min window after spawn time - start spawning
         if (spawnState.status !== "spawning") {
           spawnState.status = "spawning";
-          spawnState.spawningEndTime = new Date(spawnTime.getTime() + 5 * 60 * 1000);
+          spawnState.spawningEndTime = new Date(
+            spawnTime.getTime() + 5 * 60 * 1000
+          );
         }
         element.className = "boss-item spawning";
         const spawningRemaining = spawnState.spawningEndTime - now;
