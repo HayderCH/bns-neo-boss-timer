@@ -1,0 +1,254 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+  color: #eee;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+header {
+  text-align: center;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+.volume-control {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.volume-control label {
+  font-size: 0.9rem;
+}
+
+#volume-slider {
+  width: 150px;
+  cursor: pointer;
+}
+
+#volume-value {
+  font-size: 0.9rem;
+  min-width: 40px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: #888;
+}
+
+/* Region Section */
+.region-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.region-section h2 {
+  font-size: 1.3rem;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  color: #ffd700;
+}
+
+.boss-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Boss Item */
+.boss-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.boss-name {
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.boss-timer {
+  font-family: "Courier New", monospace;
+  font-size: 1.2rem;
+  font-weight: bold;
+  padding: 5px 15px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* Normal State - more than 5 minutes */
+.boss-item.normal {
+  border-color: rgba(100, 100, 100, 0.3);
+}
+
+.boss-item.normal .boss-timer {
+  color: #aaa;
+}
+
+/* Soon State - within 5 minutes (PINK) */
+.boss-item.soon {
+  border-color: #ff69b4;
+  background: rgba(255, 105, 180, 0.15);
+  animation: pulse-pink 1.5s infinite;
+}
+
+.boss-item.soon .boss-timer {
+  color: #ff69b4;
+}
+
+@keyframes pulse-pink {
+  0%,
+  100% {
+    box-shadow: 0 0 5px rgba(255, 105, 180, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+  }
+}
+
+/* Spawning State - timer hit 0, 5-minute spawning timer (PURPLE) */
+.boss-item.spawning {
+  border-color: #9b59b6;
+  background: rgba(155, 89, 182, 0.2);
+  animation: pulse-purple 1s infinite;
+}
+
+.boss-item.spawning .boss-timer {
+  color: #9b59b6;
+}
+
+.boss-item.spawning .boss-status {
+  color: #e74c3c;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+@keyframes pulse-purple {
+  0%,
+  100% {
+    box-shadow: 0 0 10px rgba(155, 89, 182, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(155, 89, 182, 0.8);
+  }
+}
+
+/* Next State - after spawning timer, counting to next boss */
+.boss-item.next {
+  border-color: #3498db;
+  background: rgba(52, 152, 219, 0.1);
+}
+
+.boss-item.next .boss-timer {
+  color: #3498db;
+}
+
+.boss-item.next .boss-status {
+  color: #3498db;
+  font-size: 0.8rem;
+}
+
+/* Timer Display */
+.timer-display {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 3px;
+}
+
+.boss-status {
+  font-size: 0.75rem;
+  color: #888;
+}
+
+footer {
+  text-align: center;
+  margin-top: 30px;
+  padding: 15px;
+  color: #666;
+  font-size: 0.85rem;
+}
+
+footer.sound-enabled {
+  color: #2ecc71;
+}
+
+/* About Section */
+.about-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.about-section h2 {
+  font-size: 1.2rem;
+  margin-bottom: 15px;
+  color: #ffd700;
+}
+
+.about-section p {
+  margin: 8px 0;
+  color: #ccc;
+}
+
+.about-section strong {
+  color: #ff69b4;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  header h1 {
+    font-size: 1.3rem;
+  }
+
+  .boss-item {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .timer-display {
+    align-items: center;
+  }
+}

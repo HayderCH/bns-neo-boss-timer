@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Blade & Soul Neo EU - Field Boss Timer</title>
+        <link rel="stylesheet" href="styles.css">
+    </head>
+    <body>
+        <div class="container">
+            <header>
+                <h1>🗡️ Blade & Soul Neo EU Field Boss Timer</h1>
+                <div class="volume-control">
+                    <label for="volume-slider">🔊 Volume:</label>
+                    <input type="range" id="volume-slider" min="0" max="100" value="50">
+                    <span id="volume-value">50%</span>
+                </div>
+            </header>
+            <main id="boss-container">
+                <!-- Boss regions and timers will be rendered here by JavaScript -->
+                <p class="loading">Loading boss schedules...</p>
+            </main>
+            <footer>
+                <p>Click anywhere to enable sound notifications</p>
+            </footer>
+            <section class="about-section">
+                <h2>👨‍💻 About the Developer</h2>
+                <p>
+                    <strong>Hayder</strong> — AI Engineering Student (not a web dev student 😅)
+                </p>
+                <p>
+                    🎮 In-game name: <strong>Kindle</strong>
+                </p>
+                <p>💰 Donate me 1 gold if you like it!</p>
+                <p>🦗 Have fun, crickets!</p>
+            </section>
+        </div>
+        <audio id="alarm-sound" preload="auto">
+            <source src="assets/notification.mp3" type="audio/mpeg">
+        </audio>
+        <script src="script.js"></script>
+    </body>
+</html>
