@@ -365,16 +365,37 @@ function renderBossList() {
       li.id = spawnId;
       li.dataset.time = spawn.time;
       li.dataset.location = spawn.location;
-      li.innerHTML = `
-        <div class="boss-info">
-          <span class="boss-name">${spawn.location}</span>
-          <span class="boss-time-scheduled">${spawn.time}</span>
-        </div>
-        <div class="timer-display">
-          <span class="boss-timer">--:--:--</span>
-          <span class="boss-status"></span>
-        </div>
-      `;
+      
+      // Create elements safely to prevent XSS
+      const bossInfo = document.createElement('div');
+      bossInfo.className = 'boss-info';
+      
+      const bossName = document.createElement('span');
+      bossName.className = 'boss-name';
+      bossName.textContent = spawn.location; // Safe: textContent escapes HTML
+      
+      const bossTime = document.createElement('span');
+      bossTime.className = 'boss-time-scheduled';
+      bossTime.textContent = spawn.time; // Safe: textContent escapes HTML
+      
+      bossInfo.appendChild(bossName);
+      bossInfo.appendChild(bossTime);
+      
+      const timerDisplay = document.createElement('div');
+      timerDisplay.className = 'timer-display';
+      
+      const bossTimer = document.createElement('span');
+      bossTimer.className = 'boss-timer';
+      bossTimer.textContent = '--:--:--';
+      
+      const bossStatus = document.createElement('span');
+      bossStatus.className = 'boss-status';
+      
+      timerDisplay.appendChild(bossTimer);
+      timerDisplay.appendChild(bossStatus);
+      
+      li.appendChild(bossInfo);
+      li.appendChild(timerDisplay);
       list.appendChild(li);
     });
 
