@@ -18,28 +18,32 @@ jobs:
               run: |
                   # Get current date for filename
                   DATE=$(date +%Y-%m-%d)
-          
-          # Daily backup folder (automatic)
-          DAILY_DIR="Data/Backups/Daily-${DATE}"
-          mkdir -p "${DAILY_DIR}"
-          
-          # Latest folder (you manually rename this when a new patch drops)
-          LATEST_DIR="Data/Latest"
-          mkdir -p "${LATEST_DIR}"
-          
-          # Download the sheet as CSV
-          SHEET_ID="1unXxTlJ53VZBLMOs7XtpWqMyWC7WYHQ0KN3MmqejGIY"
-          
-          # Save to daily backup
-          curl -L "https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0" \
-            -o "${DAILY_DIR}/BNS_NEO_fb_times_EU.csv"
-          
-          # Also update the "Latest" folder
-          curl -L "https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0" \
-            -o "${LATEST_DIR}/BNS_NEO_fb_times_EU.csv"
-          
-          echo "✅ Daily backup: ${DAILY_DIR}/BNS_NEO_fb_times_EU.csv"
-          echo "✅ Latest data: ${LATEST_DIR}/BNS_NEO_fb_times_EU.csv"
+                  
+                  # Daily backup folder (automatic)
+                  DAILY_DIR="Data/Backups/Daily-${DATE}"
+                  mkdir -p "${DAILY_DIR}"
+                  
+                  # Latest folder (you manually rename this when a new patch drops)
+                  LATEST_DIR="Data/Latest"
+                  mkdir -p "${LATEST_DIR}"
+                  
+                  # Download the sheet as CSV
+                  SHEET_ID="1unXxTlJ53VZBLMOs7XtpWqMyWC7WYHQ0KN3MmqejGIY"
+                  
+                  # Save to daily backup
+                  curl -L "https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0" \
+                    -o "${DAILY_DIR}/BNS_NEO_fb_times_EU.csv"
+                  
+                  # Also update the "Latest" folder
+                  curl -L "https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0" \
+                    -o "${LATEST_DIR}/BNS_NEO_fb_times_EU.csv"
+                  
+                  echo "✅ Daily backup: ${DAILY_DIR}/BNS_NEO_fb_times_EU.csv"
+                  echo "✅ Latest data: ${LATEST_DIR}/BNS_NEO_fb_times_EU.csv"
+
+            - name: Check if file has changes
+              id: check_changes
+              run: |
                   git diff --quiet || echo "changed=true" >> $GITHUB_OUTPUT
 
             - name: Commit and push if changed

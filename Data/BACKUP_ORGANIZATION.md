@@ -19,11 +19,13 @@ Data/
 ### Example: New patch on January 15, 2025
 
 1. **Create new patch folder manually:**
+
    ```bash
    mkdir "Data/Patch 01-15-25"
    ```
 
 2. **Copy the latest data:**
+
    ```bash
    cp Data/Latest/BNS_NEO_fb_times_EU.csv "Data/Patch 01-15-25/"
    ```
@@ -36,6 +38,7 @@ Data/
    ```
 
 ### Or Just Use Windows Explorer:
+
 1. Go to `Data/Latest/` folder
 2. Copy the CSV file
 3. Create new folder: `Data/Patch 01-15-25/`
@@ -58,6 +61,7 @@ Data/
 ## Quick Commands
 
 ### When new patch drops:
+
 ```bash
 # Copy latest to new patch folder
 $PATCH="Patch 01-15-25"
@@ -69,6 +73,7 @@ git push
 ```
 
 ### Restore from a backup:
+
 ```bash
 # If someone griefed your sheet, restore from backup
 cp "Data/Backups/Daily-2025-12-22/BNS_NEO_fb_times_EU.csv" "Data/Latest/"
