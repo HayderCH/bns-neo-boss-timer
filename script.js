@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   await loadBosses();
   renderBossList();
-  
+
   // Hide loading bar after content loads
   setTimeout(() => {
     const loadingBar = document.getElementById("loading-bar");
@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", async () => {
       loadingBar.classList.add("hidden");
     }
   }, 300);
-  
+
   startTimerLoop();
   requestNotificationPermission();
 
