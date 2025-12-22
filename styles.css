@@ -47,6 +47,118 @@
   --shadow-color: rgba(0, 0, 0, 0.1);
 }
 
+/* ============================================
+   Skeleton Loader
+   ============================================ */
+
+.skeleton-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+  animation: fadeIn 0.3s ease-out;
+}
+
+.skeleton-region {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid var(--card-border);
+}
+
+.skeleton-heading {
+  height: 32px;
+  background: linear-gradient(
+    90deg,
+    var(--card-border) 0%,
+    rgba(255, 255, 255, 0.1) 50%,
+    var(--card-border) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-item {
+  height: 80px;
+  background: linear-gradient(
+    90deg,
+    var(--card-border) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    var(--card-border) 100%
+  );
+  background-size: 200% 100%;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  animation: shimmer 1.5s infinite;
+  animation-delay: calc(var(--index, 0) * 0.1s);
+}
+
+.skeleton-item:nth-child(2) {
+  --index: 1;
+}
+
+.skeleton-item:nth-child(3) {
+  --index: 2;
+}
+
+.skeleton-item:nth-child(4) {
+  --index: 3;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ============================================
+   Scroll Animations
+   ============================================ */
+
+.animate-ready {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.animate-in {
+  animation: slideUp 0.5s ease-out forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Stagger animation for multiple items */
+.region-section:nth-child(1) { animation-delay: 0s; }
+.region-section:nth-child(2) { animation-delay: 0.1s; }
+.region-section:nth-child(3) { animation-delay: 0.2s; }
+
+.boss-item:nth-child(1) { animation-delay: 0s; }
+.boss-item:nth-child(2) { animation-delay: 0.05s; }
+.boss-item:nth-child(3) { animation-delay: 0.1s; }
+.boss-item:nth-child(4) { animation-delay: 0.15s; }
+.boss-item:nth-child(5) { animation-delay: 0.2s; }
+
 body {
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(
@@ -76,6 +188,38 @@ header {
   border: 1px solid var(--header-border);
   box-shadow: 0 4px 6px var(--shadow-color);
   transition: background 0.3s ease, border 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Loading Bar */
+.loading-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 0%;
+  background: linear-gradient(90deg, #e74c3c, #f39c12, #3498db, #9b59b6);
+  background-size: 200% 100%;
+  animation: loadingProgress 1.5s ease-out forwards, gradientShift 2s ease infinite;
+  transition: opacity 0.3s ease;
+  z-index: 10;
+}
+
+.loading-bar.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@keyframes loadingProgress {
+  0% { width: 0%; }
+  50% { width: 70%; }
+  100% { width: 100%; }
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 header h1 {
@@ -344,7 +488,30 @@ main {
   background: var(--card-bg);
   border-radius: 8px;
   border: 2px solid transparent;
-  transition: all 0.3s ease;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Smooth background shimmer on hover */
+.boss-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.08), transparent);
+  transition: left 0.6s ease;
+  pointer-events: none;
+}
+
+.boss-item:hover::before {
+  left: 100%;
+}
+
+.boss-item:hover {
+  transform: translateX(4px);
 }
 
 .boss-info {
@@ -401,9 +568,11 @@ main {
   0%,
   100% {
     box-shadow: 0 0 5px rgba(255, 105, 180, 0.3);
+    transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 20px rgba(255, 105, 180, 0.6);
+    box-shadow: 0 0 20px rgba(255, 105, 180, 0.6), 0 0 30px rgba(255, 105, 180, 0.3);
+    transform: scale(1.01);
   }
 }
 
@@ -428,9 +597,11 @@ main {
   0%,
   100% {
     box-shadow: 0 0 10px rgba(155, 89, 182, 0.4);
+    transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 25px rgba(155, 89, 182, 0.8);
+    box-shadow: 0 0 25px rgba(155, 89, 182, 0.8), 0 0 40px rgba(155, 89, 182, 0.4);
+    transform: scale(1.02);
   }
 }
 

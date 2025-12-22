@@ -41,10 +41,26 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   setupAudio();
   initializeTheme();
+
+  // Show skeleton loader
+  showSkeletonLoader();
+
   await loadBosses();
   renderBossList();
+  
+  // Hide loading bar after content loads
+  setTimeout(() => {
+    const loadingBar = document.getElementById("loading-bar");
+    if (loadingBar) {
+      loadingBar.classList.add("hidden");
+    }
+  }, 300);
+  
   startTimerLoop();
   requestNotificationPermission();
+
+  // Setup Intersection Observer for animations
+  setupAnimationObserver();
 
   // Setup theme toggle button
   const themeBtn = document.getElementById("theme-toggle-btn");
@@ -231,6 +247,49 @@ function updateLastModifiedTime(lastModified) {
   } else {
     updateTimeEl.textContent = "Unknown";
   }
+}
+
+// ============================================
+// Loading & Animations
+// ============================================
+
+function showSkeletonLoader() {
+  bossContainer.innerHTML = `
+    <div class="skeleton-container">
+      <div class="skeleton-region">
+        <div class="skeleton-heading"></div>
+        <div class="skeleton-item"></div>
+        <div class="skeleton-item"></div>
+        <div class="skeleton-item"></div>
+      </div>
+      <div class="skeleton-region">
+        <div class="skeleton-heading"></div>
+        <div class="skeleton-item"></div>
+        <div class="skeleton-item"></div>
+      </div>
+    </div>
+  `;
+}
+
+function setupAnimationObserver() {
+  // Animate elements as they enter viewport
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("animate-in");
+          observer.unobserve(entry.target);
+        }
+      });
+    },
+    { threshold: 0.1, rootMargin: "50px" }
+  );
+
+  // Observe all boss items and sections
+  document.querySelectorAll(".region-section, .boss-item").forEach((el) => {
+    el.classList.add("animate-ready");
+    observer.observe(el);
+  });
 }
 
 // ============================================
