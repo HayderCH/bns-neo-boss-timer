@@ -1,0 +1,48 @@
+name: Daily Google Sheets Backup
+
+on:
+  schedule:
+    # Run daily at 3 AM UTC (adjust timezone as needed)
+    - cron: '0 3 * * *'
+  workflow_dispatch: # Allow manual trigger
+
+jobs:
+  backup-sheet:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download Google Sheet as CSV
+        run: |
+          # Get current date for filename
+          DATE=$(date +%Y-%m-%d)
+          PATCH_DIR="Data/Patch-${DATE}"
+          
+          # Create directory if it doesn't exist
+          mkdir -p "${PATCH_DIR}"
+          
+          # Download the sheet as CSV
+          # Using the export link format for Google Sheets
+          SHEET_ID="1unXxTlJ53VZBLMOs7XtpWqMyWC7WYHQ0KN3MmqejGIY"
+          curl -L "https://docs.google.com/spreadsheets/d/${SHEET_ID}/export?format=csv&gid=0" \
+            -o "${PATCH_DIR}/BNS_NEO_fb_times_EU_${DATE}.csv"
+          
+          echo "Downloaded to ${PATCH_DIR}/BNS_NEO_fb_times_EU_${DATE}.csv"
+
+      - name: Check if file has changes
+        id: check_changes
+        run: |
+          git diff --quiet || echo "changed=true" >> $GITHUB_OUTPUT
+
+      - name: Commit and push if changed
+        if: steps.check_changes.outputs.changed == 'true'
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add Data/
+          git commit -m "Auto-backup: Daily Google Sheets export $(date +%Y-%m-%d)"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
