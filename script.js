@@ -3,6 +3,17 @@
 // Day-based schedule system
 // ============================================
 
+// Cache Version Check - Force reload if stale CSS/JS
+const CACHE_VERSION = "1.7.2";
+const currentVersion = localStorage.getItem("app-version");
+if (currentVersion !== CACHE_VERSION) {
+  localStorage.setItem("app-version", CACHE_VERSION);
+  if (!sessionStorage.getItem("reloaded-for-version")) {
+    sessionStorage.setItem("reloaded-for-version", "true");
+    window.location.reload(true);
+  }
+}
+
 // State Management
 const state = {
   bosses: {},
