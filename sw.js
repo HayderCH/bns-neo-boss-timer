@@ -8,7 +8,7 @@ const RUNTIME_CACHE = "bns-timer-runtime";
 const BASE_PATH =
   self.location.hostname === "localhost" ? "" : "/bns-neo-boss-timer";
 
-// Core files to cache for offline functionality
+// Core files to cache for offline functionality (excluding media files)
 const CORE_ASSETS = [
   `${BASE_PATH}/`,
   `${BASE_PATH}/index.html`,
@@ -16,23 +16,37 @@ const CORE_ASSETS = [
   `${BASE_PATH}/script.js`,
   `${BASE_PATH}/bosses.json`,
   `${BASE_PATH}/manifest.json`,
-  `${BASE_PATH}/assets/notification.mp3`,
 ];
+
+// Media files to cache separately (can handle partial responses)
+const MEDIA_ASSETS = [`${BASE_PATH}/assets/notification.mp3`];
 
 // Install event - cache core assets
 self.addEventListener("install", (event) => {
   console.log("[SW] Installing service worker...");
 
   event.waitUntil(
-    caches
-      .open(CACHE_NAME)
-      .then((cache) => {
+    Promise.all([
+      // Cache core assets
+      caches.open(CACHE_NAME).then((cache) => {
         console.log("[SW] Caching core assets");
         return cache.addAll(CORE_ASSETS);
-      })
+      }),
+      // Cache media assets individually (more resilient to 206 errors)
+      caches.open(RUNTIME_CACHE).then((cache) => {
+        console.log("[SW] Caching media assets");
+        return Promise.all(
+          MEDIA_ASSETS.map((url) =>
+            fetch(url)
+              .then((response) => cache.put(url, response))
+              .catch((err) => console.warn("[SW] Failed to cache:", url, err))
+          )
+        );
+      }),
+    ])
       .then(() => self.skipWaiting())
       .catch((error) => {
-        console.error("[SW] Failed to cache core assets:", error);
+        console.error("[SW] Failed to cache assets:", error);
       })
   );
 });
