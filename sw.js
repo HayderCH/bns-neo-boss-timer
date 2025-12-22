@@ -1,8 +1,8 @@
 // BNS Neo Field Boss Timer - Service Worker
 // Provides offline functionality and caching
 
-const CACHE_NAME = "bns-timer-v1.7.0";
-const RUNTIME_CACHE = "bns-timer-runtime";
+const CACHE_NAME = "bns-timer-v1.7.1";
+const RUNTIME_CACHE = "bns-timer-runtime-v1.7.1";
 
 // Determine base path (localhost vs GitHub Pages)
 const BASE_PATH =
@@ -90,6 +90,26 @@ self.addEventListener("fetch", (event) => {
           // Cache the fresh data
           const responseClone = response.clone();
           caches.open(RUNTIME_CACHE).then((cache) => {
+            cache.put(request, responseClone);
+          });
+          return response;
+        })
+        .catch(() => {
+          // Fallback to cached version if offline
+          return caches.match(request);
+        })
+    );
+    return;
+  }
+
+  // Network-first strategy for CSS/JS files to prevent stale styles
+  if (request.url.includes(".css") || request.url.includes("script.js")) {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          // Cache the fresh file
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => {
             cache.put(request, responseClone);
           });
           return response;
