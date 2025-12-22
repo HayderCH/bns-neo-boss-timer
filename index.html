@@ -26,6 +26,16 @@
               content="Blade & Soul Neo EU Field Boss Timer">
         <meta property="twitter:description"
               content="Track field boss spawns with real-time alerts. Community-driven, free, no ads.">
+        <!-- PWA Manifest -->
+        <link rel="manifest" href="manifest.json">
+        <meta name="theme-color" content="#16213e">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style"
+              content="black-translucent">
+        <meta name="apple-mobile-web-app-title" content="BNS Timer">
+        <link rel="apple-touch-icon" href="assets/icon-192.svg">
+        <link rel="icon" type="image/svg+xml" href="assets/icon-192.svg">
+        <link rel="icon" type="image/x-icon" href="favicon.ico">
         <link rel="stylesheet" href="styles.css">
         <link rel="canonical" href="https://hayderch.github.io/bns-neo-boss-timer/">
     </head>
@@ -33,16 +43,30 @@
         <div class="container">
             <header>
                 <h1>🗡️ Blade & Soul Neo EU Field Boss Timer</h1>
-                <div class="volume-control">
-                    <label for="volume-slider">🔊 Volume:</label>
-                    <input type="range" id="volume-slider" min="0" max="100" value="50">
-                    <span id="volume-value">50%</span>
+                <div class="header-controls">
+                    <div class="volume-control">
+                        <label for="volume-slider">🔊 Volume:</label>
+                        <input type="range" id="volume-slider" min="0" max="100" value="50">
+                        <span id="volume-value">50%</span>
+                    </div>
+                    <button id="theme-toggle-btn"
+                            class="theme-toggle-btn"
+                            title="Toggle light/dark theme">🌙 Dark Mode</button>
+                    <button id="notification-toggle-btn"
+                            class="notification-btn"
+                            title="Enable browser notifications for boss spawns">🔕 Notifications OFF</button>
+                    <button id="export-calendar-btn"
+                            class="export-btn"
+                            title="Download today's spawns as calendar file">📅 Export to Calendar</button>
                 </div>
             </header>
             <div class="community-message">
                 <p>
                     💙 This list is made by kind players who love the BNS Neo community. If you would like to help make this website better, please add any boss timer (try to be exact) using <a href="https://docs.google.com/spreadsheets/d/1unXxTlJ53VZBLMOs7XtpWqMyWC7WYHQ0KN3MmqejGIY/edit?gid=0#gid=0"
     target="_blank">this link</a>, no pressure! 🎮
+                </p>
+                <p class="last-updated" id="last-updated">
+                    📅 Data last updated: <span id="update-time">Loading...</span>
                 </p>
             </div>
             <main id="boss-container">
