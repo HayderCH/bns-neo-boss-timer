@@ -84,16 +84,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Setup mobile swipe gestures
   setupSwipeGestures();
 
-  // Unregister any existing service workers (cleanup from PWA feature)
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.getRegistrations().then((registrations) => {
-      registrations.forEach((registration) => {
-        registration.unregister();
-        console.log("Service worker unregistered");
-      });
-    });
-  }
-
   // Register service worker for PWA (DISABLED - causing cache issues)
   // registerServiceWorker();
 });
