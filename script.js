@@ -84,8 +84,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Setup mobile swipe gestures
   setupSwipeGestures();
 
-  // Register service worker for PWA
-  registerServiceWorker();
+  // Register service worker for PWA (DISABLED - causing cache issues)
+  // registerServiceWorker();
 });
 
 // Enable audio on first user interaction
