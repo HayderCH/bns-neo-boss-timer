@@ -12,13 +12,12 @@ A static web application for tracking Field Boss spawn times in Blade & Soul Neo
   - **Soon** (pink, pulsing): Within 5 minutes - alarm plays!
   - **Spawning** (purple): Boss just spawned, 5-minute spawning window timer
   - **Done** (faded): Spawn window has ended
-- **Audio Alerts**: Alarm sounds when boss enters the "Soon" state (5 minutes before spawn)
+- **Audio Alerts**: Alarm sounds when boss enters the "Soon" state (5 minutes before alarm)
 - **Volume Control**: Adjustable volume slider for notifications
 - **Browser Notifications**: Desktop notifications for boss spawns (opt-in)
 - **Dark/Light Theme**: Toggle between themes with system preference detection
 - **Export to Calendar**: Download today's spawns as ICS file
 - **Progressive Web App**: Install on mobile/desktop, works offline
-- **Privacy-First Analytics**: Cloudflare Web Analytics (no cookies, GDPR compliant)
 - **CSV Ingestor**: Easy tool to convert CSV tracking data to JSON format
 
 ## How It Works
