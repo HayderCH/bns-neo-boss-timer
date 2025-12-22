@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>CSV to JSON Ingestor - BNS Field Boss Timer</title>
+        <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .instructions {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+            border-left: 4px solid #667eea;
+        }
+
+        .instructions h2 {
+            color: #333;
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        .instructions ol {
+            margin-left: 1.5rem;
+            color: #555;
+        }
+
+        .instructions li {
+            margin: 0.5rem 0;
+        }
+
+        .input-section {
+            margin-bottom: 2rem;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 1rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            resize: vertical;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+        }
+
+        button:active {
+            transform: translateY(0);
+        }
+
+        .output-section {
+            margin-top: 2rem;
+        }
+
+        .json-output {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .json-output pre {
+            margin: 0;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .copy-button {
+            margin-top: 1rem;
+            background: #28a745;
+        }
+
+        .copy-button:hover {
+            background: #218838;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card .label {
+            color: #666;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .error {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid #f5c6cb;
+        }
+
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+            border-left: 4px solid #c3e6cb;
+        }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>🗡️ BNS Field Boss Timer - CSV Ingestor</h1>
+            <div class="instructions">
+                <h2>📋 How to Use:</h2>
+                <ol>
+                    <li>
+                        Copy the CSV data from: <code>Data/Patch 12-17-25/BNS NEO fb times EU - patch 12_17_25.csv</code>
+                    </li>
+                    <li>Paste it into the textarea below</li>
+                    <li>Click "Convert to JSON"</li>
+                    <li>
+                        Copy the generated JSON and save it as <code>bosses.json</code>
+                    </li>
+                </ol>
+                <p>
+                    <strong>CSV Format Expected:</strong> Boss,time (xx:xx),day of the week,,Boss,Time (xx:xx),Day of the week
+                </p>
+            </div>
+            <div class="input-section">
+                <label for="csv-input">CSV Data:</label>
+                <textarea id="csv-input" placeholder="Paste your CSV data here..."></textarea>
+            </div>
+            <button onclick="convertCSV()">🔄 Convert to JSON</button>
+            <div id="output" class="output-section" style="display: none;">
+                <label>Generated JSON:</label>
+                <div class="json-output">
+                    <pre id="json-output"></pre>
+                </div>
+                <button class="copy-button" onclick="copyJSON()">📋 Copy JSON to Clipboard</button>
+                <div class="stats" id="stats"></div>
+            </div>
+            <div id="message"></div>
+        </div>
+        <script>
+        function convertCSV() {
+            const csvInput = document.getElementById('csv-input').value.trim();
+            const outputDiv = document.getElementById('output');
+            const messageDiv = document.getElementById('message');
+            
+            messageDiv.innerHTML = '';
+
+            if (!csvInput) {
+                messageDiv.innerHTML = '<div class="error">❌ Please paste CSV data first!</div>';
+                return;
+            }
+
+            try {
+                const result = parseCSVToBossData(csvInput);
+                
+                document.getElementById('json-output').textContent = JSON.stringify(result.json, null, 2);
+                outputDiv.style.display = 'block';
+                
+                // Display statistics
+                const statsHTML = `
+                    <div class="stat-card">
+                        <div class="number">${result.stats.totalSpawns}</div>
+                        <div class="label">Total Spawns</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">${result.stats.silverfrostSpawns}</div>
+                        <div class="label">Silverfrost</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">${result.stats.moonwaterSpawns}</div>
+                        <div class="label">Moonwater</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">${result.stats.daysWithData}</div>
+                        <div class="label">Days with Data</div>
+                    </div>
+                `;
+                document.getElementById('stats').innerHTML = statsHTML;
+                
+                messageDiv.innerHTML = '<div class="success">✅ Successfully converted! Copy the JSON and save it as bosses.json</div>';
+            } catch (error) {
+                messageDiv.innerHTML = `<div class="error">❌ Error: ${error.message}</div>`;
+            }
+        }
+
+        function parseCSVToBossData(csvText) {
+            const lines = csvText.split('\n').filter(line => line.trim());
+            
+            // Initialize data structure
+            const bossData = {
+                "Silverfrost": {
+                    "Monday": [],
+                    "Tuesday": [],
+                    "Wednesday": [],
+                    "Thursday": [],
+                    "Friday": [],
+                    "Saturday": [],
+                    "Sunday": []
+                },
+                "Moonwater": {
+                    "Monday": [],
+                    "Tuesday": [],
+                    "Wednesday": [],
+                    "Thursday": [],
+                    "Friday": [],
+                    "Saturday": [],
+                    "Sunday": []
+                }
+            };
+
+            let silverfrostCount = 0;
+            let moonwaterCount = 0;
+
+            // Skip header line
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+
+                // Split by comma, handling potential issues
+                const parts = line.split(',').map(p => p.trim());
+                
+                // Process Silverfrost data (first 3 columns)
+                if (parts[0] && parts[1] && parts[2]) {
+                    const location = parts[0];
+                    const time = parts[1];
+                    const day = capitalizeDay(parts[2]);
+                    
+                    if (day && bossData.Silverfrost[day]) {
+                        bossData.Silverfrost[day].push({ time, location });
+                        silverfrostCount++;
+                    }
+                }
+
+                // Process Moonwater data (columns 4, 5, 6 - after the empty column)
+                if (parts.length > 4 && parts[4] && parts[5] && parts[6]) {
+                    const location = parts[4];
+                    const time = parts[5];
+                    const day = capitalizeDay(parts[6]);
+                    
+                    if (day && bossData.Moonwater[day]) {
+                        bossData.Moonwater[day].push({ time, location });
+                        moonwaterCount++;
+                    }
+                }
+            }
+
+            // Sort all spawns by time
+            for (const region in bossData) {
+                for (const day in bossData[region]) {
+                    bossData[region][day].sort((a, b) => {
+                        const timeA = a.time.split(':').map(Number);
+                        const timeB = b.time.split(':').map(Number);
+                        return (timeA[0] * 60 + timeA[1]) - (timeB[0] * 60 + timeB[1]);
+                    });
+                }
+            }
+
+            // Calculate statistics
+            const daysWithData = new Set();
+            for (const region in bossData) {
+                for (const day in bossData[region]) {
+                    if (bossData[region][day].length > 0) {
+                        daysWithData.add(day);
+                    }
+                }
+            }
+
+            return {
+                json: bossData,
+                stats: {
+                    totalSpawns: silverfrostCount + moonwaterCount,
+                    silverfrostSpawns: silverfrostCount,
+                    moonwaterSpawns: moonwaterCount,
+                    daysWithData: daysWithData.size
+                }
+            };
+        }
+
+        function capitalizeDay(day) {
+            if (!day) return null;
+            const cleaned = day.trim();
+            return cleaned.charAt(0).toUpperCase() + cleaned.slice(1).toLowerCase();
+        }
+
+        function copyJSON() {
+            const jsonText = document.getElementById('json-output').textContent;
+            navigator.clipboard.writeText(jsonText).then(() => {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = '✅ Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            });
+        }
+        </script>
+    </body>
+</html>

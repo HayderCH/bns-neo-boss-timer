@@ -163,6 +163,10 @@ function renderBossList() {
   const now = new Date();
   const currentDay = DAYS[now.getDay()];
 
+  // Create horizontal container for regions
+  const regionsContainer = document.createElement("div");
+  regionsContainer.className = "regions-container";
+
   for (const [region, schedule] of Object.entries(state.bosses)) {
     const section = document.createElement("section");
     section.className = "region-section";
@@ -177,7 +181,7 @@ function renderBossList() {
       note.className = "region-note";
       note.textContent = schedule.note;
       section.appendChild(note);
-      bossContainer.appendChild(section);
+      regionsContainer.appendChild(section);
       continue;
     }
 
@@ -187,9 +191,9 @@ function renderBossList() {
     if (todaySchedule.length === 0) {
       const note = document.createElement("p");
       note.className = "region-note";
-      note.textContent = "No spawns scheduled for today";
+      note.innerHTML = `Not enough data - contribute with boss timers at <a href="https://docs.google.com/spreadsheets/d/1unXxTlJ53VZBLMOs7XtpWqMyWC7WYHQ0KN3MmqejGIY/edit?gid=0#gid=0" target="_blank">this spreadsheet</a> 📝`;
       section.appendChild(note);
-      bossContainer.appendChild(section);
+      regionsContainer.appendChild(section);
       continue;
     }
 
@@ -225,8 +229,10 @@ function renderBossList() {
     });
 
     section.appendChild(list);
-    bossContainer.appendChild(section);
+    regionsContainer.appendChild(section);
   }
+
+  bossContainer.appendChild(regionsContainer);
 }
 
 // ============================================

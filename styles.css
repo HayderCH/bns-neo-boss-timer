@@ -59,6 +59,40 @@ main {
   gap: 20px;
 }
 
+/* Community Message */
+.community-message {
+  background: rgba(52, 152, 219, 0.15);
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  text-align: center;
+}
+
+.community-message p {
+  color: #fff;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.community-message a {
+  color: #3498db;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.community-message a:hover {
+  color: #5dade2;
+}
+
+/* Horizontal Regions Layout */
+.regions-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
+}
+
 .loading {
   text-align: center;
   padding: 40px;
@@ -88,6 +122,16 @@ main {
   background: rgba(243, 156, 18, 0.1);
   border-radius: 8px;
   border: 1px solid rgba(243, 156, 18, 0.3);
+}
+
+.region-note a {
+  color: #3498db;
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+.region-note a:hover {
+  color: #5dade2;
 }
 
 .boss-list {
@@ -272,10 +316,61 @@ footer.sound-enabled {
   color: #00ffff;
 }
 
+/* Surprise Section */
+.surprise-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 15px;
+  margin-top: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  text-align: center;
+}
+
+.surprise-section details {
+  cursor: pointer;
+}
+
+.surprise-section summary {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #ffd700;
+  padding: 10px;
+  user-select: none;
+  transition: color 0.3s;
+}
+
+.surprise-section summary:hover {
+  color: #ffed4e;
+}
+
+.surprise-content {
+  margin-top: 15px;
+  font-size: 1.3rem;
+  font-weight: bold;
+  color: #ff69b4;
+  animation: surprise-reveal 0.5s ease-out;
+  text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+}
+
+@keyframes surprise-reveal {
+  from {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 /* Responsive */
 @media (max-width: 600px) {
   header h1 {
     font-size: 1.3rem;
+  }
+
+  .regions-container {
+    grid-template-columns: 1fr;
   }
 
   .boss-item {
