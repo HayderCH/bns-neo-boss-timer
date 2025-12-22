@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hayderch.github.io/bns-neo-boss-timer/sitemap.xml
