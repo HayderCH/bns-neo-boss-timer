@@ -688,7 +688,7 @@ footer {
   text-align: center;
   margin-top: 30px;
   padding: 15px;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 0.85rem;
 }
 
