@@ -153,8 +153,29 @@
                             <span class="status-value status-indicator" id="party-status-indicator">Enter requirements to start</span>
                         </div>
                     </div>
-                    <!-- Reset Button -->
-                    <button id="reset-party-btn" class="reset-party-btn">🔄 Reset Party</button>
+                    <!-- World Chat Options -->
+                    <div class="world-chat-options">
+                        <label for="tolerance-input">
+                            SF Tolerance (for recruitment message):
+                            <span class="tolerance-hint">±0k = exact target, ±2k = flexible range</span>
+                        </label>
+                        <div class="tolerance-input-group">
+                            <span class="tolerance-label">±</span>
+                            <input type="number"
+                                   id="tolerance-input"
+                                   class="tolerance-input"
+                                   value="0"
+                                   min="0"
+                                   max="10"
+                                   step="1">
+                            <span class="tolerance-unit">k SF</span>
+                        </div>
+                    </div>
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button id="copy-world-chat-btn" class="copy-world-chat-btn">📋 Copy for World Chat</button>
+                        <button id="reset-party-btn" class="reset-party-btn">🔄 Reset Party</button>
+                    </div>
                 </div>
             </main>
             <footer>

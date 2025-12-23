@@ -1318,6 +1318,8 @@ class SFCalculatorUI {
     this.statusIndicator = document.getElementById("party-status-indicator");
     this.modifiedIndicator = document.getElementById("modified-indicator");
     this.resetPartyBtn = document.getElementById("reset-party-btn");
+    this.copyWorldChatBtn = document.getElementById("copy-world-chat-btn");
+    this.toleranceInput = document.getElementById("tolerance-input");
   }
 
   populateDungeonDropdown() {
@@ -1376,6 +1378,9 @@ class SFCalculatorUI {
     );
     this.resetPresetBtn.addEventListener("click", () => this.onResetPreset());
     this.resetPartyBtn.addEventListener("click", () => this.onResetParty());
+    this.copyWorldChatBtn.addEventListener("click", () =>
+      this.copyForWorldChat()
+    );
 
     // Party slot inputs
     this.partySlotsContainer.addEventListener("input", (e) => {
@@ -1453,6 +1458,74 @@ class SFCalculatorUI {
     const inputs = this.partySlotsContainer.querySelectorAll(".slot-input");
     inputs.forEach((input) => (input.value = ""));
     this.updateCalculator();
+  }
+
+  copyForWorldChat() {
+    const reqs = this.dungeonManager.getCurrentRequirements();
+    const filledCount = this.calculator.getFilledCount();
+    const remainingCount = 6 - filledCount;
+    const tolerance = parseInt(this.toleranceInput.value) || 0;
+
+    // Get dungeon name
+    let dungeonName = "SF Calculator";
+    if (this.dungeonSelector.value !== "manual") {
+      const selectedDungeon = this.dungeonManager.presets.find(
+        (d) => d.id === this.dungeonSelector.value
+      );
+      if (selectedDungeon) {
+        dungeonName = selectedDungeon.name;
+      }
+    }
+
+    // Build recruitment message
+    let message = "";
+
+    if (reqs.minSF && reqs.maxAvg && remainingCount > 0) {
+      // Calculate target from recommended range
+      const range = this.calculator.getValidRange();
+      const targetSF = range.recommended > 0 ? range.recommended : reqs.minSF;
+      const targetK = Math.round(targetSF / 1000);
+
+      // Format SF requirement based on tolerance
+      let sfRequirement = "";
+      if (tolerance === 0) {
+        // Exact target
+        sfRequirement = `${targetK}k SF`;
+      } else {
+        // Flexible range
+        const minK = Math.max(0, targetK - tolerance);
+        const maxK = targetK + tolerance;
+        sfRequirement = `${minK}k-${maxK}k SF`;
+      }
+
+      // Build message
+      message = `${dungeonName} | Need ${remainingCount} more, ${sfRequirement} | Apply ${filledCount}/6`;
+    } else if (remainingCount === 0) {
+      // Party full
+      message = `${dungeonName} | Party full | 6/6`;
+    } else {
+      // No requirements set
+      message = `${dungeonName} | Need ${remainingCount} more | Apply ${filledCount}/6`;
+    }
+
+    // Copy to clipboard
+    navigator.clipboard
+      .writeText(message)
+      .then(() => {
+        // Show success feedback
+        const originalText = this.copyWorldChatBtn.textContent;
+        this.copyWorldChatBtn.textContent = "✓ Copied!";
+        this.copyWorldChatBtn.style.backgroundColor = "#27ae60";
+        setTimeout(() => {
+          this.copyWorldChatBtn.textContent = originalText;
+          this.copyWorldChatBtn.style.backgroundColor = "";
+        }, 1500);
+      })
+      .catch((err) => {
+        console.error("Failed to copy:", err);
+        // Fallback: show text in alert
+        alert(`Copy this:\n\n${message}`);
+      });
   }
 
   updateSlotClearButton(slot) {
