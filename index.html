@@ -43,7 +43,13 @@
     <body>
         <div class="container">
             <header>
-                <h1>🗡️ Blade & Soul Neo EU Field Boss Timer</h1>
+                <h1>🗡️ Blade & Soul Neo Tools</h1>
+                <!-- Navigation Bar -->
+                <nav class="tool-nav" id="tool-nav">
+                    <button class="nav-tab active" data-tool="timer">🕐 Boss Timer</button>
+                    <button class="nav-tab" data-tool="sf-calculator">📊 SF Calculator</button>
+                    <button class="nav-tab" data-tool="converter">💱 Currency/Probability</button>
+                </nav>
                 <div class="server-time-notice"
                      style="background: #fff3cd;
                             border: 1px solid #ffc107;
@@ -51,7 +57,7 @@
                             margin: 0.5rem 0;
                             border-radius: 8px;
                             text-align: center;
-                            color: #856404;">
+                            color: #856404">
                     ⏰ <strong>All times shown are EU Server Time (UTC+1)</strong>
                 </div>
                 <div class="loading-bar" id="loading-bar"></div>
@@ -72,7 +78,8 @@
                             title="Download today's spawns as calendar file">📅 Export to Calendar</button>
                 </div>
             </header>
-            <div class="community-message">
+            <!-- Boss Timer Message -->
+            <div class="community-message" id="boss-timer-message">
                 <p>
                     💙 This list is made by kind players who love the BNS Neo community. If you would like to help make this website better, please add any boss timer (try to be exact) using <a href="https://docs.google.com/spreadsheets/d/1unXxTlJ53VZBLMOs7XtpWqMyWC7WYHQ0KN3MmqejGIY/edit?gid=0#gid=0"
     target="_blank">this link</a>, no pressure! 🎮
@@ -81,12 +88,164 @@
                     📅 Data last updated: <span id="update-time">Loading...</span>
                 </p>
             </div>
-            <main id="boss-container">
+            <!-- SF Calculator Message -->
+            <div class="community-message hidden" id="sf-calculator-message">
+                <p>
+                    <strong>⚡ Powered by Gunner Soha.</strong>
+                </p>
+                <div class="guide-content">
+                    <p>
+                        <strong>📖 Quick Guide:</strong>
+                    </p>
+                    <ol class="guide-steps">
+                        <li>Select your dungeon from the dropdown</li>
+                        <li>Fill in your SF (Slot 1 - You)</li>
+                        <li>Add party members' SF as they join</li>
+                        <li>Check the recommended target for remaining slots</li>
+                        <li>Use "Copy for World Chat" to recruit more players</li>
+                    </ol>
+                    <p class="guide-tip">
+                        💡 <strong>Tip:</strong> Adjust SF Tolerance for flexible recruitment ranges!
+                    </p>
+                </div>
+            </div>
+            <!-- Currency/Probability Converter Message -->
+            <div class="community-message hidden" id="converter-message">
+                <p>
+                    <strong>⚡ Powered by Brother Hajoon (Or Scamjoon?)</strong>
+                </p>
+                <div class="guide-content">
+                    <p>
+                        <strong>📖 Quick Guide:</strong>
+                    </p>
+                    <ol class="guide-steps">
+                        <li>Choose converter type: Fixed Ratio or Probability</li>
+                        <li>Name your currencies (e.g., Gold, Keys, Materials)</li>
+                        <li>Enter amounts and rates</li>
+                        <li>See instant calculations with confidence levels</li>
+                        <li>Plan your farming routes efficiently!</li>
+                    </ol>
+                    <p class="guide-tip">
+                        💡 <strong>Tip:</strong> Use probability mode to see how (un)lucky you might get!
+                    </p>
+                </div>
+            </div>
+            <!-- Boss Timer View (Default) -->
+            <main id="boss-container" class="tool-view active">
                 <!-- Boss regions and timers will be rendered here by JavaScript -->
                 <p class="loading">Loading boss schedules...</p>
             </main>
+            <!-- SF Calculator View -->
+            <main id="sf-calculator-container" class="tool-view">
+                <div class="sf-calculator">
+                    <h2 class="calculator-title">⚔️ Supreme Force Party Calculator</h2>
+                    <p class="calculator-subtitle">Build your Challenge Mode party with optimal SF distribution</p>
+                    <!-- Dungeon Selection -->
+                    <div class="dungeon-selection">
+                        <label for="dungeon-selector">Select Dungeon:</label>
+                        <select id="dungeon-selector" class="dungeon-dropdown">
+                            <option value="manual">None - Manual Entry</option>
+                            <!-- Populated by JavaScript -->
+                        </select>
+                    </div>
+                    <!-- Requirements Input -->
+                    <div class="requirements-section">
+                        <h3>
+                            Requirements <span id="modified-indicator" class="hidden">✏️ Modified</span>
+                        </h3>
+                        <div class="requirement-inputs">
+                            <div class="input-group">
+                                <label for="min-sf-input">Min Individual SF:</label>
+                                <input type="number"
+                                       id="min-sf-input"
+                                       class="sf-input"
+                                       placeholder="Enter minimum SF"
+                                       min="0"
+                                       step="1">
+                            </div>
+                            <div class="input-group">
+                                <label for="max-avg-input">Max Party Average:</label>
+                                <input type="number"
+                                       id="max-avg-input"
+                                       class="sf-input"
+                                       placeholder="Enter max average SF"
+                                       min="0"
+                                       step="1">
+                            </div>
+                            <button id="reset-preset-btn" class="reset-preset-btn hidden">↺ Reset to Preset</button>
+                        </div>
+                    </div>
+                    <!-- Party Composition -->
+                    <div class="party-section">
+                        <h3>Party Composition</h3>
+                        <div id="party-slots" class="party-slots">
+                            <!-- Slots 1-6 populated by JavaScript -->
+                        </div>
+                    </div>
+                    <!-- Party Status -->
+                    <div class="party-status" id="party-status">
+                        <div class="status-item">
+                            <span class="status-label">Current Average:</span>
+                            <span class="status-value" id="current-avg">—</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Budget Remaining:</span>
+                            <span class="status-value" id="budget-remaining">—</span>
+                        </div>
+                        <div class="status-item full-width">
+                            <span class="status-label">Status:</span>
+                            <span class="status-value status-indicator" id="party-status-indicator">Enter requirements to start</span>
+                        </div>
+                    </div>
+                    <!-- World Chat Options -->
+                    <div class="world-chat-options">
+                        <label for="tolerance-input">
+                            SF Tolerance (for recruitment message):
+                            <span class="tolerance-hint">±0k = exact target, ±2k = flexible range</span>
+                        </label>
+                        <div class="tolerance-input-group">
+                            <span class="tolerance-label">±</span>
+                            <input type="number"
+                                   id="tolerance-input"
+                                   class="tolerance-input"
+                                   value="0"
+                                   min="0"
+                                   max="10"
+                                   step="1">
+                            <span class="tolerance-unit">k SF</span>
+                        </div>
+                    </div>
+                    <!-- Action Buttons -->
+                    <div class="action-buttons">
+                        <button id="copy-world-chat-btn" class="copy-world-chat-btn">📋 Copy for World Chat</button>
+                        <button id="reset-party-btn" class="reset-party-btn">🔄 Reset Party</button>
+                    </div>
+                </div>
+            </main>
+            <!-- Currency/Probability Converter View -->
+            <main id="converter-container" class="tool-view">
+                <div class="converter-tool">
+                    <h2 class="converter-title">💱 Currency & Probability Converter</h2>
+                    <p class="converter-subtitle">Build conversion chains with multiple steps and branching paths</p>
+                    <!-- Step Builder Container -->
+                    <div id="steps-container" class="steps-container">
+                        <!-- Steps will be added dynamically -->
+                    </div>
+                    <!-- Add Step Button -->
+                    <button id="add-step-btn" class="add-step-btn">➕ Add Conversion Step</button>
+                    <!-- Cumulative Results -->
+                    <div id="cumulative-results" class="cumulative-results hidden">
+                        <h3>📊 Final Results (All Paths)</h3>
+                        <div id="results-list" class="results-list">
+                            <!-- Cumulative results will be shown here -->
+                        </div>
+                    </div>
+                    <!-- Reset Button -->
+                    <button id="reset-converter-btn" class="reset-converter-btn">🔄 Reset All Steps</button>
+                </div>
+            </main>
             <footer>
-                <p>
+                <p id="footer-content">
                     Made with 💙 by <strong>Hayder (Kindle)</strong> for the BNS Neo EU community
                 </p>
             </footer>
@@ -110,6 +269,7 @@
         <audio id="alarm-sound" preload="auto">
             <source src="assets/notification.mp3" type="audio/mpeg">
         </audio>
+        <script src="dungeons.js?v=1.0.0"></script>
         <script src="script.js?v=1.7.2"></script>
     </body>
 </html>

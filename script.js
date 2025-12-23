@@ -453,15 +453,17 @@ function updateAllCountdowns() {
       // Parse spawn time as UTC+1 (server time) and convert to local
       const [hours, minutes] = spawn.time.split(":").map(Number);
       // Create UTC date and add 1 hour for UTC+1 server time
-      const spawnTime = new Date(Date.UTC(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        hours - 1, // Subtract 1 to convert UTC+1 to UTC
-        minutes,
-        0,
-        0
-      ));
+      const spawnTime = new Date(
+        Date.UTC(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          hours - 1, // Subtract 1 to convert UTC+1 to UTC
+          minutes,
+          0,
+          0
+        )
+      );
 
       const diff = spawnTime - now;
       const diffSeconds = Math.floor(diff / 1000);
@@ -1030,15 +1032,17 @@ function exportToCalendar() {
     todaySchedule.forEach((spawn) => {
       const [hours, minutes] = spawn.time.split(":").map(Number);
       // Create UTC date and add 1 hour for UTC+1 server time
-      const spawnTime = new Date(Date.UTC(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        hours - 1, // Subtract 1 to convert UTC+1 to UTC
-        minutes,
-        0,
-        0
-      ));
+      const spawnTime = new Date(
+        Date.UTC(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          hours - 1, // Subtract 1 to convert UTC+1 to UTC
+          minutes,
+          0,
+          0
+        )
+      );
 
       events.push({
         time: spawnTime,
@@ -1129,4 +1133,1273 @@ function generateICS(events, dayName) {
   ics.push("END:VCALENDAR");
 
   return ics.join("\r\n");
+}
+
+// ============================================
+// SF CALCULATOR SYSTEM
+// ============================================
+
+// Input Sanitization
+function sanitizeSFInput(value) {
+  const parsed = parseInt(value, 10);
+  if (isNaN(parsed) || parsed < 0 || parsed > 999999) {
+    return null;
+  }
+  return parsed;
+}
+
+function validateRequirements(minSF, maxAvg) {
+  if (minSF === null || maxAvg === null) return false;
+  if (minSF > maxAvg) return false;
+  if (minSF < 0 || maxAvg < 0) return false;
+  return true;
+}
+
+// Dungeon Manager Class
+class DungeonManager {
+  constructor() {
+    this.presets =
+      typeof DUNGEON_PRESETS !== "undefined" ? DUNGEON_PRESETS : [];
+    this.currentDungeon = null;
+    this.currentMinSF = null;
+    this.currentMaxAvg = null;
+  }
+
+  selectDungeon(dungeonId) {
+    if (dungeonId === "manual") {
+      this.currentDungeon = null;
+      this.currentMinSF = null;
+      this.currentMaxAvg = null;
+      return null;
+    }
+
+    this.currentDungeon = this.presets.find((d) => d.id === dungeonId);
+    if (this.currentDungeon) {
+      this.currentMinSF = this.currentDungeon.minSF;
+      this.currentMaxAvg = this.currentDungeon.maxAvg;
+    }
+    return this.currentDungeon;
+  }
+
+  setMinSF(value) {
+    const sanitized = sanitizeSFInput(value);
+    if (sanitized !== null) {
+      this.currentMinSF = sanitized;
+      return true;
+    }
+    return false;
+  }
+
+  setMaxAvg(value) {
+    const sanitized = sanitizeSFInput(value);
+    if (sanitized !== null) {
+      this.currentMaxAvg = sanitized;
+      return true;
+    }
+    return false;
+  }
+
+  resetToPreset() {
+    if (this.currentDungeon) {
+      this.currentMinSF = this.currentDungeon.minSF;
+      this.currentMaxAvg = this.currentDungeon.maxAvg;
+    }
+  }
+
+  getCurrentRequirements() {
+    return {
+      minSF: this.currentMinSF,
+      maxAvg: this.currentMaxAvg,
+      isModified:
+        this.currentDungeon &&
+        (this.currentMinSF !== this.currentDungeon.minSF ||
+          this.currentMaxAvg !== this.currentDungeon.maxAvg),
+    };
+  }
+}
+
+// SF Calculator Class
+class SFCalculator {
+  constructor(dungeonManager) {
+    this.dungeonManager = dungeonManager;
+    this.party = Array(6).fill(null);
+  }
+
+  updateRequirements() {
+    const reqs = this.dungeonManager.getCurrentRequirements();
+    this.minSF = reqs.minSF;
+    this.maxAvg = reqs.maxAvg;
+  }
+
+  setMember(index, sfValue) {
+    if (index < 0 || index >= 6) return false;
+
+    const sanitized = sanitizeSFInput(sfValue);
+    if (sanitized === null) return false;
+
+    this.party[index] = sanitized;
+    return true;
+  }
+
+  clearMember(index) {
+    if (index >= 0 && index < 6) {
+      this.party[index] = null;
+      return true;
+    }
+    return false;
+  }
+
+  getValidRange() {
+    if (this.minSF === null || this.maxAvg === null) {
+      return { status: "no-requirements" };
+    }
+
+    const filled = this.party.filter((sf) => sf !== null);
+    const sum = filled.reduce((a, b) => a + b, 0);
+    const remaining = 6 - filled.length;
+
+    if (remaining === 0) return { status: "full" };
+
+    const maxSum = this.maxAvg * 6;
+    const budget = maxSum - sum;
+
+    // Recommended target: average needed for remaining slots
+    const recommendedTarget = Math.round(budget / remaining);
+
+    // Absolute maximum: if all other remaining slots are at minimum
+    const absoluteMax = Math.floor(budget - this.minSF * (remaining - 1));
+
+    // Check if it's still possible to form valid party
+    const isImpossible = absoluteMax < 0;
+
+    return {
+      recommended: recommendedTarget,
+      absoluteMax: absoluteMax,
+      budget: budget,
+      remaining: remaining,
+      status: isImpossible ? "impossible" : "valid",
+    };
+  }
+
+  getCurrentAverage() {
+    const filled = this.party.filter((sf) => sf !== null);
+    if (filled.length === 0) return 0;
+    return Math.round(filled.reduce((a, b) => a + b, 0) / filled.length);
+  }
+
+  getFilledCount() {
+    return this.party.filter((sf) => sf !== null).length;
+  }
+
+  reset() {
+    this.party = Array(6).fill(null);
+  }
+}
+
+// SF Calculator UI Manager
+class SFCalculatorUI {
+  constructor() {
+    this.dungeonManager = new DungeonManager();
+    this.calculator = new SFCalculator(this.dungeonManager);
+    this.initializeElements();
+    this.bindEvents();
+    this.populateDungeonDropdown();
+    this.createPartySlots();
+  }
+
+  initializeElements() {
+    this.dungeonSelector = document.getElementById("dungeon-selector");
+    this.minSFInput = document.getElementById("min-sf-input");
+    this.maxAvgInput = document.getElementById("max-avg-input");
+    this.resetPresetBtn = document.getElementById("reset-preset-btn");
+    this.partySlotsContainer = document.getElementById("party-slots");
+    this.currentAvgDisplay = document.getElementById("current-avg");
+    this.budgetRemainingDisplay = document.getElementById("budget-remaining");
+    this.statusIndicator = document.getElementById("party-status-indicator");
+    this.modifiedIndicator = document.getElementById("modified-indicator");
+    this.resetPartyBtn = document.getElementById("reset-party-btn");
+    this.copyWorldChatBtn = document.getElementById("copy-world-chat-btn");
+    this.toleranceInput = document.getElementById("tolerance-input");
+  }
+
+  populateDungeonDropdown() {
+    this.dungeonManager.presets.forEach((dungeon) => {
+      const option = document.createElement("option");
+      option.value = dungeon.id;
+      option.textContent = dungeon.name;
+      if (dungeon.note) {
+        option.textContent += ` (${dungeon.note})`;
+      }
+      this.dungeonSelector.appendChild(option);
+    });
+  }
+
+  createPartySlots() {
+    for (let i = 0; i < 6; i++) {
+      const slotDiv = document.createElement("div");
+      slotDiv.className = "party-slot";
+      slotDiv.innerHTML = `
+        <div class="slot-header">
+          <span class="slot-label">Slot ${i + 1}${
+        i === 0 ? " (You)" : ""
+      }</span>
+          ${
+            i > 0
+              ? '<button class="clear-slot-btn hidden" data-slot="' +
+                i +
+                '">✕</button>'
+              : ""
+          }
+        </div>
+        <input type="number" 
+               class="slot-input" 
+               data-slot="${i}"
+               placeholder="${i === 0 ? "Your SF" : "Recruit SF"}"
+               min="0"
+               step="1">
+        <div class="slot-range hidden">
+          <span class="range-label">Valid range:</span>
+          <span class="range-value">—</span>
+        </div>
+      `;
+      this.partySlotsContainer.appendChild(slotDiv);
+    }
+  }
+
+  bindEvents() {
+    this.dungeonSelector.addEventListener("change", () =>
+      this.onDungeonChange()
+    );
+    this.minSFInput.addEventListener("input", () =>
+      this.onRequirementsChange()
+    );
+    this.maxAvgInput.addEventListener("input", () =>
+      this.onRequirementsChange()
+    );
+    this.resetPresetBtn.addEventListener("click", () => this.onResetPreset());
+    this.resetPartyBtn.addEventListener("click", () => this.onResetParty());
+    this.copyWorldChatBtn.addEventListener("click", () =>
+      this.copyForWorldChat()
+    );
+
+    // Party slot inputs
+    this.partySlotsContainer.addEventListener("input", (e) => {
+      if (e.target.classList.contains("slot-input")) {
+        const slot = parseInt(e.target.dataset.slot);
+        this.onSlotInput(slot, e.target.value);
+      }
+    });
+
+    // Clear buttons
+    this.partySlotsContainer.addEventListener("click", (e) => {
+      if (e.target.classList.contains("clear-slot-btn")) {
+        const slot = parseInt(e.target.dataset.slot);
+        this.onClearSlot(slot);
+      }
+    });
+  }
+
+  onDungeonChange() {
+    const dungeonId = this.dungeonSelector.value;
+    this.dungeonManager.selectDungeon(dungeonId);
+
+    const reqs = this.dungeonManager.getCurrentRequirements();
+    this.minSFInput.value = reqs.minSF !== null ? reqs.minSF : "";
+    this.maxAvgInput.value = reqs.maxAvg !== null ? reqs.maxAvg : "";
+
+    this.updateModifiedIndicator();
+    this.updateCalculator();
+
+    // Force re-validation of all filled slots after dungeon change
+    setTimeout(() => this.updateCalculator(), 0);
+  }
+
+  onRequirementsChange() {
+    this.dungeonManager.setMinSF(this.minSFInput.value);
+    this.dungeonManager.setMaxAvg(this.maxAvgInput.value);
+    this.updateModifiedIndicator();
+    this.updateCalculator();
+
+    // Force re-validation of all filled slots after requirement change
+    setTimeout(() => this.updateCalculator(), 0);
+  }
+
+  onResetPreset() {
+    this.dungeonManager.resetToPreset();
+    const reqs = this.dungeonManager.getCurrentRequirements();
+    this.minSFInput.value = reqs.minSF !== null ? reqs.minSF : "";
+    this.maxAvgInput.value = reqs.maxAvg !== null ? reqs.maxAvg : "";
+    this.updateModifiedIndicator();
+    this.updateCalculator();
+  }
+
+  onSlotInput(slot, value) {
+    if (value.trim() === "") {
+      this.calculator.clearMember(slot);
+    } else {
+      this.calculator.setMember(slot, value);
+    }
+    this.updateSlotClearButton(slot);
+    this.updateCalculator();
+  }
+
+  onClearSlot(slot) {
+    this.calculator.clearMember(slot);
+    const input = this.partySlotsContainer.querySelector(
+      `input[data-slot="${slot}"]`
+    );
+    if (input) input.value = "";
+    this.updateSlotClearButton(slot);
+    this.updateCalculator();
+  }
+
+  onResetParty() {
+    this.calculator.reset();
+    const inputs = this.partySlotsContainer.querySelectorAll(".slot-input");
+    inputs.forEach((input) => (input.value = ""));
+    this.updateCalculator();
+  }
+
+  copyForWorldChat() {
+    const reqs = this.dungeonManager.getCurrentRequirements();
+    const filledCount = this.calculator.getFilledCount();
+    const remainingCount = 6 - filledCount;
+    const tolerance = parseInt(this.toleranceInput.value) || 0;
+
+    // Get dungeon name
+    let dungeonName = "SF Calculator";
+    if (this.dungeonSelector.value !== "manual") {
+      const selectedDungeon = this.dungeonManager.presets.find(
+        (d) => d.id === this.dungeonSelector.value
+      );
+      if (selectedDungeon) {
+        dungeonName = selectedDungeon.name;
+      }
+    }
+
+    // Build recruitment message
+    let message = "";
+
+    if (reqs.minSF && reqs.maxAvg && remainingCount > 0) {
+      // Calculate target from recommended range
+      const range = this.calculator.getValidRange();
+      const targetSF = range.recommended > 0 ? range.recommended : reqs.minSF;
+      const targetK = Math.round(targetSF / 1000);
+
+      // Format SF requirement based on tolerance
+      let sfRequirement = "";
+      if (tolerance === 0) {
+        // Exact target
+        sfRequirement = `${targetK}k SF`;
+      } else {
+        // Flexible range
+        const minK = Math.max(0, targetK - tolerance);
+        const maxK = targetK + tolerance;
+        sfRequirement = `${minK}k-${maxK}k SF`;
+      }
+
+      // Build message
+      message = `${dungeonName} | Need ${remainingCount} more, ${sfRequirement} | Apply ${filledCount}/6`;
+    } else if (remainingCount === 0) {
+      // Party full
+      message = `${dungeonName} | Party full | 6/6`;
+    } else {
+      // No requirements set
+      message = `${dungeonName} | Need ${remainingCount} more | Apply ${filledCount}/6`;
+    }
+
+    // Copy to clipboard
+    navigator.clipboard
+      .writeText(message)
+      .then(() => {
+        // Show success feedback
+        const originalText = this.copyWorldChatBtn.textContent;
+        this.copyWorldChatBtn.textContent = "✓ Copied!";
+        this.copyWorldChatBtn.style.backgroundColor = "#27ae60";
+        setTimeout(() => {
+          this.copyWorldChatBtn.textContent = originalText;
+          this.copyWorldChatBtn.style.backgroundColor = "";
+        }, 1500);
+      })
+      .catch((err) => {
+        console.error("Failed to copy:", err);
+        // Fallback: show text in alert
+        alert(`Copy this:\n\n${message}`);
+      });
+  }
+
+  updateSlotClearButton(slot) {
+    const clearBtn = this.partySlotsContainer.querySelector(
+      `.clear-slot-btn[data-slot="${slot}"]`
+    );
+    if (clearBtn) {
+      const input = this.partySlotsContainer.querySelector(
+        `input[data-slot="${slot}"]`
+      );
+      if (input && input.value.trim() !== "") {
+        clearBtn.classList.remove("hidden");
+      } else {
+        clearBtn.classList.add("hidden");
+      }
+    }
+  }
+
+  updateModifiedIndicator() {
+    const reqs = this.dungeonManager.getCurrentRequirements();
+    if (reqs.isModified) {
+      this.modifiedIndicator.classList.remove("hidden");
+      this.resetPresetBtn.classList.remove("hidden");
+    } else {
+      this.modifiedIndicator.classList.add("hidden");
+      if (this.dungeonSelector.value === "manual") {
+        this.resetPresetBtn.classList.add("hidden");
+      }
+    }
+  }
+
+  updateCalculator() {
+    this.calculator.updateRequirements();
+    const range = this.calculator.getValidRange();
+    const filledCount = this.calculator.getFilledCount();
+
+    // Update current average
+    const avg = this.calculator.getCurrentAverage();
+    this.currentAvgDisplay.textContent =
+      avg > 0 ? `${avg.toLocaleString()} SF` : "—";
+
+    // Update budget
+    if (range.status === "valid" || range.status === "impossible") {
+      this.budgetRemainingDisplay.textContent = `${range.budget.toLocaleString()} SF for ${
+        range.remaining
+      } slot${range.remaining !== 1 ? "s" : ""}`;
+    } else {
+      this.budgetRemainingDisplay.textContent = "—";
+    }
+
+    // Update status indicator
+    this.updateStatusIndicator(range, filledCount);
+
+    // Update slot ranges
+    this.updateSlotRanges(range, filledCount);
+  }
+
+  updateStatusIndicator(range, filledCount) {
+    let statusText = "";
+    let statusClass = "";
+
+    if (range.status === "no-requirements") {
+      statusText = "⚠️ Enter requirements to start";
+      statusClass = "status-warning";
+    } else if (range.status === "full") {
+      const reqs = this.dungeonManager.getCurrentRequirements();
+      const avg = this.calculator.getCurrentAverage();
+
+      // Check if any member is below minimum SF
+      const membersBelowMin = this.calculator.party.filter(
+        (sf) => sf !== null && sf < reqs.minSF
+      );
+
+      if (membersBelowMin.length > 0) {
+        statusText = `❌ Challenge Mode Unavailable - ${
+          membersBelowMin.length
+        } member(s) below Min SF (${reqs.minSF.toLocaleString()})`;
+        statusClass = "status-error";
+      } else if (avg > reqs.maxAvg) {
+        statusText = `❌ Challenge Mode Unavailable - Party Average Too High (${avg.toLocaleString()} > ${reqs.maxAvg.toLocaleString()})`;
+        statusClass = "status-error";
+      } else {
+        statusText = "✅ Party Complete & Valid!";
+        statusClass = "status-success";
+      }
+    } else if (range.status === "impossible") {
+      statusText = "❌ Impossible to fill (over budget)";
+      statusClass = "status-error";
+    } else if (range.status === "valid") {
+      const reqs = this.dungeonManager.getCurrentRequirements();
+      const membersBelowMin = this.calculator.party.filter(
+        (sf) => sf !== null && sf < reqs.minSF
+      );
+
+      if (membersBelowMin.length > 0) {
+        statusText = `⚠️ ${
+          membersBelowMin.length
+        } member(s) below Min SF (${reqs.minSF.toLocaleString()}) - Challenge Mode will be unavailable`;
+        statusClass = "status-warning";
+      } else if (filledCount === 0) {
+        statusText = "⚪ Ready to build party";
+        statusClass = "status-neutral";
+      } else {
+        const flexibility = range.absoluteMax - range.recommended;
+        if (flexibility < 500) {
+          statusText = "🟡 Very limited flexibility";
+          statusClass = "status-warning";
+        } else if (flexibility < 2000) {
+          statusText = "🟡 Limited flexibility";
+          statusClass = "status-warning";
+        } else {
+          statusText = "🟢 Party is Valid";
+          statusClass = "status-success";
+        }
+      }
+    }
+
+    this.statusIndicator.textContent = statusText;
+    this.statusIndicator.className =
+      "status-value status-indicator " + statusClass;
+  }
+
+  updateSlotRanges(range, filledCount) {
+    const reqs = this.dungeonManager.getCurrentRequirements();
+    const slots = this.partySlotsContainer.querySelectorAll(".party-slot");
+
+    slots.forEach((slot, index) => {
+      const input = slot.querySelector(".slot-input");
+      const rangeDisplay = slot.querySelector(".slot-range");
+      const rangeValue = slot.querySelector(".range-value");
+
+      const isFilled = input.value.trim() !== "";
+      const sfValue = parseInt(input.value, 10);
+
+      if (isFilled) {
+        // Show validation for filled slots
+        rangeDisplay.classList.remove("hidden");
+
+        if (
+          reqs.minSF !== null &&
+          reqs.minSF !== undefined &&
+          sfValue < reqs.minSF
+        ) {
+          rangeValue.textContent = `⚠️ Below Min SF (${reqs.minSF.toLocaleString()})`;
+          rangeValue.className = "range-value status-warning";
+          input.classList.add("input-warning");
+          input.classList.remove("input-valid");
+        } else if (reqs.minSF !== null && reqs.minSF !== undefined) {
+          rangeValue.textContent = `✓ Valid (${sfValue.toLocaleString()} SF)`;
+          rangeValue.className = "range-value status-success";
+          input.classList.add("input-valid");
+          input.classList.remove("input-warning");
+        } else {
+          rangeDisplay.classList.add("hidden");
+          input.classList.remove("input-valid", "input-warning");
+        }
+      } else if (!isFilled && filledCount < 6) {
+        // Show recommendations for empty slots
+        input.classList.remove("input-valid", "input-warning");
+
+        if (range.status === "valid" || range.status === "impossible") {
+          rangeDisplay.classList.remove("hidden");
+
+          if (range.status === "impossible") {
+            rangeValue.textContent = "❌ Over budget";
+            rangeValue.className = "range-value status-error";
+          } else {
+            // Show recommended target and absolute max
+            const recommended = range.recommended.toLocaleString();
+            const absMax = range.absoluteMax.toLocaleString();
+            rangeValue.textContent = `🎯 Target: ${recommended} | Max: ${absMax}`;
+
+            // Color based on flexibility
+            const flexibility = range.absoluteMax - range.recommended;
+            if (flexibility < 1000) {
+              rangeValue.className = "range-value status-warning";
+            } else {
+              rangeValue.className = "range-value status-success";
+            }
+          }
+        } else {
+          rangeDisplay.classList.add("hidden");
+        }
+      } else {
+        rangeDisplay.classList.add("hidden");
+        input.classList.remove("input-valid", "input-warning");
+      }
+    });
+  }
+}
+
+// Navigation System
+function initializeNavigation() {
+  const navButtons = document.querySelectorAll(".nav-tab");
+  const toolViews = document.querySelectorAll(".tool-view");
+  const bossTimerMessage = document.getElementById("boss-timer-message");
+  const sfCalculatorMessage = document.getElementById("sf-calculator-message");
+  const converterMessage = document.getElementById("converter-message");
+
+  function showTool(toolName) {
+    // Update nav buttons
+    navButtons.forEach((btn) => {
+      if (btn.dataset.tool === toolName) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+
+    // Update views
+    toolViews.forEach((view) => {
+      if (
+        view.id === `${toolName}-container` ||
+        (toolName === "timer" && view.id === "boss-container")
+      ) {
+        view.classList.add("active");
+      } else {
+        view.classList.remove("active");
+      }
+    });
+
+    // Update messages based on active tool
+    if (toolName === "sf-calculator") {
+      bossTimerMessage.classList.add("hidden");
+      sfCalculatorMessage.classList.remove("hidden");
+      converterMessage.classList.add("hidden");
+    } else if (toolName === "converter") {
+      bossTimerMessage.classList.add("hidden");
+      sfCalculatorMessage.classList.add("hidden");
+      converterMessage.classList.remove("hidden");
+    } else {
+      bossTimerMessage.classList.remove("hidden");
+      sfCalculatorMessage.classList.add("hidden");
+      converterMessage.classList.add("hidden");
+    }
+
+    // Update URL hash
+    window.location.hash = toolName;
+
+    // Update page title
+    if (toolName === "sf-calculator") {
+      document.title = "SF Calculator - Blade & Soul Neo Tools";
+    } else if (toolName === "converter") {
+      document.title = "Currency Converter - Blade & Soul Neo Tools";
+    } else {
+      document.title =
+        "Blade & Soul Neo EU Field Boss Timer by Hayder (Kindle)";
+    }
+  }
+
+  // Bind navigation clicks
+  navButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showTool(btn.dataset.tool);
+    });
+  });
+
+  // Handle hash navigation
+  window.addEventListener("hashchange", () => {
+    const hash = window.location.hash.substring(1);
+    if (hash === "sf-calculator" || hash === "timer" || hash === "converter") {
+      showTool(hash);
+    }
+  });
+
+  // Initialize from hash or default to timer
+  const initialHash = window.location.hash.substring(1);
+  if (initialHash === "sf-calculator" || initialHash === "converter") {
+    showTool(initialHash);
+  } else {
+    showTool("timer");
+  }
+}
+
+// Initialize SF Calculator when DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  // Initialize navigation
+  initializeNavigation();
+
+  // Initialize SF Calculator if elements exist
+  if (document.getElementById("sf-calculator-container")) {
+    window.sfCalculatorUI = new SFCalculatorUI();
+  }
+
+  // Initialize Currency/Probability Converter
+  if (document.getElementById("converter-container")) {
+    window.converterUI = new ConverterUI();
+  }
+});
+
+// ============================================
+// Currency/Probability Converter
+// ============================================
+
+class ConverterUI {
+  constructor() {
+    this.steps = [];
+    this.stepIdCounter = 0;
+    this.currencyPool = new Set();
+    this.initializeElements();
+    this.bindEvents();
+    this.addStep(); // Start with one step
+  }
+
+  initializeElements() {
+    this.stepsContainer = document.getElementById("steps-container");
+    this.addStepBtn = document.getElementById("add-step-btn");
+    this.resetBtn = document.getElementById("reset-converter-btn");
+    this.cumulativeResults = document.getElementById("cumulative-results");
+    this.resultsList = document.getElementById("results-list");
+  }
+
+  bindEvents() {
+    this.addStepBtn.addEventListener("click", () => this.addStep());
+    this.resetBtn.addEventListener("click", () => this.resetAll());
+  }
+
+  addStep(inputFrom = null) {
+    const stepId = this.stepIdCounter++;
+    const step = {
+      id: stepId,
+      type: "ratio",
+      inputFrom: inputFrom,
+      inputAmount: null,
+      rateX: null,
+      rateY: null,
+      outputTo: null,
+      probability: 100,
+      inheritFrom: "output", // "output", "input", or "none"
+    };
+    this.steps.push(step);
+    this.renderStep(step, this.steps.length - 1);
+    this.calculateChain();
+  }
+
+  renderStep(step, index = null) {
+    const stepDiv = document.createElement("div");
+    stepDiv.className = "conversion-step";
+    stepDiv.dataset.stepId = step.id;
+
+    stepDiv.innerHTML = `
+      <div class="step-header">
+        <span class="step-number">Step ${
+          index !== null ? index + 1 : step.id + 1
+        }</span>
+        <div class="step-controls">
+          <button class="delete-step-btn" data-step-id="${
+            step.id
+          }">🗑️ Delete</button>
+        </div>
+      </div>
+      
+      ${
+        step.id > 0
+          ? `<div class="inheritance-selector">
+        <label>Inherit from previous step:</label>
+        <select class="inherit-select" data-step-id="${step.id}">
+          <option value="output" ${
+            step.inheritFrom === "output" ? "selected" : ""
+          }>Use previous output</option>
+          <option value="input" ${
+            step.inheritFrom === "input" ? "selected" : ""
+          }>Use previous input</option>
+          <option value="none" ${
+            step.inheritFrom === "none" ? "selected" : ""
+          }>Manual input</option>
+        </select>
+      </div>`
+          : ""
+      }
+      
+      <div class="step-type-selector">
+        <label>Conversion Type: <span class="beta-badge">BETA</span></label>
+        <select class="type-select" data-step-id="${step.id}">
+          <option value="ratio" selected>📐 Fixed Ratio - e.g., 150 Divine Gems per 10 Gold</option>
+          <option value="probability">🎲 Probability - e.g., 0.5% chance per run</option>
+          <option value="mixed">🎰 Mixed - e.g., 5 Keys per Gold, 10% work</option>
+        </select>
+      </div>
+
+      <div class="step-inputs">
+        <!-- Input From -->
+        <div class="input-row">
+          <label class="input-amount-label">Input amount:</label>
+          <input type="number" class="amount-input" data-field="inputAmount" data-step-id="${
+            step.id
+          }" placeholder="100" min="0" step="0.01">
+          <input type="text" class="currency-input" list="currency-list-${
+            step.id
+          }-from" data-field="inputFrom" data-step-id="${
+      step.id
+    }" placeholder="Currency name">
+          <datalist id="currency-list-${step.id}-from">
+          </datalist>
+        </div>
+
+        <!-- Rate -->
+        <div class="input-row rate-row">
+          <label class="rate-label-text">Rate (e.g., 1500 Divine Gems per 100 Gold):</label>
+          <input type="number" class="rate-input" data-field="rateX" data-step-id="${
+            step.id
+          }" placeholder="1500" min="0" step="0.01">
+          <span class="rate-label">per</span>
+          <input type="number" class="rate-input" data-field="rateY" data-step-id="${
+            step.id
+          }" placeholder="100" min="0" step="0.01">
+        </div>
+
+        <!-- Output To -->
+        <div class="input-row">
+          <label>Output (what you get):</label>
+          <input type="text" class="currency-input" list="currency-list-${
+            step.id
+          }-to" data-field="outputTo" data-step-id="${
+      step.id
+    }" placeholder="Currency name">
+          <datalist id="currency-list-${step.id}-to">
+          </datalist>
+        </div>
+
+        <!-- Success Rate (for probability/mixed) -->
+        <div class="input-row probability-row">
+          <label>Success Rate:</label>
+          <input type="number" class="rate-input" data-field="probability" data-step-id="${
+            step.id
+          }" value="${step.probability || 100}" min="0" max="100" step="0.01">
+          <span class="rate-label">%</span>
+        </div>
+      </div>
+
+      <div class="step-result">
+        <span class="result-arrow">→</span>
+        <span class="result-text" data-step-id="${step.id}">—</span>
+      </div>
+    `;
+
+    this.stepsContainer.appendChild(stepDiv);
+    this.bindStepEvents(stepDiv, step);
+    this.updateCurrencyDatalist();
+    this.updateStepVisibility(step);
+  }
+
+  bindStepEvents(stepDiv, step) {
+    // Type selector
+    const typeSelect = stepDiv.querySelector(".type-select");
+    typeSelect.addEventListener("change", (e) => {
+      step.type = e.target.value;
+      this.updateStepVisibility(step);
+      this.calculateChain();
+    });
+
+    // Inheritance selector (only for steps after first)
+    const inheritSelect = stepDiv.querySelector(".inherit-select");
+    if (inheritSelect) {
+      inheritSelect.addEventListener("change", (e) => {
+        step.inheritFrom = e.target.value;
+        this.calculateChain();
+      });
+    }
+
+    // Delete button
+    const deleteBtn = stepDiv.querySelector(".delete-step-btn");
+    deleteBtn.addEventListener("click", () => this.deleteStep(step.id));
+
+    // Currency inputs (text) - update on input for immediate feedback
+    stepDiv.querySelectorAll(".currency-input").forEach((input) => {
+      input.addEventListener("input", (e) => {
+        const field = e.target.dataset.field;
+        if (e.target.value.trim()) {
+          step[field] = e.target.value.trim();
+          this.currencyPool.add(e.target.value.trim());
+          this.updateStepVisibility(step);
+        }
+        this.calculateChain(); // Update immediately on input
+      });
+      input.addEventListener("change", (e) => this.handleStepInput(e, step));
+      input.addEventListener("blur", (e) => this.handleStepInput(e, step));
+    });
+
+    // Numeric inputs - update on input with explicit logging
+    stepDiv.querySelectorAll(".amount-input, .rate-input").forEach((input) => {
+      input.addEventListener("input", (e) => {
+        const field = e.target.dataset.field;
+        const value = parseFloat(e.target.value);
+        console.log(`Field ${field} changed to:`, value, `(step ${step.id})`);
+        if (!isNaN(value)) {
+          step[field] = value;
+          console.log(`Updated step.${field} to:`, step[field]);
+        } else {
+          step[field] = null;
+        }
+        this.calculateChain();
+      });
+      input.addEventListener("change", (e) => {
+        const field = e.target.dataset.field;
+        const value = parseFloat(e.target.value);
+        if (!isNaN(value)) {
+          step[field] = value;
+        } else {
+          step[field] = null;
+        }
+        this.calculateChain();
+      });
+    });
+  }
+
+  handleStepInput(e, step) {
+    const field = e.target.dataset.field;
+    const value = e.target.value;
+
+    if (field === "inputFrom" || field === "outputTo") {
+      // Handle currency name input - only on change/blur, not every keystroke
+      if (value.trim()) {
+        this.currencyPool.add(value.trim());
+        step[field] = value.trim();
+        this.updateCurrencyDatalist();
+        this.updateStepVisibility(step); // Update labels when currencies change
+      }
+    } else {
+      // Handle numeric inputs
+      step[field] = parseFloat(value) || null;
+    }
+
+    this.calculateChain();
+  }
+
+  updateStepVisibility(step) {
+    const stepDiv = this.stepsContainer.querySelector(
+      `[data-step-id="${step.id}"]`
+    );
+    const probRow = stepDiv.querySelector(".probability-row");
+    const rateRow = stepDiv.querySelector(".rate-row");
+    const inputLabel = stepDiv.querySelector(".input-amount-label");
+    const rateLabel = stepDiv.querySelector(".rate-label-text");
+
+    if (step.type === "probability") {
+      rateRow.style.display = "none";
+      probRow.style.display = "flex";
+      if (inputLabel) inputLabel.textContent = "Cost per attempt:";
+    } else if (step.type === "mixed") {
+      rateRow.style.display = "flex";
+      probRow.style.display = "flex";
+      if (inputLabel) inputLabel.textContent = "Input amount:";
+      if (rateLabel) {
+        const outputName = step.outputTo || "output";
+        const inputName = step.inputFrom || "input";
+        rateLabel.textContent = `Rate of ${outputName} per ${inputName}:`;
+      }
+    } else {
+      rateRow.style.display = "flex";
+      probRow.style.display = "none";
+      if (inputLabel) inputLabel.textContent = "Input amount:";
+      if (rateLabel) {
+        const outputName = step.outputTo || "output";
+        const inputName = step.inputFrom || "input";
+        rateLabel.textContent = `Rate of ${outputName} per ${inputName}:`;
+      }
+    }
+  }
+
+  updateCurrencyDatalist() {
+    const datalists = this.stepsContainer.querySelectorAll("datalist");
+    datalists.forEach((datalist) => {
+      datalist.innerHTML = "";
+      this.currencyPool.forEach((currency) => {
+        const option = document.createElement("option");
+        option.value = currency;
+        datalist.appendChild(option);
+      });
+    });
+  }
+
+  calculateChain() {
+    // Calculate each step with chaining
+    this.steps.forEach((step, index) => {
+      // For steps after the first, automatically use previous step's output/input based on inheritance setting
+      if (index > 0) {
+        const prevStep = this.steps[index - 1];
+
+        if (step.inheritFrom === "output") {
+          // Use previous step's output
+          if (
+            prevStep.outputAmount !== null &&
+            prevStep.outputAmount !== undefined
+          ) {
+            step.inputAmount = prevStep.outputAmount;
+            step.inputFrom = prevStep.outputTo;
+          }
+        } else if (step.inheritFrom === "input") {
+          // Use previous step's input
+          if (
+            prevStep.inputAmount !== null &&
+            prevStep.inputAmount !== undefined
+          ) {
+            step.inputAmount = prevStep.inputAmount;
+            step.inputFrom = prevStep.inputFrom;
+          }
+        }
+        // For "none", don't auto-fill anything
+
+        // Update the input display if we're inheriting
+        if (step.inheritFrom !== "none") {
+          const amountInput = this.stepsContainer.querySelector(
+            `.amount-input[data-step-id="${step.id}"]`
+          );
+          const currencyInput = this.stepsContainer.querySelector(
+            `.currency-input[data-field="inputFrom"][data-step-id="${step.id}"]`
+          );
+          if (amountInput) {
+            amountInput.value = step.inputAmount?.toFixed(2) || "";
+            amountInput.readOnly = true;
+          }
+          if (currencyInput) {
+            currencyInput.value = step.inputFrom || "";
+            currencyInput.readOnly = true;
+          }
+        } else {
+          // For manual input, make fields editable
+          const amountInput = this.stepsContainer.querySelector(
+            `.amount-input[data-step-id="${step.id}"]`
+          );
+          const currencyInput = this.stepsContainer.querySelector(
+            `.currency-input[data-field="inputFrom"][data-step-id="${step.id}"]`
+          );
+          if (amountInput) amountInput.readOnly = false;
+          if (currencyInput) currencyInput.readOnly = false;
+        }
+      }
+
+      const result = this.calculateStep(step);
+
+      // Find the step-result container directly by step ID
+      const stepDiv = this.stepsContainer.querySelector(
+        `.conversion-step[data-step-id="${step.id}"]`
+      );
+      if (stepDiv) {
+        const stepResult = stepDiv.querySelector(".step-result");
+        if (stepResult) {
+          // Check if result contains HTML (probability detailed result)
+          if (typeof result === "string" && result.includes("<div")) {
+            // Replace with probability HTML result
+            stepResult.innerHTML = `<span class="result-arrow">→</span>${result}`;
+          } else {
+            // Simple text result - restore the span structure if needed
+            stepResult.innerHTML = `<span class="result-arrow">→</span><span class="result-text" data-step-id="${step.id}">${result}</span>`;
+          }
+        }
+      }
+    });
+
+    // Calculate cumulative
+    this.calculateCumulative();
+  }
+
+  calculateStep(step) {
+    if (!step.inputAmount || !step.inputFrom || !step.outputTo) {
+      return "—";
+    }
+
+    let output = step.inputAmount;
+    let explanation = `${step.inputAmount} ${step.inputFrom}`;
+
+    // Apply ratio
+    if (step.type !== "probability") {
+      if (!step.rateX || !step.rateY || step.rateY === 0) {
+        return "Invalid rate";
+      }
+      output = (output * step.rateX) / step.rateY;
+      explanation += ` × (${step.rateX}/${step.rateY})`;
+    }
+
+    // Apply probability
+    if (step.type === "probability" || step.type === "mixed") {
+      console.log(
+        `calculateStep: step.probability = ${step.probability} (before check)`
+      );
+      if (step.probability === null || step.probability === undefined) {
+        console.log(
+          `Setting step.probability to 100 because it was null/undefined`
+        );
+        step.probability = 100;
+      }
+      console.log(
+        `calculateStep: step.probability = ${step.probability} (after check)`
+      );
+      const successRate = step.probability / 100;
+      console.log(`successRate = ${successRate}`);
+
+      // For probability calculations, show detailed statistics
+      if (step.type === "probability") {
+        // For probability type: inputAmount is the cost per attempt, not the number of attempts
+        // Each "attempt" costs inputAmount of inputFrom and has successRate chance to yield 1 outputTo
+        const costPerAttempt = step.inputAmount;
+        const itemName = step.outputTo;
+        const inputName = step.inputFrom;
+
+        // Calculate confidence intervals (number of attempts to get at least 1 item)
+        const getAttemptsForConfidence = (confidence) => {
+          if (successRate === 0) return Infinity;
+          if (successRate >= 1) return 1;
+          const result = Math.ceil(
+            Math.log(1 - confidence) / Math.log(1 - successRate)
+          );
+          return isFinite(result) && result > 0 ? result : 0;
+        };
+
+        const attempts50 = getAttemptsForConfidence(0.5); // 50% chance
+        const attempts63 = getAttemptsForConfidence(0.632); // 63.2% (1 - 1/e, the "average")
+        const attempts90 = getAttemptsForConfidence(0.9); // 90% chance
+        const attempts99 = getAttemptsForConfidence(0.99); // 99% chance
+
+        // Expected value: 1 attempt has successRate chance to give 1 item
+        // So expected items per attempt = successRate
+        const expectedItemsPerAttempt = successRate;
+
+        // Cost to get 1 item on average = costPerAttempt / successRate
+        const avgCostPerItem =
+          successRate > 0 ? costPerAttempt / successRate : Infinity;
+
+        step.outputAmount = expectedItemsPerAttempt;
+
+        // Format large numbers with commas
+        const formatNumber = (num) => {
+          if (!isFinite(num)) return "∞";
+          return num.toLocaleString();
+        };
+
+        return `
+          <div class="probability-result">
+            <div class="expected-value">📊 <strong>${
+              step.probability
+            }%</strong> chance per attempt (costs <strong>${formatNumber(
+          costPerAttempt
+        )} ${inputName}</strong> per attempt)</div>
+            <div class="expected-value">📈 Average cost to get 1 ${itemName}: <strong>${formatNumber(
+          Math.round(avgCostPerItem)
+        )} ${inputName}</strong></div>
+            <div class="confidence-explained">
+              <div class="confidence-intro">💡 <strong>What this means for you:</strong></div>
+              <div class="confidence-line">• <strong>Most players</strong> (63%) get their first ${itemName} within <strong>${formatNumber(
+          attempts63
+        )} attempts</strong> (${formatNumber(
+          attempts63 * costPerAttempt
+        )} ${inputName})</div>
+              <div class="confidence-line">• <strong>Lucky players</strong> (50%) get it even faster, within <strong>${formatNumber(
+                attempts50
+              )} attempts</strong> (${formatNumber(
+          attempts50 * costPerAttempt
+        )} ${inputName})</div>
+              <div class="confidence-line">• <strong>Almost everyone</strong> (90%) gets it by <strong>${formatNumber(
+                attempts90
+              )} attempts</strong> (${formatNumber(
+          attempts90 * costPerAttempt
+        )} ${inputName})</div>
+              <div class="confidence-line">• Even <strong>very unlucky players</strong> (99%) get it by <strong>${formatNumber(
+                attempts99
+              )} attempts</strong> (${formatNumber(
+          attempts99 * costPerAttempt
+        )} ${inputName})</div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Mixed type still shows simple result
+      output = output * successRate;
+      explanation += ` × ${step.probability}%`;
+    }
+
+    step.outputAmount = output;
+    return `${output.toFixed(2)} ${step.outputTo}`;
+  }
+
+  calculateCumulative() {
+    if (this.steps.length === 0) {
+      this.cumulativeResults.classList.add("hidden");
+      return;
+    }
+
+    // Check if we have valid data to show
+    const validSteps = this.steps.filter(
+      (s) => s.inputAmount && s.inputFrom && s.outputTo
+    );
+    if (validSteps.length === 0) {
+      this.cumulativeResults.classList.add("hidden");
+      return;
+    }
+
+    this.cumulativeResults.classList.remove("hidden");
+
+    // Format numbers nicely
+    const formatNumber = (num) => {
+      if (!isFinite(num)) return "∞";
+      if (num >= 1000000) return (num / 1000000).toFixed(2) + "M";
+      if (num >= 1000) return (num / 1000).toFixed(2) + "K";
+      return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    };
+
+    // Build a cleaner summary showing each step's contribution
+    let summaryHTML = '<div class="chain-summary">';
+
+    // Show step-by-step breakdown
+    this.steps.forEach((step, index) => {
+      if (!step.inputAmount || !step.outputTo) return;
+
+      const stepNum = index + 1;
+      let stepDesc = "";
+
+      if (step.type === "probability") {
+        stepDesc = `<span class="chain-prob">🎲 ${step.probability}% chance</span>`;
+      } else if (step.type === "ratio") {
+        stepDesc = `<span class="chain-ratio">📐 ${step.rateX || "?"} ${
+          step.outputTo
+        } per ${step.rateY || "?"} ${step.inputFrom}</span>`;
+      } else if (step.type === "mixed") {
+        stepDesc = `<span class="chain-mixed">🎰 ${step.rateX}:${step.rateY} @ ${step.probability}%</span>`;
+      }
+
+      const inheritDesc =
+        index > 0
+          ? step.inheritFrom === "output"
+            ? "← prev output"
+            : step.inheritFrom === "input"
+            ? "← prev input"
+            : "← manual"
+          : "";
+
+      summaryHTML += `
+        <div class="chain-step-row">
+          <span class="chain-step-num">Step ${stepNum}</span>
+          <span class="chain-step-flow">${formatNumber(step.inputAmount)} ${
+        step.inputFrom || "?"
+      } → ${formatNumber(step.outputAmount || 0)} ${step.outputTo}</span>
+          <span class="chain-step-type">${stepDesc}</span>
+          ${
+            inheritDesc
+              ? `<span class="chain-inherit">${inheritDesc}</span>`
+              : ""
+          }
+        </div>
+      `;
+    });
+
+    summaryHTML += "</div>";
+    this.resultsList.innerHTML = summaryHTML;
+  }
+
+  deleteStep(stepId) {
+    this.steps = this.steps.filter((s) => s.id !== stepId);
+    const stepDiv = this.stepsContainer.querySelector(
+      `[data-step-id="${stepId}"]`
+    );
+    if (stepDiv) stepDiv.remove();
+    this.reRenderAllSteps();
+    this.calculateChain();
+  }
+
+  reRenderAllSteps() {
+    // Clear and re-render all steps with correct numbering
+    this.stepsContainer.innerHTML = "";
+    this.steps.forEach((step, index) => {
+      this.renderStep(step, index);
+    });
+    this.updateCurrencyDatalist();
+    // Update visibility for all steps
+    this.steps.forEach((step) => this.updateStepVisibility(step));
+  }
+
+  resetAll() {
+    this.steps = [];
+    this.stepIdCounter = 0;
+    this.currencyPool.clear();
+    this.stepsContainer.innerHTML = "";
+    this.cumulativeResults.classList.add("hidden");
+    this.addStep();
+  }
 }
