@@ -48,6 +48,7 @@
                 <nav class="tool-nav" id="tool-nav">
                     <button class="nav-tab active" data-tool="timer">🕐 Boss Timer</button>
                     <button class="nav-tab" data-tool="sf-calculator">📊 SF Calculator</button>
+                    <button class="nav-tab" data-tool="converter">💱 Currency/Probability</button>
                 </nav>
                 <div class="server-time-notice"
                      style="background: #fff3cd;
@@ -105,6 +106,27 @@
                     </ol>
                     <p class="guide-tip">
                         💡 <strong>Tip:</strong> Adjust SF Tolerance for flexible recruitment ranges!
+                    </p>
+                </div>
+            </div>
+            <!-- Currency/Probability Converter Message -->
+            <div class="community-message hidden" id="converter-message">
+                <p>
+                    <strong>⚡ Powered by Brother Hajoon (Or Scamjoon?)</strong>
+                </p>
+                <div class="guide-content">
+                    <p>
+                        <strong>📖 Quick Guide:</strong>
+                    </p>
+                    <ol class="guide-steps">
+                        <li>Choose converter type: Fixed Ratio or Probability</li>
+                        <li>Name your currencies (e.g., Gold, Keys, Materials)</li>
+                        <li>Enter amounts and rates</li>
+                        <li>See instant calculations with confidence levels</li>
+                        <li>Plan your farming routes efficiently!</li>
+                    </ol>
+                    <p class="guide-tip">
+                        💡 <strong>Tip:</strong> Use probability mode to see how (un)lucky you might get!
                     </p>
                 </div>
             </div>
@@ -198,6 +220,28 @@
                         <button id="copy-world-chat-btn" class="copy-world-chat-btn">📋 Copy for World Chat</button>
                         <button id="reset-party-btn" class="reset-party-btn">🔄 Reset Party</button>
                     </div>
+                </div>
+            </main>
+            <!-- Currency/Probability Converter View -->
+            <main id="converter-container" class="tool-view">
+                <div class="converter-tool">
+                    <h2 class="converter-title">💱 Currency & Probability Converter</h2>
+                    <p class="converter-subtitle">Build conversion chains with multiple steps and branching paths</p>
+                    <!-- Step Builder Container -->
+                    <div id="steps-container" class="steps-container">
+                        <!-- Steps will be added dynamically -->
+                    </div>
+                    <!-- Add Step Button -->
+                    <button id="add-step-btn" class="add-step-btn">➕ Add Conversion Step</button>
+                    <!-- Cumulative Results -->
+                    <div id="cumulative-results" class="cumulative-results hidden">
+                        <h3>📊 Final Results (All Paths)</h3>
+                        <div id="results-list" class="results-list">
+                            <!-- Cumulative results will be shown here -->
+                        </div>
+                    </div>
+                    <!-- Reset Button -->
+                    <button id="reset-converter-btn" class="reset-converter-btn">🔄 Reset All Steps</button>
                 </div>
             </main>
             <footer>

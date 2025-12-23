@@ -1723,6 +1723,7 @@ function initializeNavigation() {
   const toolViews = document.querySelectorAll(".tool-view");
   const bossTimerMessage = document.getElementById("boss-timer-message");
   const sfCalculatorMessage = document.getElementById("sf-calculator-message");
+  const converterMessage = document.getElementById("converter-message");
 
   function showTool(toolName) {
     // Update nav buttons
@@ -1750,9 +1751,15 @@ function initializeNavigation() {
     if (toolName === "sf-calculator") {
       bossTimerMessage.classList.add("hidden");
       sfCalculatorMessage.classList.remove("hidden");
+      converterMessage.classList.add("hidden");
+    } else if (toolName === "converter") {
+      bossTimerMessage.classList.add("hidden");
+      sfCalculatorMessage.classList.add("hidden");
+      converterMessage.classList.remove("hidden");
     } else {
       bossTimerMessage.classList.remove("hidden");
       sfCalculatorMessage.classList.add("hidden");
+      converterMessage.classList.add("hidden");
     }
 
     // Update URL hash
@@ -1761,6 +1768,8 @@ function initializeNavigation() {
     // Update page title
     if (toolName === "sf-calculator") {
       document.title = "SF Calculator - Blade & Soul Neo Tools";
+    } else if (toolName === "converter") {
+      document.title = "Currency Converter - Blade & Soul Neo Tools";
     } else {
       document.title =
         "Blade & Soul Neo EU Field Boss Timer by Hayder (Kindle)";
@@ -1777,15 +1786,15 @@ function initializeNavigation() {
   // Handle hash navigation
   window.addEventListener("hashchange", () => {
     const hash = window.location.hash.substring(1);
-    if (hash === "sf-calculator" || hash === "timer") {
+    if (hash === "sf-calculator" || hash === "timer" || hash === "converter") {
       showTool(hash);
     }
   });
 
   // Initialize from hash or default to timer
   const initialHash = window.location.hash.substring(1);
-  if (initialHash === "sf-calculator") {
-    showTool("sf-calculator");
+  if (initialHash === "sf-calculator" || initialHash === "converter") {
+    showTool(initialHash);
   } else {
     showTool("timer");
   }
@@ -1800,4 +1809,597 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("sf-calculator-container")) {
     window.sfCalculatorUI = new SFCalculatorUI();
   }
+
+  // Initialize Currency/Probability Converter
+  if (document.getElementById("converter-container")) {
+    window.converterUI = new ConverterUI();
+  }
 });
+
+// ============================================
+// Currency/Probability Converter
+// ============================================
+
+class ConverterUI {
+  constructor() {
+    this.steps = [];
+    this.stepIdCounter = 0;
+    this.currencyPool = new Set();
+    this.initializeElements();
+    this.bindEvents();
+    this.addStep(); // Start with one step
+  }
+
+  initializeElements() {
+    this.stepsContainer = document.getElementById("steps-container");
+    this.addStepBtn = document.getElementById("add-step-btn");
+    this.resetBtn = document.getElementById("reset-converter-btn");
+    this.cumulativeResults = document.getElementById("cumulative-results");
+    this.resultsList = document.getElementById("results-list");
+  }
+
+  bindEvents() {
+    this.addStepBtn.addEventListener("click", () => this.addStep());
+    this.resetBtn.addEventListener("click", () => this.resetAll());
+  }
+
+  addStep(inputFrom = null) {
+    const stepId = this.stepIdCounter++;
+    const step = {
+      id: stepId,
+      type: "ratio",
+      inputFrom: inputFrom,
+      inputAmount: null,
+      rateX: null,
+      rateY: null,
+      outputTo: null,
+      probability: 100,
+      inheritFrom: "output", // "output", "input", or "none"
+    };
+    this.steps.push(step);
+    this.renderStep(step, this.steps.length - 1);
+    this.calculateChain();
+  }
+
+  renderStep(step, index = null) {
+    const stepDiv = document.createElement("div");
+    stepDiv.className = "conversion-step";
+    stepDiv.dataset.stepId = step.id;
+
+    stepDiv.innerHTML = `
+      <div class="step-header">
+        <span class="step-number">Step ${
+          index !== null ? index + 1 : step.id + 1
+        }</span>
+        <div class="step-controls">
+          <button class="delete-step-btn" data-step-id="${
+            step.id
+          }">🗑️ Delete</button>
+        </div>
+      </div>
+      
+      ${
+        step.id > 0
+          ? `<div class="inheritance-selector">
+        <label>Inherit from previous step:</label>
+        <select class="inherit-select" data-step-id="${step.id}">
+          <option value="output" ${
+            step.inheritFrom === "output" ? "selected" : ""
+          }>Use previous output</option>
+          <option value="input" ${
+            step.inheritFrom === "input" ? "selected" : ""
+          }>Use previous input</option>
+          <option value="none" ${
+            step.inheritFrom === "none" ? "selected" : ""
+          }>Manual input</option>
+        </select>
+      </div>`
+          : ""
+      }
+      
+      <div class="step-type-selector">
+        <label>Conversion Type:</label>
+        <select class="type-select" data-step-id="${step.id}">
+          <option value="ratio" selected>📐 Fixed Ratio - e.g., 150 Divine Gems per 10 Gold</option>
+          <option value="probability">🎲 Probability - e.g., 0.5% chance per run</option>
+          <option value="mixed">🎰 Mixed - e.g., 5 Keys per Gold, 10% work</option>
+        </select>
+      </div>
+
+      <div class="step-inputs">
+        <!-- Input From -->
+        <div class="input-row">
+          <label class="input-amount-label">Input amount:</label>
+          <input type="number" class="amount-input" data-field="inputAmount" data-step-id="${
+            step.id
+          }" placeholder="100" min="0" step="0.01">
+          <input type="text" class="currency-input" list="currency-list-${
+            step.id
+          }-from" data-field="inputFrom" data-step-id="${
+      step.id
+    }" placeholder="Currency name">
+          <datalist id="currency-list-${step.id}-from">
+          </datalist>
+        </div>
+
+        <!-- Rate -->
+        <div class="input-row rate-row">
+          <label class="rate-label-text">Rate (e.g., 1500 Divine Gems per 100 Gold):</label>
+          <input type="number" class="rate-input" data-field="rateX" data-step-id="${
+            step.id
+          }" placeholder="1500" min="0" step="0.01">
+          <span class="rate-label">per</span>
+          <input type="number" class="rate-input" data-field="rateY" data-step-id="${
+            step.id
+          }" placeholder="100" min="0" step="0.01">
+        </div>
+
+        <!-- Output To -->
+        <div class="input-row">
+          <label>Output (what you get):</label>
+          <input type="text" class="currency-input" list="currency-list-${
+            step.id
+          }-to" data-field="outputTo" data-step-id="${
+      step.id
+    }" placeholder="Currency name">
+          <datalist id="currency-list-${step.id}-to">
+          </datalist>
+        </div>
+
+        <!-- Success Rate (for probability/mixed) -->
+        <div class="input-row probability-row">
+          <label>Success Rate:</label>
+          <input type="number" class="rate-input" data-field="probability" data-step-id="${
+            step.id
+          }" value="${step.probability || 100}" min="0" max="100" step="0.01">
+          <span class="rate-label">%</span>
+        </div>
+      </div>
+
+      <div class="step-result">
+        <span class="result-arrow">→</span>
+        <span class="result-text" data-step-id="${step.id}">—</span>
+      </div>
+    `;
+
+    this.stepsContainer.appendChild(stepDiv);
+    this.bindStepEvents(stepDiv, step);
+    this.updateCurrencyDatalist();
+    this.updateStepVisibility(step);
+  }
+
+  bindStepEvents(stepDiv, step) {
+    // Type selector
+    const typeSelect = stepDiv.querySelector(".type-select");
+    typeSelect.addEventListener("change", (e) => {
+      step.type = e.target.value;
+      this.updateStepVisibility(step);
+      this.calculateChain();
+    });
+
+    // Inheritance selector (only for steps after first)
+    const inheritSelect = stepDiv.querySelector(".inherit-select");
+    if (inheritSelect) {
+      inheritSelect.addEventListener("change", (e) => {
+        step.inheritFrom = e.target.value;
+        this.calculateChain();
+      });
+    }
+
+    // Delete button
+    const deleteBtn = stepDiv.querySelector(".delete-step-btn");
+    deleteBtn.addEventListener("click", () => this.deleteStep(step.id));
+
+    // Currency inputs (text) - update on input for immediate feedback
+    stepDiv.querySelectorAll(".currency-input").forEach((input) => {
+      input.addEventListener("input", (e) => {
+        const field = e.target.dataset.field;
+        if (e.target.value.trim()) {
+          step[field] = e.target.value.trim();
+          this.currencyPool.add(e.target.value.trim());
+          this.updateStepVisibility(step);
+        }
+        this.calculateChain(); // Update immediately on input
+      });
+      input.addEventListener("change", (e) => this.handleStepInput(e, step));
+      input.addEventListener("blur", (e) => this.handleStepInput(e, step));
+    });
+
+    // Numeric inputs - update on input with explicit logging
+    stepDiv.querySelectorAll(".amount-input, .rate-input").forEach((input) => {
+      input.addEventListener("input", (e) => {
+        const field = e.target.dataset.field;
+        const value = parseFloat(e.target.value);
+        console.log(`Field ${field} changed to:`, value, `(step ${step.id})`);
+        if (!isNaN(value)) {
+          step[field] = value;
+          console.log(`Updated step.${field} to:`, step[field]);
+        } else {
+          step[field] = null;
+        }
+        this.calculateChain();
+      });
+      input.addEventListener("change", (e) => {
+        const field = e.target.dataset.field;
+        const value = parseFloat(e.target.value);
+        if (!isNaN(value)) {
+          step[field] = value;
+        } else {
+          step[field] = null;
+        }
+        this.calculateChain();
+      });
+    });
+  }
+
+  handleStepInput(e, step) {
+    const field = e.target.dataset.field;
+    const value = e.target.value;
+
+    if (field === "inputFrom" || field === "outputTo") {
+      // Handle currency name input - only on change/blur, not every keystroke
+      if (value.trim()) {
+        this.currencyPool.add(value.trim());
+        step[field] = value.trim();
+        this.updateCurrencyDatalist();
+        this.updateStepVisibility(step); // Update labels when currencies change
+      }
+    } else {
+      // Handle numeric inputs
+      step[field] = parseFloat(value) || null;
+    }
+
+    this.calculateChain();
+  }
+
+  updateStepVisibility(step) {
+    const stepDiv = this.stepsContainer.querySelector(
+      `[data-step-id="${step.id}"]`
+    );
+    const probRow = stepDiv.querySelector(".probability-row");
+    const rateRow = stepDiv.querySelector(".rate-row");
+    const inputLabel = stepDiv.querySelector(".input-amount-label");
+    const rateLabel = stepDiv.querySelector(".rate-label-text");
+
+    if (step.type === "probability") {
+      rateRow.style.display = "none";
+      probRow.style.display = "flex";
+      if (inputLabel) inputLabel.textContent = "Cost per attempt:";
+    } else if (step.type === "mixed") {
+      rateRow.style.display = "flex";
+      probRow.style.display = "flex";
+      if (inputLabel) inputLabel.textContent = "Input amount:";
+      if (rateLabel) {
+        const outputName = step.outputTo || "output";
+        const inputName = step.inputFrom || "input";
+        rateLabel.textContent = `Rate of ${outputName} per ${inputName}:`;
+      }
+    } else {
+      rateRow.style.display = "flex";
+      probRow.style.display = "none";
+      if (inputLabel) inputLabel.textContent = "Input amount:";
+      if (rateLabel) {
+        const outputName = step.outputTo || "output";
+        const inputName = step.inputFrom || "input";
+        rateLabel.textContent = `Rate of ${outputName} per ${inputName}:`;
+      }
+    }
+  }
+
+  updateCurrencyDatalist() {
+    const datalists = this.stepsContainer.querySelectorAll("datalist");
+    datalists.forEach((datalist) => {
+      datalist.innerHTML = "";
+      this.currencyPool.forEach((currency) => {
+        const option = document.createElement("option");
+        option.value = currency;
+        datalist.appendChild(option);
+      });
+    });
+  }
+
+  calculateChain() {
+    // Calculate each step with chaining
+    this.steps.forEach((step, index) => {
+      // For steps after the first, automatically use previous step's output/input based on inheritance setting
+      if (index > 0) {
+        const prevStep = this.steps[index - 1];
+
+        if (step.inheritFrom === "output") {
+          // Use previous step's output
+          if (
+            prevStep.outputAmount !== null &&
+            prevStep.outputAmount !== undefined
+          ) {
+            step.inputAmount = prevStep.outputAmount;
+            step.inputFrom = prevStep.outputTo;
+          }
+        } else if (step.inheritFrom === "input") {
+          // Use previous step's input
+          if (
+            prevStep.inputAmount !== null &&
+            prevStep.inputAmount !== undefined
+          ) {
+            step.inputAmount = prevStep.inputAmount;
+            step.inputFrom = prevStep.inputFrom;
+          }
+        }
+        // For "none", don't auto-fill anything
+
+        // Update the input display if we're inheriting
+        if (step.inheritFrom !== "none") {
+          const amountInput = this.stepsContainer.querySelector(
+            `.amount-input[data-step-id="${step.id}"]`
+          );
+          const currencyInput = this.stepsContainer.querySelector(
+            `.currency-input[data-field="inputFrom"][data-step-id="${step.id}"]`
+          );
+          if (amountInput) {
+            amountInput.value = step.inputAmount?.toFixed(2) || "";
+            amountInput.readOnly = true;
+          }
+          if (currencyInput) {
+            currencyInput.value = step.inputFrom || "";
+            currencyInput.readOnly = true;
+          }
+        } else {
+          // For manual input, make fields editable
+          const amountInput = this.stepsContainer.querySelector(
+            `.amount-input[data-step-id="${step.id}"]`
+          );
+          const currencyInput = this.stepsContainer.querySelector(
+            `.currency-input[data-field="inputFrom"][data-step-id="${step.id}"]`
+          );
+          if (amountInput) amountInput.readOnly = false;
+          if (currencyInput) currencyInput.readOnly = false;
+        }
+      }
+
+      const result = this.calculateStep(step);
+
+      // Find the step-result container directly by step ID
+      const stepDiv = this.stepsContainer.querySelector(
+        `.conversion-step[data-step-id="${step.id}"]`
+      );
+      if (stepDiv) {
+        const stepResult = stepDiv.querySelector(".step-result");
+        if (stepResult) {
+          // Check if result contains HTML (probability detailed result)
+          if (typeof result === "string" && result.includes("<div")) {
+            // Replace with probability HTML result
+            stepResult.innerHTML = `<span class="result-arrow">→</span>${result}`;
+          } else {
+            // Simple text result - restore the span structure if needed
+            stepResult.innerHTML = `<span class="result-arrow">→</span><span class="result-text" data-step-id="${step.id}">${result}</span>`;
+          }
+        }
+      }
+    });
+
+    // Calculate cumulative
+    this.calculateCumulative();
+  }
+
+  calculateStep(step) {
+    if (!step.inputAmount || !step.inputFrom || !step.outputTo) {
+      return "—";
+    }
+
+    let output = step.inputAmount;
+    let explanation = `${step.inputAmount} ${step.inputFrom}`;
+
+    // Apply ratio
+    if (step.type !== "probability") {
+      if (!step.rateX || !step.rateY || step.rateY === 0) {
+        return "Invalid rate";
+      }
+      output = (output * step.rateX) / step.rateY;
+      explanation += ` × (${step.rateX}/${step.rateY})`;
+    }
+
+    // Apply probability
+    if (step.type === "probability" || step.type === "mixed") {
+      console.log(
+        `calculateStep: step.probability = ${step.probability} (before check)`
+      );
+      if (step.probability === null || step.probability === undefined) {
+        console.log(
+          `Setting step.probability to 100 because it was null/undefined`
+        );
+        step.probability = 100;
+      }
+      console.log(
+        `calculateStep: step.probability = ${step.probability} (after check)`
+      );
+      const successRate = step.probability / 100;
+      console.log(`successRate = ${successRate}`);
+
+      // For probability calculations, show detailed statistics
+      if (step.type === "probability") {
+        // For probability type: inputAmount is the cost per attempt, not the number of attempts
+        // Each "attempt" costs inputAmount of inputFrom and has successRate chance to yield 1 outputTo
+        const costPerAttempt = step.inputAmount;
+        const itemName = step.outputTo;
+        const inputName = step.inputFrom;
+
+        // Calculate confidence intervals (number of attempts to get at least 1 item)
+        const getAttemptsForConfidence = (confidence) => {
+          if (successRate === 0) return Infinity;
+          if (successRate >= 1) return 1;
+          const result = Math.ceil(
+            Math.log(1 - confidence) / Math.log(1 - successRate)
+          );
+          return isFinite(result) && result > 0 ? result : 0;
+        };
+
+        const attempts50 = getAttemptsForConfidence(0.5); // 50% chance
+        const attempts63 = getAttemptsForConfidence(0.632); // 63.2% (1 - 1/e, the "average")
+        const attempts90 = getAttemptsForConfidence(0.9); // 90% chance
+        const attempts99 = getAttemptsForConfidence(0.99); // 99% chance
+
+        // Expected value: 1 attempt has successRate chance to give 1 item
+        // So expected items per attempt = successRate
+        const expectedItemsPerAttempt = successRate;
+
+        // Cost to get 1 item on average = costPerAttempt / successRate
+        const avgCostPerItem =
+          successRate > 0 ? costPerAttempt / successRate : Infinity;
+
+        step.outputAmount = expectedItemsPerAttempt;
+
+        // Format large numbers with commas
+        const formatNumber = (num) => {
+          if (!isFinite(num)) return "∞";
+          return num.toLocaleString();
+        };
+
+        return `
+          <div class="probability-result">
+            <div class="expected-value">📊 <strong>${
+              step.probability
+            }%</strong> chance per attempt (costs <strong>${formatNumber(
+          costPerAttempt
+        )} ${inputName}</strong> per attempt)</div>
+            <div class="expected-value">📈 Average cost to get 1 ${itemName}: <strong>${formatNumber(
+          Math.round(avgCostPerItem)
+        )} ${inputName}</strong></div>
+            <div class="confidence-explained">
+              <div class="confidence-intro">💡 <strong>What this means for you:</strong></div>
+              <div class="confidence-line">• <strong>Most players</strong> (63%) get their first ${itemName} within <strong>${formatNumber(
+          attempts63
+        )} attempts</strong> (${formatNumber(
+          attempts63 * costPerAttempt
+        )} ${inputName})</div>
+              <div class="confidence-line">• <strong>Lucky players</strong> (50%) get it even faster, within <strong>${formatNumber(
+                attempts50
+              )} attempts</strong> (${formatNumber(
+          attempts50 * costPerAttempt
+        )} ${inputName})</div>
+              <div class="confidence-line">• <strong>Almost everyone</strong> (90%) gets it by <strong>${formatNumber(
+                attempts90
+              )} attempts</strong> (${formatNumber(
+          attempts90 * costPerAttempt
+        )} ${inputName})</div>
+              <div class="confidence-line">• Even <strong>very unlucky players</strong> (99%) get it by <strong>${formatNumber(
+                attempts99
+              )} attempts</strong> (${formatNumber(
+          attempts99 * costPerAttempt
+        )} ${inputName})</div>
+            </div>
+          </div>
+        `;
+      }
+
+      // Mixed type still shows simple result
+      output = output * successRate;
+      explanation += ` × ${step.probability}%`;
+    }
+
+    step.outputAmount = output;
+    return `${output.toFixed(2)} ${step.outputTo}`;
+  }
+
+  calculateCumulative() {
+    if (this.steps.length === 0) {
+      this.cumulativeResults.classList.add("hidden");
+      return;
+    }
+
+    // Check if we have valid data to show
+    const validSteps = this.steps.filter(
+      (s) => s.inputAmount && s.inputFrom && s.outputTo
+    );
+    if (validSteps.length === 0) {
+      this.cumulativeResults.classList.add("hidden");
+      return;
+    }
+
+    this.cumulativeResults.classList.remove("hidden");
+
+    // Format numbers nicely
+    const formatNumber = (num) => {
+      if (!isFinite(num)) return "∞";
+      if (num >= 1000000) return (num / 1000000).toFixed(2) + "M";
+      if (num >= 1000) return (num / 1000).toFixed(2) + "K";
+      return num.toLocaleString(undefined, { maximumFractionDigits: 2 });
+    };
+
+    // Build a cleaner summary showing each step's contribution
+    let summaryHTML = '<div class="chain-summary">';
+
+    // Show step-by-step breakdown
+    this.steps.forEach((step, index) => {
+      if (!step.inputAmount || !step.outputTo) return;
+
+      const stepNum = index + 1;
+      let stepDesc = "";
+
+      if (step.type === "probability") {
+        stepDesc = `<span class="chain-prob">🎲 ${step.probability}% chance</span>`;
+      } else if (step.type === "ratio") {
+        stepDesc = `<span class="chain-ratio">📐 ${step.rateX || "?"} ${
+          step.outputTo
+        } per ${step.rateY || "?"} ${step.inputFrom}</span>`;
+      } else if (step.type === "mixed") {
+        stepDesc = `<span class="chain-mixed">🎰 ${step.rateX}:${step.rateY} @ ${step.probability}%</span>`;
+      }
+
+      const inheritDesc =
+        index > 0
+          ? step.inheritFrom === "output"
+            ? "← prev output"
+            : step.inheritFrom === "input"
+            ? "← prev input"
+            : "← manual"
+          : "";
+
+      summaryHTML += `
+        <div class="chain-step-row">
+          <span class="chain-step-num">Step ${stepNum}</span>
+          <span class="chain-step-flow">${formatNumber(step.inputAmount)} ${
+        step.inputFrom || "?"
+      } → ${formatNumber(step.outputAmount || 0)} ${step.outputTo}</span>
+          <span class="chain-step-type">${stepDesc}</span>
+          ${
+            inheritDesc
+              ? `<span class="chain-inherit">${inheritDesc}</span>`
+              : ""
+          }
+        </div>
+      `;
+    });
+
+    summaryHTML += "</div>";
+    this.resultsList.innerHTML = summaryHTML;
+  }
+
+  deleteStep(stepId) {
+    this.steps = this.steps.filter((s) => s.id !== stepId);
+    const stepDiv = this.stepsContainer.querySelector(
+      `[data-step-id="${stepId}"]`
+    );
+    if (stepDiv) stepDiv.remove();
+    this.reRenderAllSteps();
+    this.calculateChain();
+  }
+
+  reRenderAllSteps() {
+    // Clear and re-render all steps with correct numbering
+    this.stepsContainer.innerHTML = "";
+    this.steps.forEach((step, index) => {
+      this.renderStep(step, index);
+    });
+    this.updateCurrencyDatalist();
+    // Update visibility for all steps
+    this.steps.forEach((step) => this.updateStepVisibility(step));
+  }
+
+  resetAll() {
+    this.steps = [];
+    this.stepIdCounter = 0;
+    this.currencyPool.clear();
+    this.stepsContainer.innerHTML = "";
+    this.cumulativeResults.classList.add("hidden");
+    this.addStep();
+  }
+}
