@@ -1898,7 +1898,7 @@ class ConverterUI {
       }
       
       <div class="step-type-selector">
-        <label>Conversion Type:</label>
+        <label>Conversion Type: <span class="beta-badge">BETA</span></label>
         <select class="type-select" data-step-id="${step.id}">
           <option value="ratio" selected>📐 Fixed Ratio - e.g., 150 Divine Gems per 10 Gold</option>
           <option value="probability">🎲 Probability - e.g., 0.5% chance per run</option>
