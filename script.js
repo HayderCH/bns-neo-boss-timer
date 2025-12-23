@@ -365,35 +365,35 @@ function renderBossList() {
       li.id = spawnId;
       li.dataset.time = spawn.time;
       li.dataset.location = spawn.location;
-      
+
       // Create elements safely to prevent XSS
-      const bossInfo = document.createElement('div');
-      bossInfo.className = 'boss-info';
-      
-      const bossName = document.createElement('span');
-      bossName.className = 'boss-name';
+      const bossInfo = document.createElement("div");
+      bossInfo.className = "boss-info";
+
+      const bossName = document.createElement("span");
+      bossName.className = "boss-name";
       bossName.textContent = spawn.location; // Safe: textContent escapes HTML
-      
-      const bossTime = document.createElement('span');
-      bossTime.className = 'boss-time-scheduled';
+
+      const bossTime = document.createElement("span");
+      bossTime.className = "boss-time-scheduled";
       bossTime.textContent = spawn.time; // Safe: textContent escapes HTML
-      
+
       bossInfo.appendChild(bossName);
       bossInfo.appendChild(bossTime);
-      
-      const timerDisplay = document.createElement('div');
-      timerDisplay.className = 'timer-display';
-      
-      const bossTimer = document.createElement('span');
-      bossTimer.className = 'boss-timer';
-      bossTimer.textContent = '--:--:--';
-      
-      const bossStatus = document.createElement('span');
-      bossStatus.className = 'boss-status';
-      
+
+      const timerDisplay = document.createElement("div");
+      timerDisplay.className = "timer-display";
+
+      const bossTimer = document.createElement("span");
+      bossTimer.className = "boss-timer";
+      bossTimer.textContent = "--:--:--";
+
+      const bossStatus = document.createElement("span");
+      bossStatus.className = "boss-status";
+
       timerDisplay.appendChild(bossTimer);
       timerDisplay.appendChild(bossStatus);
-      
+
       li.appendChild(bossInfo);
       li.appendChild(timerDisplay);
       list.appendChild(li);
@@ -450,10 +450,10 @@ function updateAllCountdowns() {
       const timerEl = element.querySelector(".boss-timer");
       const statusEl = element.querySelector(".boss-status");
 
-      // Parse spawn time
+      // Parse spawn time (UTC) and convert to local
       const [hours, minutes] = spawn.time.split(":").map(Number);
       const spawnTime = new Date(now);
-      spawnTime.setHours(hours, minutes, 0, 0);
+      spawnTime.setUTCHours(hours, minutes, 0, 0);
 
       const diff = spawnTime - now;
       const diffSeconds = Math.floor(diff / 1000);
@@ -1022,7 +1022,7 @@ function exportToCalendar() {
     todaySchedule.forEach((spawn) => {
       const [hours, minutes] = spawn.time.split(":").map(Number);
       const spawnTime = new Date(now);
-      spawnTime.setHours(hours, minutes, 0, 0);
+      spawnTime.setUTCHours(hours, minutes, 0, 0);
 
       events.push({
         time: spawnTime,
