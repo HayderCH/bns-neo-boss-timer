@@ -450,10 +450,10 @@ function updateAllCountdowns() {
       const timerEl = element.querySelector(".boss-timer");
       const statusEl = element.querySelector(".boss-status");
 
-      // Parse spawn time (UTC) and convert to local
+      // Parse spawn time (server time)
       const [hours, minutes] = spawn.time.split(":").map(Number);
       const spawnTime = new Date(now);
-      spawnTime.setUTCHours(hours, minutes, 0, 0);
+      spawnTime.setHours(hours, minutes, 0, 0);
 
       const diff = spawnTime - now;
       const diffSeconds = Math.floor(diff / 1000);
@@ -1022,7 +1022,7 @@ function exportToCalendar() {
     todaySchedule.forEach((spawn) => {
       const [hours, minutes] = spawn.time.split(":").map(Number);
       const spawnTime = new Date(now);
-      spawnTime.setUTCHours(hours, minutes, 0, 0);
+      spawnTime.setHours(hours, minutes, 0, 0);
 
       events.push({
         time: spawnTime,
