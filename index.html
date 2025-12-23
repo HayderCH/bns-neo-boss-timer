@@ -43,7 +43,12 @@
     <body>
         <div class="container">
             <header>
-                <h1>🗡️ Blade & Soul Neo EU Field Boss Timer</h1>
+                <h1>🗡️ Blade & Soul Neo Tools</h1>
+                <!-- Navigation Bar -->
+                <nav class="tool-nav" id="tool-nav">
+                    <button class="nav-tab active" data-tool="timer">🕐 Boss Timer</button>
+                    <button class="nav-tab" data-tool="sf-calculator">📊 SF Calculator</button>
+                </nav>
                 <div class="server-time-notice"
                      style="background: #fff3cd;
                             border: 1px solid #ffc107;
@@ -51,7 +56,7 @@
                             margin: 0.5rem 0;
                             border-radius: 8px;
                             text-align: center;
-                            color: #856404;">
+                            color: #856404">
                     ⏰ <strong>All times shown are EU Server Time (UTC+1)</strong>
                 </div>
                 <div class="loading-bar" id="loading-bar"></div>
@@ -81,9 +86,76 @@
                     📅 Data last updated: <span id="update-time">Loading...</span>
                 </p>
             </div>
-            <main id="boss-container">
+            <!-- Boss Timer View (Default) -->
+            <main id="boss-container" class="tool-view active">
                 <!-- Boss regions and timers will be rendered here by JavaScript -->
                 <p class="loading">Loading boss schedules...</p>
+            </main>
+            <!-- SF Calculator View -->
+            <main id="sf-calculator-container" class="tool-view">
+                <div class="sf-calculator">
+                    <h2 class="calculator-title">⚔️ Supreme Force Party Calculator</h2>
+                    <p class="calculator-subtitle">Build your Challenge Mode party with optimal SF distribution</p>
+                    <!-- Dungeon Selection -->
+                    <div class="dungeon-selection">
+                        <label for="dungeon-selector">Select Dungeon:</label>
+                        <select id="dungeon-selector" class="dungeon-dropdown">
+                            <option value="manual">None - Manual Entry</option>
+                            <!-- Populated by JavaScript -->
+                        </select>
+                    </div>
+                    <!-- Requirements Input -->
+                    <div class="requirements-section">
+                        <h3>
+                            Requirements <span id="modified-indicator" class="hidden">✏️ Modified</span>
+                        </h3>
+                        <div class="requirement-inputs">
+                            <div class="input-group">
+                                <label for="min-sf-input">Min Individual SF:</label>
+                                <input type="number"
+                                       id="min-sf-input"
+                                       class="sf-input"
+                                       placeholder="Enter minimum SF"
+                                       min="0"
+                                       step="1">
+                            </div>
+                            <div class="input-group">
+                                <label for="max-avg-input">Max Party Average:</label>
+                                <input type="number"
+                                       id="max-avg-input"
+                                       class="sf-input"
+                                       placeholder="Enter max average SF"
+                                       min="0"
+                                       step="1">
+                            </div>
+                            <button id="reset-preset-btn" class="reset-preset-btn hidden">↺ Reset to Preset</button>
+                        </div>
+                    </div>
+                    <!-- Party Composition -->
+                    <div class="party-section">
+                        <h3>Party Composition</h3>
+                        <div id="party-slots" class="party-slots">
+                            <!-- Slots 1-6 populated by JavaScript -->
+                        </div>
+                    </div>
+                    <!-- Party Status -->
+                    <div class="party-status" id="party-status">
+                        <div class="status-item">
+                            <span class="status-label">Current Average:</span>
+                            <span class="status-value" id="current-avg">—</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Budget Remaining:</span>
+                            <span class="status-value" id="budget-remaining">—</span>
+                        </div>
+                        <div class="status-item full-width">
+                            <span class="status-label">Status:</span>
+                            <span class="status-value status-indicator" id="party-status-indicator">Enter requirements to start</span>
+                        </div>
+                    </div>
+                    <!-- Reset Button -->
+                    <button id="reset-party-btn" class="reset-party-btn">🔄 Reset Party</button>
+                </div>
             </main>
             <footer>
                 <p>
@@ -110,6 +182,7 @@
         <audio id="alarm-sound" preload="auto">
             <source src="assets/notification.mp3" type="audio/mpeg">
         </audio>
+        <script src="dungeons.js?v=1.0.0"></script>
         <script src="script.js?v=1.7.2"></script>
     </body>
 </html>

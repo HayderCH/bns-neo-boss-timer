@@ -453,15 +453,17 @@ function updateAllCountdowns() {
       // Parse spawn time as UTC+1 (server time) and convert to local
       const [hours, minutes] = spawn.time.split(":").map(Number);
       // Create UTC date and add 1 hour for UTC+1 server time
-      const spawnTime = new Date(Date.UTC(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        hours - 1, // Subtract 1 to convert UTC+1 to UTC
-        minutes,
-        0,
-        0
-      ));
+      const spawnTime = new Date(
+        Date.UTC(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          hours - 1, // Subtract 1 to convert UTC+1 to UTC
+          minutes,
+          0,
+          0
+        )
+      );
 
       const diff = spawnTime - now;
       const diffSeconds = Math.floor(diff / 1000);
@@ -1030,15 +1032,17 @@ function exportToCalendar() {
     todaySchedule.forEach((spawn) => {
       const [hours, minutes] = spawn.time.split(":").map(Number);
       // Create UTC date and add 1 hour for UTC+1 server time
-      const spawnTime = new Date(Date.UTC(
-        now.getFullYear(),
-        now.getMonth(),
-        now.getDate(),
-        hours - 1, // Subtract 1 to convert UTC+1 to UTC
-        minutes,
-        0,
-        0
-      ));
+      const spawnTime = new Date(
+        Date.UTC(
+          now.getFullYear(),
+          now.getMonth(),
+          now.getDate(),
+          hours - 1, // Subtract 1 to convert UTC+1 to UTC
+          minutes,
+          0,
+          0
+        )
+      );
 
       events.push({
         time: spawnTime,
@@ -1130,3 +1134,586 @@ function generateICS(events, dayName) {
 
   return ics.join("\r\n");
 }
+
+// ============================================
+// SF CALCULATOR SYSTEM
+// ============================================
+
+// Input Sanitization
+function sanitizeSFInput(value) {
+  const parsed = parseInt(value, 10);
+  if (isNaN(parsed) || parsed < 0 || parsed > 999999) {
+    return null;
+  }
+  return parsed;
+}
+
+function validateRequirements(minSF, maxAvg) {
+  if (minSF === null || maxAvg === null) return false;
+  if (minSF > maxAvg) return false;
+  if (minSF < 0 || maxAvg < 0) return false;
+  return true;
+}
+
+// Dungeon Manager Class
+class DungeonManager {
+  constructor() {
+    this.presets =
+      typeof DUNGEON_PRESETS !== "undefined" ? DUNGEON_PRESETS : [];
+    this.currentDungeon = null;
+    this.currentMinSF = null;
+    this.currentMaxAvg = null;
+  }
+
+  selectDungeon(dungeonId) {
+    if (dungeonId === "manual") {
+      this.currentDungeon = null;
+      this.currentMinSF = null;
+      this.currentMaxAvg = null;
+      return null;
+    }
+
+    this.currentDungeon = this.presets.find((d) => d.id === dungeonId);
+    if (this.currentDungeon) {
+      this.currentMinSF = this.currentDungeon.minSF;
+      this.currentMaxAvg = this.currentDungeon.maxAvg;
+    }
+    return this.currentDungeon;
+  }
+
+  setMinSF(value) {
+    const sanitized = sanitizeSFInput(value);
+    if (sanitized !== null) {
+      this.currentMinSF = sanitized;
+      return true;
+    }
+    return false;
+  }
+
+  setMaxAvg(value) {
+    const sanitized = sanitizeSFInput(value);
+    if (sanitized !== null) {
+      this.currentMaxAvg = sanitized;
+      return true;
+    }
+    return false;
+  }
+
+  resetToPreset() {
+    if (this.currentDungeon) {
+      this.currentMinSF = this.currentDungeon.minSF;
+      this.currentMaxAvg = this.currentDungeon.maxAvg;
+    }
+  }
+
+  getCurrentRequirements() {
+    return {
+      minSF: this.currentMinSF,
+      maxAvg: this.currentMaxAvg,
+      isModified:
+        this.currentDungeon &&
+        (this.currentMinSF !== this.currentDungeon.minSF ||
+          this.currentMaxAvg !== this.currentDungeon.maxAvg),
+    };
+  }
+}
+
+// SF Calculator Class
+class SFCalculator {
+  constructor(dungeonManager) {
+    this.dungeonManager = dungeonManager;
+    this.party = Array(6).fill(null);
+  }
+
+  updateRequirements() {
+    const reqs = this.dungeonManager.getCurrentRequirements();
+    this.minSF = reqs.minSF;
+    this.maxAvg = reqs.maxAvg;
+  }
+
+  setMember(index, sfValue) {
+    if (index < 0 || index >= 6) return false;
+
+    const sanitized = sanitizeSFInput(sfValue);
+    if (sanitized === null) return false;
+
+    this.party[index] = sanitized;
+    return true;
+  }
+
+  clearMember(index) {
+    if (index >= 0 && index < 6) {
+      this.party[index] = null;
+      return true;
+    }
+    return false;
+  }
+
+  getValidRange() {
+    if (this.minSF === null || this.maxAvg === null) {
+      return { status: "no-requirements" };
+    }
+
+    const filled = this.party.filter((sf) => sf !== null);
+    const sum = filled.reduce((a, b) => a + b, 0);
+    const remaining = 6 - filled.length;
+
+    if (remaining === 0) return { status: "full" };
+
+    const maxSum = this.maxAvg * 6;
+    const budget = maxSum - sum;
+
+    // Recommended target: average needed for remaining slots
+    const recommendedTarget = Math.round(budget / remaining);
+
+    // Absolute maximum: if all other remaining slots are at minimum
+    const absoluteMax = Math.floor(budget - this.minSF * (remaining - 1));
+
+    // Check if it's still possible to form valid party
+    const isImpossible = absoluteMax < 0;
+
+    return {
+      recommended: recommendedTarget,
+      absoluteMax: absoluteMax,
+      budget: budget,
+      remaining: remaining,
+      status: isImpossible ? "impossible" : "valid",
+    };
+  }
+
+  getCurrentAverage() {
+    const filled = this.party.filter((sf) => sf !== null);
+    if (filled.length === 0) return 0;
+    return Math.round(filled.reduce((a, b) => a + b, 0) / filled.length);
+  }
+
+  getFilledCount() {
+    return this.party.filter((sf) => sf !== null).length;
+  }
+
+  reset() {
+    this.party = Array(6).fill(null);
+  }
+}
+
+// SF Calculator UI Manager
+class SFCalculatorUI {
+  constructor() {
+    this.dungeonManager = new DungeonManager();
+    this.calculator = new SFCalculator(this.dungeonManager);
+    this.initializeElements();
+    this.bindEvents();
+    this.populateDungeonDropdown();
+    this.createPartySlots();
+  }
+
+  initializeElements() {
+    this.dungeonSelector = document.getElementById("dungeon-selector");
+    this.minSFInput = document.getElementById("min-sf-input");
+    this.maxAvgInput = document.getElementById("max-avg-input");
+    this.resetPresetBtn = document.getElementById("reset-preset-btn");
+    this.partySlotsContainer = document.getElementById("party-slots");
+    this.currentAvgDisplay = document.getElementById("current-avg");
+    this.budgetRemainingDisplay = document.getElementById("budget-remaining");
+    this.statusIndicator = document.getElementById("party-status-indicator");
+    this.modifiedIndicator = document.getElementById("modified-indicator");
+    this.resetPartyBtn = document.getElementById("reset-party-btn");
+  }
+
+  populateDungeonDropdown() {
+    this.dungeonManager.presets.forEach((dungeon) => {
+      const option = document.createElement("option");
+      option.value = dungeon.id;
+      option.textContent = dungeon.name;
+      if (dungeon.note) {
+        option.textContent += ` (${dungeon.note})`;
+      }
+      this.dungeonSelector.appendChild(option);
+    });
+  }
+
+  createPartySlots() {
+    for (let i = 0; i < 6; i++) {
+      const slotDiv = document.createElement("div");
+      slotDiv.className = "party-slot";
+      slotDiv.innerHTML = `
+        <div class="slot-header">
+          <span class="slot-label">Slot ${i + 1}${
+        i === 0 ? " (You)" : ""
+      }</span>
+          ${
+            i > 0
+              ? '<button class="clear-slot-btn hidden" data-slot="' +
+                i +
+                '">✕</button>'
+              : ""
+          }
+        </div>
+        <input type="number" 
+               class="slot-input" 
+               data-slot="${i}"
+               placeholder="${i === 0 ? "Your SF" : "Recruit SF"}"
+               min="0"
+               step="1">
+        <div class="slot-range hidden">
+          <span class="range-label">Valid range:</span>
+          <span class="range-value">—</span>
+        </div>
+      `;
+      this.partySlotsContainer.appendChild(slotDiv);
+    }
+  }
+
+  bindEvents() {
+    this.dungeonSelector.addEventListener("change", () =>
+      this.onDungeonChange()
+    );
+    this.minSFInput.addEventListener("input", () =>
+      this.onRequirementsChange()
+    );
+    this.maxAvgInput.addEventListener("input", () =>
+      this.onRequirementsChange()
+    );
+    this.resetPresetBtn.addEventListener("click", () => this.onResetPreset());
+    this.resetPartyBtn.addEventListener("click", () => this.onResetParty());
+
+    // Party slot inputs
+    this.partySlotsContainer.addEventListener("input", (e) => {
+      if (e.target.classList.contains("slot-input")) {
+        const slot = parseInt(e.target.dataset.slot);
+        this.onSlotInput(slot, e.target.value);
+      }
+    });
+
+    // Clear buttons
+    this.partySlotsContainer.addEventListener("click", (e) => {
+      if (e.target.classList.contains("clear-slot-btn")) {
+        const slot = parseInt(e.target.dataset.slot);
+        this.onClearSlot(slot);
+      }
+    });
+  }
+
+  onDungeonChange() {
+    const dungeonId = this.dungeonSelector.value;
+    this.dungeonManager.selectDungeon(dungeonId);
+
+    const reqs = this.dungeonManager.getCurrentRequirements();
+    this.minSFInput.value = reqs.minSF !== null ? reqs.minSF : "";
+    this.maxAvgInput.value = reqs.maxAvg !== null ? reqs.maxAvg : "";
+
+    this.updateModifiedIndicator();
+    this.updateCalculator();
+
+    // Force re-validation of all filled slots after dungeon change
+    setTimeout(() => this.updateCalculator(), 0);
+  }
+
+  onRequirementsChange() {
+    this.dungeonManager.setMinSF(this.minSFInput.value);
+    this.dungeonManager.setMaxAvg(this.maxAvgInput.value);
+    this.updateModifiedIndicator();
+    this.updateCalculator();
+
+    // Force re-validation of all filled slots after requirement change
+    setTimeout(() => this.updateCalculator(), 0);
+  }
+
+  onResetPreset() {
+    this.dungeonManager.resetToPreset();
+    const reqs = this.dungeonManager.getCurrentRequirements();
+    this.minSFInput.value = reqs.minSF !== null ? reqs.minSF : "";
+    this.maxAvgInput.value = reqs.maxAvg !== null ? reqs.maxAvg : "";
+    this.updateModifiedIndicator();
+    this.updateCalculator();
+  }
+
+  onSlotInput(slot, value) {
+    if (value.trim() === "") {
+      this.calculator.clearMember(slot);
+    } else {
+      this.calculator.setMember(slot, value);
+    }
+    this.updateSlotClearButton(slot);
+    this.updateCalculator();
+  }
+
+  onClearSlot(slot) {
+    this.calculator.clearMember(slot);
+    const input = this.partySlotsContainer.querySelector(
+      `input[data-slot="${slot}"]`
+    );
+    if (input) input.value = "";
+    this.updateSlotClearButton(slot);
+    this.updateCalculator();
+  }
+
+  onResetParty() {
+    this.calculator.reset();
+    const inputs = this.partySlotsContainer.querySelectorAll(".slot-input");
+    inputs.forEach((input) => (input.value = ""));
+    this.updateCalculator();
+  }
+
+  updateSlotClearButton(slot) {
+    const clearBtn = this.partySlotsContainer.querySelector(
+      `.clear-slot-btn[data-slot="${slot}"]`
+    );
+    if (clearBtn) {
+      const input = this.partySlotsContainer.querySelector(
+        `input[data-slot="${slot}"]`
+      );
+      if (input && input.value.trim() !== "") {
+        clearBtn.classList.remove("hidden");
+      } else {
+        clearBtn.classList.add("hidden");
+      }
+    }
+  }
+
+  updateModifiedIndicator() {
+    const reqs = this.dungeonManager.getCurrentRequirements();
+    if (reqs.isModified) {
+      this.modifiedIndicator.classList.remove("hidden");
+      this.resetPresetBtn.classList.remove("hidden");
+    } else {
+      this.modifiedIndicator.classList.add("hidden");
+      if (this.dungeonSelector.value === "manual") {
+        this.resetPresetBtn.classList.add("hidden");
+      }
+    }
+  }
+
+  updateCalculator() {
+    this.calculator.updateRequirements();
+    const range = this.calculator.getValidRange();
+    const filledCount = this.calculator.getFilledCount();
+
+    // Update current average
+    const avg = this.calculator.getCurrentAverage();
+    this.currentAvgDisplay.textContent =
+      avg > 0 ? `${avg.toLocaleString()} SF` : "—";
+
+    // Update budget
+    if (range.status === "valid" || range.status === "impossible") {
+      this.budgetRemainingDisplay.textContent = `${range.budget.toLocaleString()} SF for ${
+        range.remaining
+      } slot${range.remaining !== 1 ? "s" : ""}`;
+    } else {
+      this.budgetRemainingDisplay.textContent = "—";
+    }
+
+    // Update status indicator
+    this.updateStatusIndicator(range, filledCount);
+
+    // Update slot ranges
+    this.updateSlotRanges(range, filledCount);
+  }
+
+  updateStatusIndicator(range, filledCount) {
+    let statusText = "";
+    let statusClass = "";
+
+    if (range.status === "no-requirements") {
+      statusText = "⚠️ Enter requirements to start";
+      statusClass = "status-warning";
+    } else if (range.status === "full") {
+      const reqs = this.dungeonManager.getCurrentRequirements();
+      const avg = this.calculator.getCurrentAverage();
+
+      // Check if any member is below minimum SF
+      const membersBelowMin = this.calculator.party.filter(
+        (sf) => sf !== null && sf < reqs.minSF
+      );
+
+      if (membersBelowMin.length > 0) {
+        statusText = `❌ Challenge Mode Unavailable - ${
+          membersBelowMin.length
+        } member(s) below Min SF (${reqs.minSF.toLocaleString()})`;
+        statusClass = "status-error";
+      } else if (avg > reqs.maxAvg) {
+        statusText = `❌ Challenge Mode Unavailable - Party Average Too High (${avg.toLocaleString()} > ${reqs.maxAvg.toLocaleString()})`;
+        statusClass = "status-error";
+      } else {
+        statusText = "✅ Party Complete & Valid!";
+        statusClass = "status-success";
+      }
+    } else if (range.status === "impossible") {
+      statusText = "❌ Impossible to fill (over budget)";
+      statusClass = "status-error";
+    } else if (range.status === "valid") {
+      const reqs = this.dungeonManager.getCurrentRequirements();
+      const membersBelowMin = this.calculator.party.filter(
+        (sf) => sf !== null && sf < reqs.minSF
+      );
+
+      if (membersBelowMin.length > 0) {
+        statusText = `⚠️ ${
+          membersBelowMin.length
+        } member(s) below Min SF (${reqs.minSF.toLocaleString()}) - Challenge Mode will be unavailable`;
+        statusClass = "status-warning";
+      } else if (filledCount === 0) {
+        statusText = "⚪ Ready to build party";
+        statusClass = "status-neutral";
+      } else {
+        const flexibility = range.absoluteMax - range.recommended;
+        if (flexibility < 500) {
+          statusText = "🟡 Very limited flexibility";
+          statusClass = "status-warning";
+        } else if (flexibility < 2000) {
+          statusText = "🟡 Limited flexibility";
+          statusClass = "status-warning";
+        } else {
+          statusText = "🟢 Party is Valid";
+          statusClass = "status-success";
+        }
+      }
+    }
+
+    this.statusIndicator.textContent = statusText;
+    this.statusIndicator.className =
+      "status-value status-indicator " + statusClass;
+  }
+
+  updateSlotRanges(range, filledCount) {
+    const reqs = this.dungeonManager.getCurrentRequirements();
+    const slots = this.partySlotsContainer.querySelectorAll(".party-slot");
+
+    slots.forEach((slot, index) => {
+      const input = slot.querySelector(".slot-input");
+      const rangeDisplay = slot.querySelector(".slot-range");
+      const rangeValue = slot.querySelector(".range-value");
+
+      const isFilled = input.value.trim() !== "";
+      const sfValue = parseInt(input.value, 10);
+
+      if (isFilled) {
+        // Show validation for filled slots
+        rangeDisplay.classList.remove("hidden");
+
+        if (
+          reqs.minSF !== null &&
+          reqs.minSF !== undefined &&
+          sfValue < reqs.minSF
+        ) {
+          rangeValue.textContent = `⚠️ Below Min SF (${reqs.minSF.toLocaleString()})`;
+          rangeValue.className = "range-value status-warning";
+          input.classList.add("input-warning");
+          input.classList.remove("input-valid");
+        } else if (reqs.minSF !== null && reqs.minSF !== undefined) {
+          rangeValue.textContent = `✓ Valid (${sfValue.toLocaleString()} SF)`;
+          rangeValue.className = "range-value status-success";
+          input.classList.add("input-valid");
+          input.classList.remove("input-warning");
+        } else {
+          rangeDisplay.classList.add("hidden");
+          input.classList.remove("input-valid", "input-warning");
+        }
+      } else if (!isFilled && filledCount < 6) {
+        // Show recommendations for empty slots
+        input.classList.remove("input-valid", "input-warning");
+
+        if (range.status === "valid" || range.status === "impossible") {
+          rangeDisplay.classList.remove("hidden");
+
+          if (range.status === "impossible") {
+            rangeValue.textContent = "❌ Over budget";
+            rangeValue.className = "range-value status-error";
+          } else {
+            // Show recommended target and absolute max
+            const recommended = range.recommended.toLocaleString();
+            const absMax = range.absoluteMax.toLocaleString();
+            rangeValue.textContent = `🎯 Target: ${recommended} | Max: ${absMax}`;
+
+            // Color based on flexibility
+            const flexibility = range.absoluteMax - range.recommended;
+            if (flexibility < 1000) {
+              rangeValue.className = "range-value status-warning";
+            } else {
+              rangeValue.className = "range-value status-success";
+            }
+          }
+        } else {
+          rangeDisplay.classList.add("hidden");
+        }
+      } else {
+        rangeDisplay.classList.add("hidden");
+        input.classList.remove("input-valid", "input-warning");
+      }
+    });
+  }
+}
+
+// Navigation System
+function initializeNavigation() {
+  const navButtons = document.querySelectorAll(".nav-tab");
+  const toolViews = document.querySelectorAll(".tool-view");
+
+  function showTool(toolName) {
+    // Update nav buttons
+    navButtons.forEach((btn) => {
+      if (btn.dataset.tool === toolName) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+
+    // Update views
+    toolViews.forEach((view) => {
+      if (
+        view.id === `${toolName}-container` ||
+        (toolName === "timer" && view.id === "boss-container")
+      ) {
+        view.classList.add("active");
+      } else {
+        view.classList.remove("active");
+      }
+    });
+
+    // Update URL hash
+    window.location.hash = toolName;
+
+    // Update page title
+    if (toolName === "sf-calculator") {
+      document.title = "SF Calculator - Blade & Soul Neo Tools";
+    } else {
+      document.title =
+        "Blade & Soul Neo EU Field Boss Timer by Hayder (Kindle)";
+    }
+  }
+
+  // Bind navigation clicks
+  navButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showTool(btn.dataset.tool);
+    });
+  });
+
+  // Handle hash navigation
+  window.addEventListener("hashchange", () => {
+    const hash = window.location.hash.substring(1);
+    if (hash === "sf-calculator" || hash === "timer") {
+      showTool(hash);
+    }
+  });
+
+  // Initialize from hash or default to timer
+  const initialHash = window.location.hash.substring(1);
+  if (initialHash === "sf-calculator") {
+    showTool("sf-calculator");
+  } else {
+    showTool("timer");
+  }
+}
+
+// Initialize SF Calculator when DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  // Initialize navigation
+  initializeNavigation();
+
+  // Initialize SF Calculator if elements exist
+  if (document.getElementById("sf-calculator-container")) {
+    window.sfCalculatorUI = new SFCalculatorUI();
+  }
+});

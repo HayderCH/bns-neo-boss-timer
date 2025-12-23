@@ -1007,3 +1007,462 @@ footer.sound-enabled {
     align-items: center;
   }
 }
+
+/* ============================================
+   SF CALCULATOR STYLES
+   ============================================ */
+
+/* Navigation */
+.tool-nav {
+  display: flex;
+  gap: 0.5rem;
+  margin: 1rem 0;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.nav-tab {
+  padding: 0.75rem 1.5rem;
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.nav-tab:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.nav-tab.active {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border-color: #667eea;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Tool Views */
+.tool-view {
+  display: none;
+}
+
+.tool-view.active {
+  display: block;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* SF Calculator Container */
+.sf-calculator {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.calculator-title {
+  font-size: 2rem;
+  color: var(--region-heading);
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.calculator-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+}
+
+/* Dungeon Selection */
+.dungeon-selection {
+  margin-bottom: 2rem;
+}
+
+.dungeon-selection label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.dungeon-dropdown {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  background: rgba(0, 0, 0, 0.3);
+  border: 2px solid var(--card-border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.dungeon-dropdown option {
+  background: #1a1a2e;
+  color: var(--text-primary);
+}
+
+.dungeon-dropdown:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.dungeon-dropdown:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+/* Requirements Section */
+.requirements-section {
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.requirements-section h3 {
+  margin-bottom: 1rem;
+  color: var(--region-heading);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+#modified-indicator {
+  font-size: 0.9rem;
+  color: #ffa500;
+}
+
+.requirement-inputs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  align-items: end;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-group label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.sf-input {
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 2px solid var(--card-border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.sf-input:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.sf-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.sf-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.reset-preset-btn {
+  padding: 0.75rem 1rem;
+  background: rgba(255, 165, 0, 0.2);
+  border: 2px solid rgba(255, 165, 0, 0.5);
+  border-radius: 8px;
+  color: var(--text-primary);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.reset-preset-btn:hover {
+  background: rgba(255, 165, 0, 0.3);
+  border-color: rgba(255, 165, 0, 0.7);
+  transform: translateY(-2px);
+}
+
+/* Party Section */
+.party-section {
+  margin-bottom: 2rem;
+}
+
+.party-section h3 {
+  margin-bottom: 1rem;
+  color: var(--region-heading);
+}
+
+.party-slots {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.party-slot {
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.3s ease;
+}
+
+.party-slot:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.slot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.slot-label {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.clear-slot-btn {
+  padding: 0.25rem 0.5rem;
+  background: rgba(255, 69, 58, 0.2);
+  border: 1px solid rgba(255, 69, 58, 0.5);
+  border-radius: 4px;
+  color: #ff4540;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.clear-slot-btn:hover {
+  background: rgba(255, 69, 58, 0.3);
+  border-color: rgba(255, 69, 58, 0.7);
+}
+
+.slot-input {
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1rem;
+  background: rgba(0, 0, 0, 0.2);
+  border: 2px solid var(--card-border);
+  border-radius: 8px;
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.slot-input:hover {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+.slot-input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.slot-input.input-valid {
+  border-color: #4caf50;
+  background: rgba(76, 175, 80, 0.1);
+}
+
+.slot-input.input-warning {
+  border-color: #ffa500;
+  background: rgba(255, 165, 0, 0.1);
+}
+
+.slot-input::placeholder {
+  color: var(--text-secondary);
+  opacity: 0.5;
+}
+
+.slot-range {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  word-wrap: break-word;
+}
+
+.range-label {
+  color: var(--text-secondary);
+  margin-right: 0.5rem;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.range-value {
+  font-weight: 600;
+  display: block;
+}
+
+.range-value.status-success {
+  color: #4caf50;
+}
+
+.range-value.status-warning {
+  color: #ffa500;
+}
+
+.range-value.status-error {
+  color: #ff4540;
+}
+
+/* Party Status */
+.party-status {
+  background: var(--card-bg);
+  border: 2px solid var(--card-border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.status-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.status-item.full-width {
+  grid-column: 1 / -1;
+}
+
+.status-label {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.status-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.status-indicator {
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.status-indicator.status-neutral {
+  background: rgba(158, 158, 158, 0.2);
+  border: 2px solid rgba(158, 158, 158, 0.5);
+  color: #9e9e9e;
+}
+
+.status-indicator.status-success {
+  background: rgba(76, 175, 80, 0.2);
+  border: 2px solid rgba(76, 175, 80, 0.5);
+  color: #4caf50;
+}
+
+.status-indicator.status-warning {
+  background: rgba(255, 165, 0, 0.2);
+  border: 2px solid rgba(255, 165, 0, 0.5);
+  color: #ffa500;
+}
+
+.status-indicator.status-error {
+  background: rgba(255, 69, 58, 0.2);
+  border: 2px solid rgba(255, 69, 58, 0.5);
+  color: #ff4540;
+}
+
+/* Reset Party Button */
+.reset-party-btn {
+  width: 100%;
+  padding: 1rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: rgba(255, 69, 58, 0.2);
+  border: 2px solid rgba(255, 69, 58, 0.5);
+  border-radius: 12px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.reset-party-btn:hover {
+  background: rgba(255, 69, 58, 0.3);
+  border-color: rgba(255, 69, 58, 0.7);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 69, 58, 0.3);
+}
+
+/* Utility */
+.hidden {
+  display: none !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .sf-calculator {
+    padding: 1rem;
+  }
+
+  .calculator-title {
+    font-size: 1.5rem;
+  }
+
+  .requirement-inputs {
+    grid-template-columns: 1fr;
+  }
+
+  .party-slots {
+    grid-template-columns: 1fr;
+  }
+
+  .party-status {
+    grid-template-columns: 1fr;
+  }
+
+  .nav-tab {
+    padding: 0.6rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .calculator-title {
+    font-size: 1.3rem;
+  }
+
+  .calculator-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .status-value {
+    font-size: 1rem;
+  }
+}
