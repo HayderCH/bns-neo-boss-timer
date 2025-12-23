@@ -77,7 +77,8 @@
                             title="Download today's spawns as calendar file">📅 Export to Calendar</button>
                 </div>
             </header>
-            <div class="community-message">
+            <!-- Boss Timer Message -->
+            <div class="community-message" id="boss-timer-message">
                 <p>
                     💙 This list is made by kind players who love the BNS Neo community. If you would like to help make this website better, please add any boss timer (try to be exact) using <a href="https://docs.google.com/spreadsheets/d/1unXxTlJ53VZBLMOs7XtpWqMyWC7WYHQ0KN3MmqejGIY/edit?gid=0#gid=0"
     target="_blank">this link</a>, no pressure! 🎮
@@ -85,6 +86,27 @@
                 <p class="last-updated" id="last-updated">
                     📅 Data last updated: <span id="update-time">Loading...</span>
                 </p>
+            </div>
+            <!-- SF Calculator Message -->
+            <div class="community-message hidden" id="sf-calculator-message">
+                <p>
+                    <strong>⚡ Powered by Gunner Soha.</strong>
+                </p>
+                <div class="guide-content">
+                    <p>
+                        <strong>📖 Quick Guide:</strong>
+                    </p>
+                    <ol class="guide-steps">
+                        <li>Select your dungeon from the dropdown</li>
+                        <li>Fill in your SF (Slot 1 - You)</li>
+                        <li>Add party members' SF as they join</li>
+                        <li>Check the recommended target for remaining slots</li>
+                        <li>Use "Copy for World Chat" to recruit more players</li>
+                    </ol>
+                    <p class="guide-tip">
+                        💡 <strong>Tip:</strong> Adjust SF Tolerance for flexible recruitment ranges!
+                    </p>
+                </div>
             </div>
             <!-- Boss Timer View (Default) -->
             <main id="boss-container" class="tool-view active">
@@ -179,7 +201,7 @@
                 </div>
             </main>
             <footer>
-                <p>
+                <p id="footer-content">
                     Made with 💙 by <strong>Hayder (Kindle)</strong> for the BNS Neo EU community
                 </p>
             </footer>

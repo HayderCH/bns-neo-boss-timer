@@ -1721,6 +1721,8 @@ class SFCalculatorUI {
 function initializeNavigation() {
   const navButtons = document.querySelectorAll(".nav-tab");
   const toolViews = document.querySelectorAll(".tool-view");
+  const bossTimerMessage = document.getElementById("boss-timer-message");
+  const sfCalculatorMessage = document.getElementById("sf-calculator-message");
 
   function showTool(toolName) {
     // Update nav buttons
@@ -1743,6 +1745,15 @@ function initializeNavigation() {
         view.classList.remove("active");
       }
     });
+
+    // Update messages based on active tool
+    if (toolName === "sf-calculator") {
+      bossTimerMessage.classList.add("hidden");
+      sfCalculatorMessage.classList.remove("hidden");
+    } else {
+      bossTimerMessage.classList.remove("hidden");
+      sfCalculatorMessage.classList.add("hidden");
+    }
 
     // Update URL hash
     window.location.hash = toolName;
