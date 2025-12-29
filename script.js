@@ -1,5 +1,5 @@
 // ============================================
-// Blade & Soul Neo EU Field Boss Timer
+// Blade & Soul Neo EU/NA Field Boss Timer
 // Day-based schedule system
 // ============================================
 
@@ -1818,7 +1818,7 @@ function initializeNavigation() {
       document.title = "Currency Converter - Blade & Soul Neo Tools";
     } else {
       document.title =
-        "Blade & Soul Neo EU Field Boss Timer by Hayder (Kindle)";
+        "Blade & Soul Neo EU/NA Field Boss Timer by Hayder (Kindle)";
     }
   }
 
