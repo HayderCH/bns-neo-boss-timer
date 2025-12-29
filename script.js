@@ -4,15 +4,8 @@
 // ============================================
 
 // Cache Version Check - Force reload if stale CSS/JS
-const CACHE_VERSION = "1.7.2";
-const currentVersion = localStorage.getItem("app-version");
-if (currentVersion !== CACHE_VERSION) {
-  localStorage.setItem("app-version", CACHE_VERSION);
-  if (!sessionStorage.getItem("reloaded-for-version")) {
-    sessionStorage.setItem("reloaded-for-version", "true");
-    window.location.reload(true);
-  }
-}
+const CACHE_VERSION = "1.8.1";
+// Note: Main version check is now inline in index.html <head> for reliability
 
 // State Management
 const state = {
@@ -21,6 +14,7 @@ const state = {
   audioEnabled: false,
   volume: 0.5,
   notificationsEnabled: false,
+  currentRegion: "eu", // 'eu' or 'na'
 };
 
 // Day names for schedule lookup
@@ -450,20 +444,39 @@ function updateAllCountdowns() {
       const timerEl = element.querySelector(".boss-timer");
       const statusEl = element.querySelector(".boss-status");
 
-      // Parse spawn time as UTC+1 (server time) and convert to local
+      // Parse spawn time based on selected region
       const [hours, minutes] = spawn.time.split(":").map(Number);
-      // Create UTC date and add 1 hour for UTC+1 server time
-      const spawnTime = new Date(
-        Date.UTC(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate(),
-          hours - 1, // Subtract 1 to convert UTC+1 to UTC
-          minutes,
-          0,
-          0
-        )
-      );
+      let spawnTime;
+
+      if (state.currentRegion === "na") {
+        // NA server time is UTC-6
+        // Convert UTC-6 to UTC by adding 6 hours
+        spawnTime = new Date(
+          Date.UTC(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            hours + 6, // Add 6 to convert UTC-6 to UTC
+            minutes,
+            0,
+            0
+          )
+        );
+      } else {
+        // EU server time is UTC+1 (default)
+        // Convert UTC+1 to UTC by subtracting 1 hour
+        spawnTime = new Date(
+          Date.UTC(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            hours - 1, // Subtract 1 to convert UTC+1 to UTC
+            minutes,
+            0,
+            0
+          )
+        );
+      }
 
       const diff = spawnTime - now;
       const diffSeconds = Math.floor(diff / 1000);
@@ -525,7 +538,7 @@ function updateAllCountdowns() {
         // Soon state - within 5 minutes (PINK)
         element.className = "boss-item soon";
         timerEl.textContent = formatTime(diffSeconds);
-        statusEl.textContent = "Spawning soon!";
+        statusEl.textContent = "Announcing soon!";
 
         if (!spawnState.alarmPlayed) {
           spawnState.alarmPlayed = true;
@@ -1031,18 +1044,35 @@ function exportToCalendar() {
 
     todaySchedule.forEach((spawn) => {
       const [hours, minutes] = spawn.time.split(":").map(Number);
-      // Create UTC date and add 1 hour for UTC+1 server time
-      const spawnTime = new Date(
-        Date.UTC(
-          now.getFullYear(),
-          now.getMonth(),
-          now.getDate(),
-          hours - 1, // Subtract 1 to convert UTC+1 to UTC
-          minutes,
-          0,
-          0
-        )
-      );
+      let spawnTime;
+
+      if (state.currentRegion === "na") {
+        // NA server time is UTC-6
+        spawnTime = new Date(
+          Date.UTC(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            hours + 6, // Add 6 to convert UTC-6 to UTC
+            minutes,
+            0,
+            0
+          )
+        );
+      } else {
+        // EU server time is UTC+1 (default)
+        spawnTime = new Date(
+          Date.UTC(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            hours - 1, // Subtract 1 to convert UTC+1 to UTC
+            minutes,
+            0,
+            0
+          )
+        );
+      }
 
       events.push({
         time: spawnTime,
@@ -1061,13 +1091,14 @@ function exportToCalendar() {
   }
 
   // Generate ICS file
-  const ics = generateICS(events, currentDay);
+  const regionLabel = state.currentRegion === "na" ? "NA" : "EU";
+  const ics = generateICS(events, currentDay, regionLabel);
 
   // Download file
   const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
   const link = document.createElement("a");
   link.href = URL.createObjectURL(blob);
-  link.download = `BNS-Field-Bosses-${currentDay}-${
+  link.download = `BNS-Field-Bosses-${regionLabel}-${currentDay}-${
     now.toISOString().split("T")[0]
   }.ics`;
   document.body.appendChild(link);
@@ -1087,7 +1118,7 @@ function exportToCalendar() {
   }, 2000);
 }
 
-function generateICS(events, dayName) {
+function generateICS(events, dayName, regionLabel = "EU") {
   const now = new Date();
   const timestamp = now.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
 
@@ -1097,7 +1128,7 @@ function generateICS(events, dayName) {
     "PRODID:-//BNS Neo Field Boss Timer//EN",
     "CALSCALE:GREGORIAN",
     "METHOD:PUBLISH",
-    "X-WR-CALNAME:BNS Field Bosses - " + dayName,
+    "X-WR-CALNAME:BNS Field Bosses " + regionLabel + " - " + dayName,
     "X-WR-TIMEZONE:UTC",
   ];
 
@@ -1720,10 +1751,14 @@ class SFCalculatorUI {
 // Navigation System
 function initializeNavigation() {
   const navButtons = document.querySelectorAll(".nav-tab");
+  const regionButtons = document.querySelectorAll(".region-tab");
+  const regionNav = document.getElementById("region-nav");
   const toolViews = document.querySelectorAll(".tool-view");
   const bossTimerMessage = document.getElementById("boss-timer-message");
   const sfCalculatorMessage = document.getElementById("sf-calculator-message");
   const converterMessage = document.getElementById("converter-message");
+  const serverTimeNotice = document.getElementById("server-time-notice");
+  const promoSidebar = document.getElementById("promo-sidebar");
 
   function showTool(toolName) {
     // Update nav buttons
@@ -1734,6 +1769,17 @@ function initializeNavigation() {
         btn.classList.remove("active");
       }
     });
+
+    // Show/hide region nav and promo sidebar based on tool
+    if (toolName === "timer") {
+      regionNav.style.display = "flex";
+      serverTimeNotice.style.display = "block";
+      if (promoSidebar) promoSidebar.classList.remove("hidden");
+    } else {
+      regionNav.style.display = "none";
+      serverTimeNotice.style.display = "none";
+      if (promoSidebar) promoSidebar.classList.add("hidden");
+    }
 
     // Update views
     toolViews.forEach((view) => {
@@ -1776,10 +1822,45 @@ function initializeNavigation() {
     }
   }
 
+  function showRegion(region) {
+    state.currentRegion = region;
+
+    // Update region buttons
+    regionButtons.forEach((btn) => {
+      if (btn.dataset.region === region) {
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+
+    // Update server time notice
+    const serverTimeText = document.getElementById("server-time-text");
+    if (serverTimeText) {
+      if (region === "eu") {
+        serverTimeText.textContent =
+          "All times shown are EU Server Time (UTC+1)";
+      } else {
+        serverTimeText.textContent =
+          "All times shown are NA Server Time (UTC-6)";
+      }
+    }
+
+    // Re-render boss list with new timezone
+    renderBossList();
+  }
+
   // Bind navigation clicks
   navButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
       showTool(btn.dataset.tool);
+    });
+  });
+
+  // Bind region clicks
+  regionButtons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      showRegion(btn.dataset.region);
     });
   });
 
@@ -1898,7 +1979,7 @@ class ConverterUI {
       }
       
       <div class="step-type-selector">
-        <label>Conversion Type: <span class="beta-badge">BETA</span></label>
+        <label>Conversion Type:</label>
         <select class="type-select" data-step-id="${step.id}">
           <option value="ratio" selected>📐 Fixed Ratio - e.g., 150 Divine Gems per 10 Gold</option>
           <option value="probability">🎲 Probability - e.g., 0.5% chance per run</option>

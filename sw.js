@@ -1,8 +1,8 @@
 // BNS Neo Field Boss Timer - Service Worker
 // Provides offline functionality and caching
 
-const CACHE_NAME = "bns-timer-v1.7.2";
-const RUNTIME_CACHE = "bns-timer-runtime-v1.7.2";
+const CACHE_NAME = "bns-timer-v1.7.3";
+const RUNTIME_CACHE = "bns-timer-runtime-v1.7.3";
 
 // Determine base path (localhost vs GitHub Pages)
 const BASE_PATH =
@@ -70,6 +70,15 @@ self.addEventListener("activate", (event) => {
       })
       .then(() => self.clients.claim())
   );
+});
+
+// Listen for messages from the page (e.g., to skip waiting)
+self.addEventListener("message", (event) => {
+  if (!event.data) return;
+  if (event.data.type === "SKIP_WAITING") {
+    console.log("[SW] Received SKIP_WAITING message, calling skipWaiting()");
+    self.skipWaiting();
+  }
 });
 
 // Fetch event - serve from cache, fallback to network

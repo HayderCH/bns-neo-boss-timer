@@ -37,8 +37,38 @@
         <link rel="apple-touch-icon" href="assets/icon-192.svg">
         <link rel="icon" type="image/svg+xml" href="assets/icon-192.svg">
         <link rel="icon" type="image/x-icon" href="favicon.ico">
-        <link rel="stylesheet" href="styles.css?v=1.7.2">
+        <!-- Cache Control -->
+        <meta http-equiv="Cache-Control"
+              content="no-cache, no-store, must-revalidate">
+        <meta http-equiv="Pragma" content="no-cache">
+        <meta http-equiv="Expires" content="0">
+        <link rel="stylesheet" href="styles.css?v=1.8.1">
         <link rel="canonical" href="https://hayderch.github.io/bns-neo-boss-timer/">
+        <!-- Inline version check - runs BEFORE cached script.js -->
+        <script>
+            (function() {
+                var APP_VERSION = '1.8.1';
+                var stored = localStorage.getItem('bns-app-version');
+                if (stored && stored !== APP_VERSION) {
+                    localStorage.setItem('bns-app-version', APP_VERSION);
+                    // Clear all caches and force reload
+                    if ('caches' in window) {
+                        caches.keys().then(function(names) {
+                            names.forEach(function(name) { caches.delete(name); });
+                        });
+                    }
+                    // Unregister service workers
+                    if ('serviceWorker' in navigator) {
+                        navigator.serviceWorker.getRegistrations().then(function(regs) {
+                            regs.forEach(function(reg) { reg.unregister(); });
+                        });
+                    }
+                    location.reload(true);
+                } else if (!stored) {
+                    localStorage.setItem('bns-app-version', APP_VERSION);
+                }
+            })();
+        </script>
     </head>
     <body>
         <div class="container">
@@ -48,9 +78,15 @@
                 <nav class="tool-nav" id="tool-nav">
                     <button class="nav-tab active" data-tool="timer">🕐 Boss Timer</button>
                     <button class="nav-tab" data-tool="sf-calculator">📊 SF Calculator</button>
-                    <button class="nav-tab" data-tool="converter">💱 Currency/Probability</button>
+                    <button class="nav-tab" data-tool="converter">💱 Probability to Currency</button>
+                </nav>
+                <!-- Region Subtabs (only visible when Boss Timer is active) -->
+                <nav class="region-nav" id="region-nav">
+                    <button class="region-tab active" data-region="eu">🌍 EU (UTC+1)</button>
+                    <button class="region-tab" data-region="na">🌎 NA (UTC-6)</button>
                 </nav>
                 <div class="server-time-notice"
+                     id="server-time-notice"
                      style="background: #fff3cd;
                             border: 1px solid #ffc107;
                             padding: 0.5rem 1rem;
@@ -58,7 +94,7 @@
                             border-radius: 8px;
                             text-align: center;
                             color: #856404">
-                    ⏰ <strong>All times shown are EU Server Time (UTC+1)</strong>
+                    ⏰ <strong id="server-time-text">All times shown are EU Server Time (UTC+1)</strong>
                 </div>
                 <div class="loading-bar" id="loading-bar"></div>
                 <div class="header-controls">
@@ -109,7 +145,7 @@
                     </p>
                 </div>
             </div>
-            <!-- Currency/Probability Converter Message -->
+            <!-- Probability to Currency Converter Message -->
             <div class="community-message hidden" id="converter-message">
                 <p>
                     <strong>⚡ Powered by Brother Hajoon (Or Scamjoon?)</strong>
@@ -131,10 +167,33 @@
                 </div>
             </div>
             <!-- Boss Timer View (Default) -->
-            <main id="boss-container" class="tool-view active">
-                <!-- Boss regions and timers will be rendered here by JavaScript -->
-                <p class="loading">Loading boss schedules...</p>
-            </main>
+            <div class="timer-layout" id="timer-layout">
+                <!-- Promotional Sidebar -->
+                <aside class="promo-sidebar" id="promo-sidebar">
+                    <div class="promo-box sf-promo"
+                         onclick="window.location.hash='sf-calculator'">
+                        <div class="promo-icon">📊</div>
+                        <h3>SF Calculator</h3>
+                        <p>
+                            Planning Challenge Mode or Normal Mode? Our SF Calculator helps you recruit <strong>exactly the right SF</strong> for your party. No more guesswork — build the perfect team!
+                        </p>
+                        <span class="promo-cta">Try it now →</span>
+                    </div>
+                    <div class="promo-box probability-promo"
+                         onclick="window.location.hash='converter'">
+                        <div class="promo-icon">🎲</div>
+                        <h3>Probability to Currency</h3>
+                        <p>
+                            Want to detect <strong>Scamjoon</strong> and know how much gamba will really cost you? Our calculator uses <strong>universal mathematical probability</strong> — accurate and reliable!
+                        </p>
+                        <span class="promo-cta">Calculate odds →</span>
+                    </div>
+                </aside>
+                <main id="boss-container" class="tool-view active">
+                    <!-- Boss regions and timers will be rendered here by JavaScript -->
+                    <p class="loading">Loading boss schedules...</p>
+                </main>
+            </div>
             <!-- SF Calculator View -->
             <main id="sf-calculator-container" class="tool-view">
                 <div class="sf-calculator">
@@ -222,10 +281,10 @@
                     </div>
                 </div>
             </main>
-            <!-- Currency/Probability Converter View -->
+            <!-- Probability to Currency Converter View -->
             <main id="converter-container" class="tool-view">
                 <div class="converter-tool">
-                    <h2 class="converter-title">💱 Currency & Probability Converter</h2>
+                    <h2 class="converter-title">💱 Probability to Currency Converter</h2>
                     <p class="converter-subtitle">Build conversion chains with multiple steps and branching paths</p>
                     <!-- Step Builder Container -->
                     <div id="steps-container" class="steps-container">
@@ -269,7 +328,7 @@
         <audio id="alarm-sound" preload="auto">
             <source src="assets/notification.mp3" type="audio/mpeg">
         </audio>
-        <script src="dungeons.js?v=1.0.0"></script>
-        <script src="script.js?v=1.7.2"></script>
+        <script src="dungeons.js?v=1.8.1"></script>
+        <script src="script.js?v=1.8.1"></script>
     </body>
 </html>

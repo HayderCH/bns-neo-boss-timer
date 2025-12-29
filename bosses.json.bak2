@@ -128,10 +128,6 @@
         "location": "Skypetal Plains"
       },
       {
-        "time": "18:59",
-        "location": "Skypetal Plains"
-      },
-      {
         "time": "23:37",
         "location": "Primeval Forest"
       }
@@ -460,24 +456,10 @@
       }
     ],
     "Wednesday": [],
-    "Thursday": [
-      {
-        "time": "09:02",
-        "location": "Lycan"
-      }
-    ],
-    "Friday": [
-      {
-        "time": "08:57",
-        "location": "Lycan"
-      }
-    ],
+    "Thursday": [],
+    "Friday": [],
     "Saturday": [],
     "Sunday": [
-      {
-        "time": "17:15",
-        "location": "Sajifi"
-      },
       {
         "time": "23:08",
         "location": "Profane"
