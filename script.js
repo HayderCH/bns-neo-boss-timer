@@ -4,7 +4,7 @@
 // ============================================
 
 // Cache Version Check - Force reload if stale CSS/JS
-const CACHE_VERSION = "1.8.1";
+const CACHE_VERSION = "1.8.2";
 // Note: Main version check is now inline in index.html <head> for reliability
 
 // State Management
