@@ -91,6 +91,15 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
+  // Always bypass caches for SEO-critical files so Googlebot sees fresh content
+  if (
+    request.url.endsWith("sitemap.xml") ||
+    request.url.endsWith("robots.txt")
+  ) {
+    event.respondWith(fetch(request));
+    return;
+  }
+
   // Network-first strategy for critical files (HTML, CSS, JS, JSON)
   if (
     request.url.includes(".html") ||
