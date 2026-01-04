@@ -40,6 +40,11 @@ let midnightRefreshTimeout = null;
 // ============================================
 
 document.addEventListener("DOMContentLoaded", async () => {
+  // Track page load
+  if (typeof analytics !== "undefined") {
+    analytics.track("page", "page_load", window.location.pathname);
+  }
+
   alarmSound = document.getElementById("alarm-sound");
   volumeSlider = document.getElementById("volume-slider");
   volumeValue = document.getElementById("volume-value");
@@ -71,19 +76,39 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Setup theme toggle button
   const themeBtn = document.getElementById("theme-toggle-btn");
   if (themeBtn) {
-    themeBtn.addEventListener("click", toggleTheme);
+    themeBtn.addEventListener("click", () => {
+      const currentTheme = document.body.classList.contains("dark-theme")
+        ? "dark"
+        : "light";
+      const newTheme = currentTheme === "dark" ? "light" : "dark";
+      if (typeof analytics !== "undefined") {
+        analytics.track("header_control", "theme_toggle", newTheme);
+      }
+      toggleTheme();
+    });
   }
 
   // Setup export calendar button
   const exportBtn = document.getElementById("export-calendar-btn");
   if (exportBtn) {
-    exportBtn.addEventListener("click", exportToCalendar);
+    exportBtn.addEventListener("click", () => {
+      if (typeof analytics !== "undefined") {
+        analytics.track("header_control", "export_calendar", "clicked");
+      }
+      exportToCalendar();
+    });
   }
 
   // Setup notification toggle button
   const notifBtn = document.getElementById("notification-toggle-btn");
   if (notifBtn) {
-    notifBtn.addEventListener("click", toggleNotifications);
+    notifBtn.addEventListener("click", () => {
+      const newState = !state.notificationsEnabled ? "on" : "off";
+      if (typeof analytics !== "undefined") {
+        analytics.track("header_control", "notification_toggle", newState);
+      }
+      toggleNotifications();
+    });
     updateNotificationButton();
   }
 
@@ -93,6 +118,15 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Register service worker for PWA (DISABLED - causing cache issues)
   // registerServiceWorker();
 });
+
+// Track volume changes
+if (volumeSlider) {
+  volumeSlider.addEventListener("change", () => {
+    if (typeof analytics !== "undefined") {
+      analytics.track("header_control", "volume_change", volumeSlider.value);
+    }
+  });
+}
 
 // Enable audio on first user interaction
 document.addEventListener(
@@ -1441,20 +1475,48 @@ class SFCalculatorUI {
   }
 
   bindEvents() {
-    this.dungeonSelector.addEventListener("change", () =>
-      this.onDungeonChange()
-    );
+    this.dungeonSelector.addEventListener("change", () => {
+      if (typeof analytics !== "undefined") {
+        analytics.track(
+          "sf_calculator",
+          "dungeon_select",
+          this.dungeonSelector.value
+        );
+      }
+      this.onDungeonChange();
+    });
     this.minSFInput.addEventListener("input", () =>
       this.onRequirementsChange()
     );
     this.maxAvgInput.addEventListener("input", () =>
       this.onRequirementsChange()
     );
-    this.resetPresetBtn.addEventListener("click", () => this.onResetPreset());
-    this.resetPartyBtn.addEventListener("click", () => this.onResetParty());
-    this.copyWorldChatBtn.addEventListener("click", () =>
-      this.copyForWorldChat()
-    );
+    this.resetPresetBtn.addEventListener("click", () => {
+      if (typeof analytics !== "undefined") {
+        analytics.track(
+          "sf_calculator",
+          "reset_preset",
+          this.dungeonSelector.value
+        );
+      }
+      this.onResetPreset();
+    });
+    this.resetPartyBtn.addEventListener("click", () => {
+      if (typeof analytics !== "undefined") {
+        analytics.track("sf_calculator", "reset_party", "clicked");
+      }
+      this.onResetParty();
+    });
+    this.copyWorldChatBtn.addEventListener("click", () => {
+      if (typeof analytics !== "undefined") {
+        analytics.track(
+          "sf_calculator",
+          "copy_world_chat",
+          this.dungeonSelector.value
+        );
+      }
+      this.copyForWorldChat();
+    });
 
     // Party slot inputs
     this.partySlotsContainer.addEventListener("input", (e) => {
@@ -1899,14 +1961,24 @@ function initializeNavigation() {
   // Bind navigation clicks
   navButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
-      showTool(btn.dataset.tool);
+      const toolName = btn.dataset.tool;
+      // Track tab click
+      if (typeof analytics !== "undefined") {
+        analytics.track("navigation", "tab_click", toolName);
+      }
+      showTool(toolName);
     });
   });
 
   // Bind region clicks
   regionButtons.forEach((btn) => {
     btn.addEventListener("click", () => {
-      showRegion(btn.dataset.region);
+      const region = btn.dataset.region;
+      // Track region switch
+      if (typeof analytics !== "undefined") {
+        analytics.track("navigation", "region_switch", region.toUpperCase());
+      }
+      showRegion(region);
     });
   });
 
@@ -1966,8 +2038,26 @@ class ConverterUI {
   }
 
   bindEvents() {
-    this.addStepBtn.addEventListener("click", () => this.addStep());
-    this.resetBtn.addEventListener("click", () => this.resetAll());
+    this.addStepBtn.addEventListener("click", () => {
+      if (typeof analytics !== "undefined") {
+        analytics.track(
+          "converter",
+          "add_step",
+          `total_steps_${this.steps.length + 1}`
+        );
+      }
+      this.addStep();
+    });
+    this.resetBtn.addEventListener("click", () => {
+      if (typeof analytics !== "undefined") {
+        analytics.track(
+          "converter",
+          "reset_all",
+          `had_${this.steps.length}_steps`
+        );
+      }
+      this.resetAll();
+    });
   }
 
   addStep(inputFrom = null) {
@@ -2530,3 +2620,31 @@ class ConverterUI {
     this.addStep();
   }
 }
+
+// ============================================
+// Analytics - Setup Promo Tracking
+// ============================================
+function setupPromoTracking() {
+  const promoBoxes = document.querySelectorAll(".promo-box");
+  promoBoxes.forEach((box) => {
+    box.addEventListener("click", () => {
+      let promoName = "Unknown";
+      if (box.classList.contains("sf-promo")) {
+        promoName = "SF Calculator";
+      } else if (box.classList.contains("probability-promo")) {
+        promoName = "Probability Converter";
+      } else if (box.classList.contains("celestial-promo")) {
+        promoName = "Celestial Clan";
+      }
+
+      if (typeof analytics !== "undefined") {
+        analytics.track("promo", "promo_click", promoName);
+      }
+    });
+  });
+}
+
+// Setup promo tracking when DOM is ready
+document.addEventListener("DOMContentLoaded", () => {
+  setupPromoTracking();
+});
