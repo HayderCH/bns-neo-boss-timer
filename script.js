@@ -12,7 +12,7 @@ const state = {
   bosses: {},
   bossStates: new Map(), // Tracks state per spawn: { status, spawningEndTime, alarmPlayed, notificationSent }
   audioEnabled: false,
-  volume: 0.5,
+  volume: 0.25,
   notificationsEnabled: false,
   currentRegion: "eu", // 'eu' or 'na'
 };
@@ -33,6 +33,7 @@ let alarmSound;
 let volumeSlider;
 let volumeValue;
 let bossContainer;
+let midnightRefreshTimeout = null;
 
 // ============================================
 // Initialization
@@ -305,7 +306,8 @@ function renderBossList() {
   bossContainer.innerHTML = "";
 
   const now = new Date();
-  const currentDay = DAYS[now.getDay()];
+  const serverNow = getServerTime(now);
+  const currentDay = DAYS[serverNow.getUTCDay()];
 
   // Create horizontal container for regions
   const regionsContainer = document.createElement("div");
@@ -413,12 +415,35 @@ function startTimerLoop() {
 }
 
 function scheduleMiddnightRefresh() {
-  const now = new Date();
-  const midnight = new Date(now);
-  midnight.setHours(24, 0, 0, 0);
-  const msUntilMidnight = midnight - now;
+  // Cancel existing timeout if any
+  if (midnightRefreshTimeout) {
+    clearTimeout(midnightRefreshTimeout);
+  }
 
-  setTimeout(() => {
+  const now = new Date();
+  const serverNow = getServerTime(now);
+
+  // Calculate next midnight in server time (UTC)
+  const serverMidnight = new Date(
+    Date.UTC(
+      serverNow.getUTCFullYear(),
+      serverNow.getUTCMonth(),
+      serverNow.getUTCDate() + 1,
+      0,
+      0,
+      0,
+      0
+    )
+  );
+
+  // Convert back to user's time
+  const offsetHours = state.currentRegion === "na" ? -6 : 1;
+  const userMidnight = new Date(
+    serverMidnight.getTime() - offsetHours * 3600000
+  );
+  const msUntilMidnight = userMidnight - now;
+
+  midnightRefreshTimeout = setTimeout(() => {
     renderBossList();
     scheduleMiddnightRefresh();
   }, msUntilMidnight + 1000);
@@ -426,7 +451,8 @@ function scheduleMiddnightRefresh() {
 
 function updateAllCountdowns() {
   const now = new Date();
-  const currentDay = DAYS[now.getDay()];
+  const serverNow = getServerTime(now);
+  const currentDay = DAYS[serverNow.getUTCDay()];
 
   for (const [region, schedule] of Object.entries(state.bosses)) {
     // Skip regions with just notes
@@ -444,18 +470,18 @@ function updateAllCountdowns() {
       const timerEl = element.querySelector(".boss-timer");
       const statusEl = element.querySelector(".boss-status");
 
-      // Parse spawn time based on selected region
+      // Parse spawn time based on selected region using server date
       const [hours, minutes] = spawn.time.split(":").map(Number);
       let spawnTime;
 
       if (state.currentRegion === "na") {
         // NA server time is UTC-6
-        // Convert UTC-6 to UTC by adding 6 hours
+        // Build spawn time on server date, then convert to UTC
         spawnTime = new Date(
           Date.UTC(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate(),
+            serverNow.getUTCFullYear(),
+            serverNow.getUTCMonth(),
+            serverNow.getUTCDate(),
             hours + 6, // Add 6 to convert UTC-6 to UTC
             minutes,
             0,
@@ -464,12 +490,12 @@ function updateAllCountdowns() {
         );
       } else {
         // EU server time is UTC+1 (default)
-        // Convert UTC+1 to UTC by subtracting 1 hour
+        // Build spawn time on server date, then convert to UTC
         spawnTime = new Date(
           Date.UTC(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate(),
+            serverNow.getUTCFullYear(),
+            serverNow.getUTCMonth(),
+            serverNow.getUTCDate(),
             hours - 1, // Subtract 1 to convert UTC+1 to UTC
             minutes,
             0,
@@ -1026,13 +1052,30 @@ function formatTime(totalSeconds) {
     .padStart(2, "0")}`;
 }
 
+function getServerTime(userTime) {
+  // Convert user's local time to what the clock shows in server's timezone
+  // Server time = UTC time + server offset
+  const offsetHours = state.currentRegion === "na" ? -6 : 1;
+
+  // Get UTC timestamp and create new date shifted by server offset
+  // This gives us a UTC date that represents the server's local time
+  const utcTimestamp = userTime.getTime();
+  const serverLocalTime = new Date(utcTimestamp + offsetHours * 3600000);
+
+  return serverLocalTime;
+}
+
+// Debug helper (exposed globally for console testing)
+window.getServerTime = getServerTime;
+
 // ============================================
 // Export to Calendar
 // ============================================
 
 function exportToCalendar() {
   const now = new Date();
-  const currentDay = DAYS[now.getDay()];
+  const serverNow = getServerTime(now);
+  const currentDay = DAYS[serverNow.getUTCDay()];
 
   let events = [];
 
@@ -1050,9 +1093,9 @@ function exportToCalendar() {
         // NA server time is UTC-6
         spawnTime = new Date(
           Date.UTC(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate(),
+            serverNow.getUTCFullYear(),
+            serverNow.getUTCMonth(),
+            serverNow.getUTCDate(),
             hours + 6, // Add 6 to convert UTC-6 to UTC
             minutes,
             0,
@@ -1063,9 +1106,9 @@ function exportToCalendar() {
         // EU server time is UTC+1 (default)
         spawnTime = new Date(
           Date.UTC(
-            now.getFullYear(),
-            now.getMonth(),
-            now.getDate(),
+            serverNow.getUTCFullYear(),
+            serverNow.getUTCMonth(),
+            serverNow.getUTCDate(),
             hours - 1, // Subtract 1 to convert UTC+1 to UTC
             minutes,
             0,
@@ -1848,6 +1891,9 @@ function initializeNavigation() {
 
     // Re-render boss list with new timezone
     renderBossList();
+
+    // Reschedule midnight refresh for new region
+    scheduleMiddnightRefresh();
   }
 
   // Bind navigation clicks
