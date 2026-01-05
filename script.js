@@ -50,6 +50,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   volumeValue = document.getElementById("volume-value");
   bossContainer = document.getElementById("boss-container");
 
+  // Initialize volume slider with saved value
+  if (volumeSlider && volumeValue) {
+    const volumePercent = Math.round(state.volume * 100);
+    volumeSlider.value = volumePercent;
+    volumeValue.textContent = `${volumePercent}%`;
+    alarmSound.volume = state.volume;
+  }
+
   setupAudio();
   initializeTheme();
 
@@ -166,6 +174,8 @@ function setupAudio() {
     state.volume = value / 100;
     alarmSound.volume = state.volume;
     volumeValue.textContent = `${value}%`;
+    // Save volume preference
+    localStorage.setItem("bns-volume", state.volume);
   });
 }
 
@@ -210,14 +220,11 @@ function playBeep() {
 
 function playAlarm() {
   if (state.audioEnabled && state.volume > 0) {
-    // Try MP3 first, fallback to beep
+    // Try MP3 first, fallback to beep only if it fails
     alarmSound.currentTime = 0;
     alarmSound.play().catch(() => {
       playBeep();
     });
-
-    // Also play beep as backup
-    playBeep();
   }
 }
 
