@@ -14,7 +14,7 @@ const state = {
   audioEnabled: false,
   volume: 0.25,
   notificationsEnabled: false,
-  currentRegion: "eu", // 'eu' or 'na'
+  currentRegion: localStorage.getItem("bns-region") || "eu", // 'eu' or 'na' - load saved preference
 };
 
 // Day names for schedule lookup
@@ -1930,6 +1930,9 @@ function initializeNavigation() {
   function showRegion(region) {
     state.currentRegion = region;
 
+    // Save region preference to localStorage
+    localStorage.setItem("bns-region", region);
+
     // Update region buttons
     regionButtons.forEach((btn) => {
       if (btn.dataset.region === region) {
@@ -1997,6 +2000,9 @@ function initializeNavigation() {
   } else {
     showTool("timer");
   }
+
+  // Initialize region from saved preference
+  showRegion(state.currentRegion);
 }
 
 // Initialize SF Calculator when DOM is ready

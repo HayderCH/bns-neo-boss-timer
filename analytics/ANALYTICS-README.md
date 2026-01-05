@@ -33,10 +33,10 @@ A: Date | B: Total Events | C: Tab Clicks | D: SF Calculator | E: Converter | F:
 - A2: `=TEXT(TODAY(), "yyyy-MM-dd")`
 - B2: `=COUNTIF('Raw Events'!B:B, A2)`
 - C2: `=COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!D:D, "navigation")`
-- D2: `=COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!F:F, "*SF Calculator*")`
-- E2: `=COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!F:F, "*Converter*")`
-- F2: `=COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!F:F, "*Boss Timer*")`
-- G2: `=COUNTA(UNIQUE(FILTER('Raw Events'!G:G, 'Raw Events'!B:B=A2)))-1`
+- D2: `=COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!D:D, "sf_calculator") + COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!F:F, "*sf-calculator*")`
+- E2: `=COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!D:D, "converter") + COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!F:F, "*converter*")`
+- F2: `=COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!D:D, "boss_timer") + COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!F:F, "*timer*")`
+- G2: `=COUNTA(UNIQUE(FILTER('Raw Events'!G2:G, 'Raw Events'!B2:B=A2)))`
 
 Copy row 2 down for historical dates (change A3 to yesterday, A4 to day before, etc.)
 
@@ -62,12 +62,12 @@ A8: Average Events per Day
 ```
 B1: Value
 B2: =COUNTA('Raw Events'!A:A)-1
-B3: =INDEX('Raw Events'!F:F, MODE(MATCH('Raw Events'!F:F, 'Raw Events'!F:F, 0)))
-B4: =INDEX('Raw Events'!F:F, MODE(MATCH(FILTER('Raw Events'!F:F, 'Raw Events'!E:E="dungeon_select"), FILTER('Raw Events'!F:F, 'Raw Events'!E:E="dungeon_select"), 0)))
-B5: =INDEX('Raw Events'!H:H, MODE(MATCH('Raw Events'!H:H, 'Raw Events'!H:H, 0)))
+B3: =IFERROR(INDEX('Raw Events'!F2:F, MODE(MATCH('Raw Events'!F2:F, 'Raw Events'!F2:F, 0))), "Not enough data")
+B4: =IFERROR(INDEX(FILTER('Raw Events'!F2:F, 'Raw Events'!E2:E="dungeon_select"), MODE(MATCH(FILTER('Raw Events'!F2:F, 'Raw Events'!E2:E="dungeon_select"), FILTER('Raw Events'!F2:F, 'Raw Events'!E2:E="dungeon_select"), 0))), "No dungeons selected yet")
+B5: =IFERROR(INDEX('Raw Events'!H2:H, MODE(MATCH('Raw Events'!H2:H, 'Raw Events'!H2:H, 0))), "Not enough data")
 B6: =COUNTIF('Raw Events'!D:D, "navigation")
 B7: =COUNTIF('Raw Events'!E:E, "*_click")
-B8: =B2/COUNTA(UNIQUE('Raw Events'!B:B))
+B8: =IF(COUNTA(UNIQUE('Raw Events'!B2:B))>0, B2/COUNTA(UNIQUE('Raw Events'!B2:B)), 0)
 ```
 
 ---
@@ -159,17 +159,88 @@ function testPost() {
   const result = doPost(testData);
   Logger.log(result.getContent());
 }
+
+// ============================================
+// Auto-create Daily Summary rows
+// ============================================
+
+// This function runs daily to create a new row for today
+function createDailySummaryRow() {
+  const ss = SpreadsheetApp.getActiveSpreadsheet();
+  const dailySummary = ss.getSheetByName("Daily Summary");
+
+  if (!dailySummary) {
+    Logger.log("Daily Summary sheet not found");
+    return;
+  }
+
+  const today = Utilities.formatDate(new Date(), "GMT", "yyyy-MM-dd");
+  const lastRow = dailySummary.getLastRow();
+
+  // Check if today's row already exists (check row 2, which is the most recent)
+  if (lastRow > 1) {
+    const topDate = dailySummary.getRange(2, 1).getValue();
+    // Format the date properly for comparison
+    const topDateStr = topDate
+      ? Utilities.formatDate(new Date(topDate), "GMT", "yyyy-MM-dd")
+      : "";
+    if (topDateStr === today) {
+      Logger.log("Today's row already exists");
+      return;
+    }
+  }
+
+  // Insert new row at position 2 (right after header)
+  dailySummary.insertRowBefore(2);
+
+  // Add formulas for the new row
+  const formulas = [
+    `=TEXT(TODAY(), "yyyy-MM-dd")`,
+    `=COUNTIF('Raw Events'!B:B, A2)`,
+    `=COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!D:D, "navigation")`,
+    `=COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!D:D, "sf_calculator") + COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!F:F, "*sf-calculator*")`,
+    `=COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!D:D, "converter") + COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!F:F, "*converter*")`,
+    `=COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!D:D, "boss_timer") + COUNTIFS('Raw Events'!B:B, A2, 'Raw Events'!F:F, "*timer*")`,
+    `=COUNTA(UNIQUE(FILTER('Raw Events'!G2:G, 'Raw Events'!B2:B=A2)))`,
+  ];
+
+  // Set formulas in the new row
+  for (let i = 0; i < formulas.length; i++) {
+    dailySummary.getRange(2, i + 1).setFormula(formulas[i]);
+  }
+
+  Logger.log("Created new row for " + today);
+}
 ```
 
-4. Click **Deploy → New deployment**
-5. Click the gear icon ⚙️ next to "Select type" → Choose **Web app**
-6. Configure:
+4. **Set up automatic daily trigger:**
+
+   - In Apps Script editor, click the **clock icon** ⏰ (Triggers) on the left sidebar
+   - Click **+ Add Trigger** (bottom right)
+   - Configure:
+     - Function: `createDailySummaryRow`
+     - Deployment: Head
+     - Event source: Time-driven
+     - Type: Day timer
+     - Time of day: 12am to 1am (or your preferred time)
+   - Click **Save**
+   - You may need to authorize the trigger
+
+5. **Manual first-time setup:**
+
+   - Run `createDailySummaryRow` once manually to create today's row
+   - Click the play button ▶️ next to the function name
+   - After that, it runs automatically every day!
+
+6. Click **Deploy → New deployment**
+7. Click the gear icon ⚙️ next to "Select type" → Choose **Web app**
+8. Configure:
    - **Description:** BNS Timer Analytics
    - **Execute as:** Me (your email)
    - **Who has access:** Anyone
-7. Click **Deploy**
-8. **Copy the Web App URL** (looks like: `https://script.google.com/macros/s/ABC123.../exec`)
-9. Paste it in `config.js` (next step)
+9. Click **Deploy**
+10. **Copy the Web App URL** (looks like: `https://script.google.com/macros/s/ABC123.../exec`)
+11. Paste it in `config.js` (next step)
 
 ---
 
