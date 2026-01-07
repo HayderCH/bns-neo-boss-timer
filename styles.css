@@ -2707,6 +2707,71 @@ footer.sound-enabled {
   border-color: #667eea;
 }
 
+.price-status-banner {
+  background: rgba(255, 193, 7, 0.15);
+  border-left: 4px solid #ffc107;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 6px;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: linear-gradient(135deg, #ff6b6b, #ee5a6f);
+  color: white;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.price-evolution {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  font-size: 1.05rem;
+}
+
+.old-price {
+  color: var(--text-secondary);
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.arrow {
+  color: var(--primary-color);
+  font-weight: bold;
+  font-size: 1.3rem;
+}
+
+.current-price {
+  color: #43e97b;
+  font-weight: bold;
+  font-size: 1.1rem;
+}
+
+.comparison-card.baseline {
+  background: linear-gradient(
+    135deg,
+    rgba(103, 126, 234, 0.1) 0%,
+    rgba(118, 75, 162, 0.1) 100%
+  );
+  border-color: #667eea;
+}
+
 .comparison-card.chest-method {
   background: linear-gradient(
     135deg,
@@ -2714,6 +2779,15 @@ footer.sound-enabled {
     rgba(56, 239, 125, 0.1) 100%
   );
   border-color: #11998e;
+}
+
+.chest-advantage {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(67, 233, 123, 0.15);
+  border-radius: 6px;
+  border-left: 3px solid #43e97b;
+  font-size: 0.95rem;
 }
 
 .comparison-card h4 {
@@ -2981,6 +3055,24 @@ footer.sound-enabled {
   border: 1px solid var(--border-color);
 }
 
+.prediction-card.success {
+  background: linear-gradient(
+    135deg,
+    rgba(67, 233, 123, 0.1),
+    rgba(56, 239, 125, 0.05)
+  );
+  border-color: rgba(67, 233, 123, 0.4);
+}
+
+.prediction-card.warning {
+  background: linear-gradient(
+    135deg,
+    rgba(255, 193, 7, 0.1),
+    rgba(255, 152, 0, 0.05)
+  );
+  border-color: rgba(255, 193, 7, 0.4);
+}
+
 .prediction-card h5 {
   margin: 0 0 1rem 0;
   color: var(--text-color);
@@ -3028,10 +3120,48 @@ footer.sound-enabled {
   margin: 0.5rem 0;
   border-radius: 6px;
   border-left: 3px solid #667eea;
+  transition: all 0.3s ease;
+}
+
+.timeline li.completed {
+  border-left-color: #43e97b;
+  background: rgba(67, 233, 123, 0.1);
+  opacity: 0.85;
+}
+
+.timeline li.active {
+  border-left-color: #ffc107;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 193, 7, 0.2),
+    rgba(255, 152, 0, 0.1)
+  );
+  border-left-width: 5px;
+  transform: translateX(5px);
+  box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+}
+
+.timeline li.upcoming {
+  border-left-color: #667eea;
+  opacity: 0.9;
+}
+
+.timeline li.future {
+  border-left-color: #9d4edd;
+  opacity: 0.75;
 }
 
 .timeline strong {
   color: var(--primary-color);
+}
+
+.timeline-insight {
+  margin-top: 1.5rem;
+  padding: 1rem;
+  background: rgba(76, 201, 240, 0.15);
+  border-left: 4px solid #4cc9f0;
+  border-radius: 6px;
+  font-style: italic;
 }
 
 .bottom-line {
@@ -3041,6 +3171,211 @@ footer.sound-enabled {
   border-radius: 4px;
   font-weight: bold;
   margin-top: 1.5rem;
+}
+
+/* Rare Outfit Hunters Section */
+.rare-hunters-section {
+  background: linear-gradient(
+    135deg,
+    rgba(138, 43, 226, 0.1),
+    rgba(75, 0, 130, 0.1)
+  );
+  border-radius: 12px;
+  padding: 2rem;
+  margin: 2rem 0;
+  border: 2px solid rgba(138, 43, 226, 0.3);
+}
+
+.rare-hunters-section .section-title {
+  color: #c77dff;
+  font-size: 1.8rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.hunter-intro {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin-bottom: 2rem;
+  border-left: 4px solid #9d4edd;
+}
+
+.hunter-intro p {
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.hunter-economics {
+  margin: 2rem 0;
+}
+
+.hunter-economics h4 {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.chain-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.chain-step {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+  transition: transform 0.2s ease;
+}
+
+.chain-step:hover {
+  transform: translateX(5px);
+}
+
+.chain-step.net-cost {
+  background: linear-gradient(
+    135deg,
+    rgba(76, 201, 240, 0.15),
+    rgba(67, 233, 123, 0.15)
+  );
+  border-left: 4px solid #43e97b;
+}
+
+.chain-step h5 {
+  color: var(--primary-color);
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+}
+
+.chain-step ul {
+  margin-left: 1.5rem;
+  margin-top: 0.5rem;
+}
+
+.chain-step ul ul {
+  margin-left: 2rem;
+  margin-top: 0.3rem;
+}
+
+.chain-step li {
+  margin: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.hunter-scenarios {
+  margin: 2rem 0;
+}
+
+.hunter-scenarios h4 {
+  color: var(--primary-color);
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.scenario-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.scenario-card {
+  background: rgba(255, 255, 255, 0.05);
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 2px solid rgba(102, 126, 234, 0.3);
+  transition: all 0.3s ease;
+}
+
+.scenario-card:hover {
+  transform: translateY(-5px);
+  border-color: rgba(102, 126, 234, 0.6);
+  box-shadow: 0 8px 16px rgba(102, 126, 234, 0.2);
+}
+
+.scenario-card h5 {
+  color: #667eea;
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid rgba(102, 126, 234, 0.3);
+}
+
+.scenario-card ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.scenario-card li {
+  padding: 0.5rem 0;
+  line-height: 1.5;
+}
+
+.scenario-card .chance {
+  margin-top: 1rem;
+  padding: 0.75rem;
+  background: rgba(67, 233, 123, 0.2);
+  border-radius: 6px;
+  border-left: 3px solid #43e97b;
+  font-weight: bold;
+  color: #43e97b;
+}
+
+.hunter-tips {
+  background: rgba(255, 193, 7, 0.1);
+  padding: 2rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+  border: 2px solid rgba(255, 193, 7, 0.3);
+}
+
+.hunter-tips h4 {
+  color: #ffc107;
+  font-size: 1.4rem;
+  margin-bottom: 1.5rem;
+}
+
+.hunter-tips ol {
+  margin-left: 1.5rem;
+}
+
+.hunter-tips li {
+  padding: 0.75rem 0;
+  line-height: 1.6;
+}
+
+.hunter-tips strong {
+  color: var(--primary-color);
+}
+
+.hunter-bottomline {
+  background: linear-gradient(
+    135deg,
+    rgba(76, 201, 240, 0.2),
+    rgba(67, 233, 123, 0.2)
+  );
+  padding: 2rem;
+  border-radius: 8px;
+  margin-top: 2rem;
+  border: 2px solid rgba(67, 233, 123, 0.5);
+}
+
+.hunter-bottomline h4 {
+  color: #43e97b;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+.hunter-bottomline p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  margin: 1rem 0;
 }
 
 /* Pro Tips Section */
