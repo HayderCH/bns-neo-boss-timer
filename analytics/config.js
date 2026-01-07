@@ -34,6 +34,8 @@ const AnalyticsConfig = {
     headerControls: true, // Theme, notifications, export
     promoSidebar: true, // Promo box clicks
     pageLoad: true, // Initial page load
+    promotion: true, // Promotional content clicks
+    market_news: true, // Market News interactions
   },
 };
 

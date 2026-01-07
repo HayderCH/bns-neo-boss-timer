@@ -1914,6 +1914,10 @@ function initializeNavigation() {
       bossTimerMessage.classList.add("hidden");
       sfCalculatorMessage.classList.add("hidden");
       converterMessage.classList.remove("hidden");
+    } else if (toolName === "market-news") {
+      bossTimerMessage.classList.add("hidden");
+      sfCalculatorMessage.classList.add("hidden");
+      converterMessage.classList.add("hidden");
     } else {
       bossTimerMessage.classList.remove("hidden");
       sfCalculatorMessage.classList.add("hidden");
@@ -1928,6 +1932,8 @@ function initializeNavigation() {
       document.title = "SF Calculator - Blade & Soul Neo Tools";
     } else if (toolName === "converter") {
       document.title = "Currency Converter - Blade & Soul Neo Tools";
+    } else if (toolName === "market-news") {
+      document.title = "Market News - Blade & Soul Neo Tools";
     } else {
       document.title =
         "Blade & Soul Neo EU/NA Field Boss Timer by Hayder (Kindle)";
@@ -1995,14 +2001,23 @@ function initializeNavigation() {
   // Handle hash navigation
   window.addEventListener("hashchange", () => {
     const hash = window.location.hash.substring(1);
-    if (hash === "sf-calculator" || hash === "timer" || hash === "converter") {
+    if (
+      hash === "sf-calculator" ||
+      hash === "timer" ||
+      hash === "converter" ||
+      hash === "market-news"
+    ) {
       showTool(hash);
     }
   });
 
   // Initialize from hash or default to timer
   const initialHash = window.location.hash.substring(1);
-  if (initialHash === "sf-calculator" || initialHash === "converter") {
+  if (
+    initialHash === "sf-calculator" ||
+    initialHash === "converter" ||
+    initialHash === "market-news"
+  ) {
     showTool(initialHash);
   } else {
     showTool("timer");
@@ -2026,7 +2041,58 @@ document.addEventListener("DOMContentLoaded", () => {
   if (document.getElementById("converter-container")) {
     window.converterUI = new ConverterUI();
   }
+
+  // Initialize Market News
+  initializeMarketNews();
 });
+
+// ============================================
+// Market News
+// ============================================
+
+function initializeMarketNews() {
+  // Collapsible preview toggle
+  const previewToggle = document.getElementById("preview-toggle");
+  const outfitPreviews = document.getElementById("outfit-previews");
+
+  if (previewToggle && outfitPreviews) {
+    previewToggle.addEventListener("click", () => {
+      const isHidden = outfitPreviews.classList.contains("hidden");
+
+      if (isHidden) {
+        outfitPreviews.classList.remove("hidden");
+        previewToggle.textContent = "🔼 Hide Outfit Previews";
+
+        // Track analytics
+        if (typeof analytics !== "undefined") {
+          analytics.track("market_news", "preview_expand", "outfit_previews");
+        }
+      } else {
+        outfitPreviews.classList.add("hidden");
+        previewToggle.textContent = "🔽 Show Full Outfit Previews";
+
+        // Track analytics
+        if (typeof analytics !== "undefined") {
+          analytics.track("market_news", "preview_collapse", "outfit_previews");
+        }
+      }
+    });
+  }
+
+  // Promotional box click handler
+  const streetOutfitPromo = document.querySelector(".street-outfit-promo");
+  if (streetOutfitPromo) {
+    streetOutfitPromo.addEventListener("click", () => {
+      // Track analytics
+      if (typeof analytics !== "undefined") {
+        analytics.track("promotion", "promo_box_click", "street_outfit_chest");
+      }
+
+      // Navigate to market-news tab
+      window.location.hash = "market-news";
+    });
+  }
+}
 
 // ============================================
 // Currency/Probability Converter

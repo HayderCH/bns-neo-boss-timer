@@ -77,6 +77,7 @@
                     <button class="nav-tab active" data-tool="timer">🕐 Boss Timer</button>
                     <button class="nav-tab" data-tool="sf-calculator">📊 SF Calculator</button>
                     <button class="nav-tab" data-tool="converter">💱 Probability to Currency</button>
+                    <button class="nav-tab" data-tool="market-news">💎 Market News</button>
                 </nav>
                 <!-- Region Subtabs (only visible when Boss Timer is active) -->
                 <nav class="region-nav" id="region-nav">
@@ -173,6 +174,24 @@
             <div class="timer-layout" id="timer-layout">
                 <!-- Promotional Sidebar -->
                 <aside class="promo-sidebar" id="promo-sidebar">
+                    <!-- NEW: Street Outfit Chest Promotional Box (TOP POSITION) -->
+                    <div class="promo-box street-outfit-promo featured-promo"
+                         onclick="window.location.hash='market-news'">
+                        <div class="promo-icon">
+                            <img src="assets/Street outfit chest.png"
+                                 alt="Street Outfit Chest"
+                                 class="promo-img">
+                        </div>
+                        <div class="event-badge">⏰ Jan 6-20, 2026</div>
+                        <h3>💎 Convert Gems to Gold!</h3>
+                        <p>
+                            Turn <strong>500 gems → ~26.62g</strong> instantly! Better than marketplace (need 1,879 gems for 100g via chests vs 2,000 gems on marketplace).
+                        </p>
+                        <p class="highlight-text">
+                            <strong>Get MORE gold per gem</strong> + skip marketplace hassle!
+                        </p>
+                        <span class="promo-cta">💰 See Full Analysis →</span>
+                    </div>
                     <div class="promo-box sf-promo"
                          onclick="window.location.hash='sf-calculator'">
                         <div class="promo-icon">📊</div>
@@ -317,6 +336,392 @@
                     </div>
                     <!-- Reset Button -->
                     <button id="reset-converter-btn" class="reset-converter-btn">🔄 Reset All Steps</button>
+                </div>
+            </main>
+            <!-- Market News View -->
+            <main id="market-news-container" class="tool-view">
+                <div class="market-news-tool">
+                    <h2 class="market-news-title">💎 Market News: Street Outfit Chest Event</h2>
+                    <p class="market-news-subtitle">Limited Time: Jan 6-20, 2026 | Convert gems to gold more efficiently!</p>
+                    <!-- Event Overview Section -->
+                    <section class="event-overview">
+                        <div class="event-header">
+                            <img src="assets/Street outfit chest.png"
+                                 alt="Street Outfit Chest"
+                                 class="event-chest-icon">
+                            <div class="event-info">
+                                <h3>Street Outfit Chest Event</h3>
+                                <p>
+                                    <strong>Available:</strong> Jan 6 - Jan 20, 2026 | <strong>Unlimited Purchases</strong>
+                                </p>
+                                <p class="event-cost">
+                                    <strong>Cost:</strong> 500
+                                    <img src="assets/divine gem.png" alt="Divine Gems" class="inline-icon">
+                                    Divine Gems
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Drop Table Section -->
+                    <section class="drop-table-section">
+                        <h3 class="section-title">🎁 What's Inside?</h3>
+                        <div class="outfit-drops">
+                            <div class="outfit-card common">
+                                <img src="assets/Hope icon.png" alt="Hope Outfit" class="outfit-icon">
+                                <div class="outfit-details">
+                                    <h4>Hope Outfit Chest</h4>
+                                    <div class="outfit-stats">
+                                        <span class="probability">📊 Probability: <strong>90%</strong></span>
+                                        <span class="sell-price">💰 Sell Price: <strong>25g</strong></span>
+                                        <span class="customizable">✨ Customizable: <strong>❌</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="outfit-card uncommon">
+                                <img src="assets/Final Showdown icon.png"
+                                     alt="Final Showdown Outfit"
+                                     class="outfit-icon">
+                                <div class="outfit-details">
+                                    <h4>Final Showdown Outfit Chest</h4>
+                                    <div class="outfit-stats">
+                                        <span class="probability">📊 Probability: <strong>8%</strong></span>
+                                        <span class="sell-price">💰 Sell Price: <strong>26.5g</strong></span>
+                                        <span class="customizable">✨ Customizable: <strong>❌</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="outfit-card rare">
+                                <img src="assets/Cargo Pants icon.png"
+                                     alt="Cargo Pants Outfit"
+                                     class="outfit-icon">
+                                <div class="outfit-details">
+                                    <h4>Cargo Pants Outfit Chest ⭐ RARE</h4>
+                                    <div class="outfit-stats">
+                                        <span class="probability">📊 Probability: <strong>2%</strong></span>
+                                        <span class="sell-price">💰 Sell Price: <strong>100g</strong></span>
+                                        <span class="customizable">✨ Customizable: <strong>✅</strong></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Collapsible Previews -->
+                        <button class="preview-toggle" id="preview-toggle">📸 Show Outfit Previews ▼</button>
+                        <div class="outfit-previews hidden" id="outfit-previews">
+                            <div class="preview-item">
+                                <img src="assets/Cargo Pants Preview.png"
+                                     alt="Cargo Pants Preview"
+                                     class="preview-image">
+                                <h4>🎨 Cargo Pants</h4>
+                                <p>
+                                    Cargo Pants Preview features a modern, casual design built around comfort and mobility. The outfit includes loose cargo-style pants paired with fitted and oversized tops, creating a balanced look that works naturally across all races: Lyn, Jin, Yun, and Gon.
+                                </p>
+                                <p>
+                                    The color palette uses muted earth tones, giving the outfit a clean and grounded appearance that fits well in both urban and fantasy environments. The relaxed fit allows animations and combat movements to feel fluid without visual clutter.
+                                </p>
+                                <p>
+                                    This outfit is ideal for players who prefer a simple, practical style that still looks coordinated and stylish in group settings.
+                                </p>
+                            </div>
+                            <div class="preview-item">
+                                <img src="assets/Final Showdown preview.png"
+                                     alt="Final Showdown Preview"
+                                     class="preview-image">
+                                <h4>⚔️ Final Showdown</h4>
+                                <p>
+                                    Final Showdown Preview offers a sleek and compact design with a sharper, more focused appearance. The outfit features fitted clothing with light armor details and animal-themed accessories, creating a distinct but balanced look across all races.
+                                </p>
+                                <p>
+                                    The darker tones and refined textures give the outfit a serious, battle-ready feel, while the streamlined shape highlights character movement and stance during combat. Despite the animal elements, the design remains neutral and adaptable, ensuring it does not favor any single race.
+                                </p>
+                                <p>This outfit suits players looking for a clean, high-impact style that stands out without being exaggerated.</p>
+                            </div>
+                            <div class="preview-item">
+                                <img src="assets/Hope preview.png"
+                                     alt="Hope Preview"
+                                     class="preview-image">
+                                <h4>✨ Hope</h4>
+                                <p>
+                                    Hope Preview features a refined, formal design with strong Eastern-inspired detailing. The outfit combines a fitted upper garment with wide sleeves and clean decorative patterns, paired with slim trousers and structured boots for a sharp, balanced silhouette.
+                                </p>
+                                <p>
+                                    The red and gold color scheme gives the outfit a bold but controlled presence, making it visually striking without being excessive. Metallic accents and embroidered details add depth, while the tailored fit adapts well across all races — Lyn, Jin, Yun, and Gon — maintaining proportion and clarity in both idle and combat animations.
+                                </p>
+                                <p>
+                                    This outfit is suited for players who prefer an elegant, confident look that blends tradition with a modern, battle-ready finish.
+                                </p>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Expected Value Section -->
+                    <section class="expected-value-section">
+                        <h3 class="section-title">💰 Expected Returns Analysis</h3>
+                        <div class="calculation-box">
+                            <h4>Average Gold Per Chest (Expected Value):</h4>
+                            <div class="calculation-details">
+                                <p>
+                                    <strong>Calculation:</strong>
+                                </p>
+                                <p>(90% × 25g) + (8% × 26.5g) + (2% × 100g)</p>
+                                <p>= 22.5g + 2.12g + 2g</p>
+                                <p class="result">
+                                    <strong>= 26.62g per chest</strong>
+                                </p>
+                            </div>
+                            <div class="cost-summary">
+                                <p>
+                                    <strong>Cost per chest:</strong> 500 Divine Gems
+                                </p>
+                                <p>
+                                    <strong>Average return:</strong> 26.62g per chest
+                                </p>
+                            </div>
+                            <div class="quick-reference">
+                                <h4>📊 Quick Reference:</h4>
+                                <ul>
+                                    <li>10 chests = 5,000 gems → ~266g</li>
+                                    <li>50 chests = 25,000 gems → ~1,331g</li>
+                                    <li>100 chests = 50,000 gems → ~2,662g</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </section>
+                    <!-- Market Impact Section -->
+                    <section class="market-impact-section">
+                        <h3 class="section-title">📉 How This Impacts the Gold Market</h3>
+                        <div class="market-comparison">
+                            <div class="comparison-card baseline">
+                                <h4>Current Market Baseline (Before Event)</h4>
+                                <p>
+                                    <strong>MARKETPLACE - Player-Set Prices (Current Average):</strong>
+                                </p>
+                                <div class="market-stats">
+                                    <div class="stat-group">
+                                        <h5>👤 Gold Sellers (Want Gems):</h5>
+                                        <ul>
+                                            <li>List 100g at their chosen price (currently ~2,000 gems)</li>
+                                            <li>After 8% fee: Receive ~1,840 gems</li>
+                                            <li>Can adjust price based on demand/competition</li>
+                                        </ul>
+                                    </div>
+                                    <div class="stat-group">
+                                        <h5>👤 Gold Buyers (Want Gold):</h5>
+                                        <ul>
+                                            <li>Pay whatever sellers list (currently ~2,000 gems/100g)</li>
+                                            <li>Current cost: ~20 gems per 1g</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="comparison-card chest-method">
+                                <h4>Street Outfit Chest Economics</h4>
+                                <ul class="benefit-list">
+                                    <li>Pay 500 gems → Get ~26.62g (sell outfit to NPC)</li>
+                                    <li>Cost: 18.78 gems per 1g</li>
+                                    <li>NO FEES on outfit sales to NPCs!</li>
+                                </ul>
+                                <p class="highlight-benefit">📈 Chests are 6.1% CHEAPER than buying gold on marketplace! (18.78 gems/g vs 20 gems/g)</p>
+                                <p class="highlight-benefit">💰 Best way to convert gems → gold!</p>
+                            </div>
+                        </div>
+                        <!-- Break-Even Analysis -->
+                        <div class="breakeven-analysis">
+                            <h4>🎯 Break-Even Analysis: Converting Gems → Gold</h4>
+                            <div class="method-comparison">
+                                <div class="method-card chest-card">
+                                    <h5>Method 1: Street Outfit Chests (THIS EVENT!)</h5>
+                                    <ul class="pros-cons">
+                                        <li class="pro">✅ Pay 500 gems → Get 26.62g average</li>
+                                        <li class="pro">✅ Cost: 18.78 gems per 1g (FIXED - based on RNG)</li>
+                                        <li class="pro">✅ No marketplace fees</li>
+                                        <li class="con">⚠️ Requires time to open & sell outfits to NPCs</li>
+                                        <li class="con">⚠️ Subject to RNG variance (gambling element)</li>
+                                    </ul>
+                                </div>
+                                <div class="method-card marketplace-card">
+                                    <h5>Method 2: Buy Gold from Marketplace</h5>
+                                    <ul class="pros-cons">
+                                        <li class="pro">✅ Instant, guaranteed transaction</li>
+                                        <li class="pro">✅ No RNG, no time investment</li>
+                                        <li class="con">❌ Cost: ~20 gems per 1g (VARIABLE - player-set prices)</li>
+                                        <li class="con">❌ Currently ~2,000 gems/100g (6.1% MORE expensive!)</li>
+                                        <li class="info">💡 May drop to ~1,700-1,800/100g if sellers compete</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <p class="conclusion">
+                                💡 Chests are better value unless marketplace drops below ~1,878 gems/100g! Use marketplace only if you need gold INSTANTLY and can't wait.
+                            </p>
+                        </div>
+                        <!-- Player Advice -->
+                        <div class="player-advice">
+                            <div class="advice-card gem-holders">
+                                <h4>💎 For Players with DIVINE GEMS (Want Gold)</h4>
+                                <p class="advice-intro">✨ YOU BENEFIT FROM THIS EVENT! ✨</p>
+                                <div class="strategy">
+                                    <h5>Best Strategy: Open Street Outfit Chests</h5>
+                                    <ul>
+                                        <li>✅ Pay 500 gems → Get 26.62g average</li>
+                                        <li>✅ Cost: 18.78 gems per gold (BEST RATE!)</li>
+                                        <li>✅ 6.1% cheaper than buying gold on marketplace</li>
+                                        <li>⚠️ Takes time to open chests & sell to NPCs</li>
+                                        <li>⚠️ RNG variance (but evens out over volume)</li>
+                                    </ul>
+                                </div>
+                                <div class="strategy alternative">
+                                    <h5>Alternative: Buy Gold from Marketplace</h5>
+                                    <ul>
+                                        <li>✅ Instant, guaranteed transaction</li>
+                                        <li>✅ No RNG, no time investment</li>
+                                        <li>❌ Pay ~2,000 gems for 100g (more expensive)</li>
+                                        <li>❌ 6.1% higher cost than chests</li>
+                                    </ul>
+                                </div>
+                                <p class="recommendation">
+                                    💡 <strong>Recommendation:</strong> Open chests unless you need gold INSTANTLY. Save 6.1% on every gold!
+                                </p>
+                            </div>
+                            <div class="advice-card gold-holders">
+                                <h4>💰 For Players with GOLD (Want Divine Gems)</h4>
+                                <p class="advice-intro warning">⚠️ THIS EVENT HURTS YOUR BUSINESS! ⚠️</p>
+                                <div class="situation">
+                                    <h5>Your Situation:</h5>
+                                    <ul>
+                                        <li>You list 100g on marketplace (currently ~2,000 gems)</li>
+                                        <li>After 8% fee: You receive ~1,840 gems</li>
+                                        <li>Buyers now have BETTER option (chests at 1,878 gems)</li>
+                                        <li>Your marketplace listings will get less attention</li>
+                                    </ul>
+                                </div>
+                                <div class="options">
+                                    <h5>What You CAN Do:</h5>
+                                    <ul>
+                                        <li>
+                                            💡 <strong>Option 1:</strong> Lower your listing price
+                                            <ul>
+                                                <li>List at ~1,700-1,800 gems/100g to compete</li>
+                                                <li>Accept lower profit for faster sales</li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            💡 <strong>Option 2:</strong> Hold gold until after event (Jan 20+)
+                                            <ul>
+                                                <li>Prices should return to ~2,000 gems/100g</li>
+                                                <li>No profit loss, just patience required</li>
+                                            </ul>
+                                        </li>
+                                        <li>
+                                            💡 <strong>Option 3:</strong> Focus on other gem-earning methods
+                                        </li>
+                                    </ul>
+                                </div>
+                                <p class="good-news">
+                                    🔮 <strong>Good News:</strong> This is temporary! Market normalizes after!
+                                </p>
+                            </div>
+                        </div>
+                        <!-- Market Predictions -->
+                        <div class="market-predictions">
+                            <h4>📊 Predicted Marketplace Impact</h4>
+                            <div class="predictions-grid">
+                                <div class="prediction-card buyers">
+                                    <h5>For GOLD BUYERS (Have Gems, Want Gold):</h5>
+                                    <ul>
+                                        <li>Current marketplace: ~2,000 gems for 100g (player-set)</li>
+                                        <li>Chest alternative: 1,878 gems for 100g (average)</li>
+                                        <li>Expected: Buyers switch to chests (6.1% cheaper!)</li>
+                                    </ul>
+                                </div>
+                                <div class="prediction-card sellers">
+                                    <h5>For GOLD SELLERS (Have Gold, Want Gems):</h5>
+                                    <ul>
+                                        <li>Current: List 100g for ~2,000 gems (receive 1,840)</li>
+                                        <li>Impact: DEMAND DROPS (buyers prefer chests)</li>
+                                        <li>
+                                            Options:
+                                            <ul>
+                                                <li>1. Lower listing price to compete (~1,800 gems/100g?)</li>
+                                                <li>2. Accept slower sales at current prices</li>
+                                                <li>3. Hold gold until event ends (Jan 20+)</li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="timeline">
+                                <h5>Timeline:</h5>
+                                <ul>
+                                    <li>
+                                        <strong>Day 1-3 (NOW):</strong> Normal marketplace, ~2,000 gems/100g
+                                    </li>
+                                    <li>
+                                        <strong>Day 4-7:</strong> Demand drops, smart sellers lower to ~1,800
+                                    </li>
+                                    <li>
+                                        <strong>Day 8-14:</strong> Possible stabilization at ~1,700-1,800/100g
+                                    </li>
+                                    <li>
+                                        <strong>Day 15-20:</strong> Last-minute buyers return
+                                    </li>
+                                    <li>
+                                        <strong>Post-Event (Jan 20+):</strong> Prices return to ~2,000/100g
+                                    </li>
+                                </ul>
+                            </div>
+                            <p class="bottom-line">
+                                🎯 <strong>Bottom Line:</strong> Gem holders WIN (cheaper gold via chests) | Gold sellers must ADAPT (lower prices or wait)
+                            </p>
+                        </div>
+                    </section>
+                    <!-- Pro Tips Section -->
+                    <section class="pro-tips-section">
+                        <h3 class="section-title">💡 Smart Player Strategies</h3>
+                        <div class="tips-grid">
+                            <div class="tip-card gem-tips">
+                                <h4>✅ For GEM HOLDERS (Want Gold):</h4>
+                                <ol>
+                                    <li>PRIMARY: Open chests! (18.78 gems per gold)</li>
+                                    <li>Open in batches - RNG evens out over volume</li>
+                                    <li>Sell outfits to NPCs immediately</li>
+                                    <li>Only buy marketplace gold if need INSTANT (6.1% premium)</li>
+                                </ol>
+                            </div>
+                            <div class="tip-card gold-tips">
+                                <h4>✅ For GOLD HOLDERS (Want Gems):</h4>
+                                <ol>
+                                    <li>Assess: Can you wait until Jan 20+? (BEST option)</li>
+                                    <li>If selling now: Consider lowering to ~1,700-1,800/100g</li>
+                                    <li>Monitor marketplace - if others drop prices, adapt</li>
+                                    <li>Don't panic - this event is temporary (14 days)</li>
+                                </ol>
+                            </div>
+                        </div>
+                        <div class="philosophy">
+                            <h4>⚖️ Fair Trading Philosophy:</h4>
+                            <ul>
+                                <li>Gem holders: This event is YOUR advantage - use it!</li>
+                                <li>Gold holders: Unlucky timing, demand will drop</li>
+                                <li>Chests = 6.1% cheaper gems→gold conversion</li>
+                                <li>Marketplace = instant but costs more for gem holders</li>
+                                <li>Event temporarily shifts market favor to gem holders</li>
+                            </ul>
+                        </div>
+                        <div class="risk-reward">
+                            <h4>🎲 Risk vs Reward (Cargo Pants - 2% per chest):</h4>
+                            <ul>
+                                <li>Opening 10 chests: 18.3% chance of Cargo Pants</li>
+                                <li>Opening 50 chests: 63.6% chance of Cargo Pants</li>
+                                <li>Opening 100 chests: 86.7% chance of Cargo Pants</li>
+                                <li>Even with bad RNG: 26.62g average is still 6.1% better!</li>
+                                <li>Marketplace gold: Guaranteed but costs 6.1% more</li>
+                            </ul>
+                        </div>
+                        <div class="outlook">
+                            <h4>🔮 Long-Term Outlook:</h4>
+                            <p>
+                                Events like this temporarily increase gold circulation, benefiting the overall economy. Both sellers and buyers benefit when the market is competitive and fair!
+                            </p>
+                        </div>
+                    </section>
                 </div>
             </main>
             <footer>
