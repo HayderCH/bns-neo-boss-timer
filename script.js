@@ -1641,14 +1641,14 @@ class SFCalculatorUI {
         sfRequirement = `${minK}k-${maxK}k SF`;
       }
 
-      // Build message
-      message = `${dungeonName} | Need ${remainingCount} more, ${sfRequirement} | Apply ${filledCount}/6`;
+      // Build message (using - instead of | for game compatibility)
+      message = `${dungeonName} - Need ${remainingCount} more, ${sfRequirement} - Apply ${filledCount}/6`;
     } else if (remainingCount === 0) {
       // Party full
-      message = `${dungeonName} | Party full | 6/6`;
+      message = `${dungeonName} - Party full - 6/6`;
     } else {
       // No requirements set
-      message = `${dungeonName} | Need ${remainingCount} more | Apply ${filledCount}/6`;
+      message = `${dungeonName} - Need ${remainingCount} more - Apply ${filledCount}/6`;
     }
 
     // Copy to clipboard
