@@ -2701,6 +2701,41 @@ class ConverterUI {
 }
 
 // ============================================
+// Alliance Modal Functions
+// ============================================
+function openAllianceModal() {
+  const modal = document.getElementById("alliance-modal");
+  if (modal) {
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden"; // Prevent background scrolling
+
+    if (typeof analytics !== "undefined") {
+      analytics.track("promo", "alliance_modal_open", "Celestial x Dragon");
+    }
+  }
+}
+
+function closeAllianceModal() {
+  const modal = document.getElementById("alliance-modal");
+  if (modal) {
+    modal.style.display = "none";
+    document.body.style.overflow = "auto"; // Restore scrolling
+
+    if (typeof analytics !== "undefined") {
+      analytics.track("promo", "alliance_modal_close", "Celestial x Dragon");
+    }
+  }
+}
+
+// Close modal when clicking outside of it
+window.addEventListener("click", (event) => {
+  const modal = document.getElementById("alliance-modal");
+  if (event.target === modal) {
+    closeAllianceModal();
+  }
+});
+
+// ============================================
 // Analytics - Setup Promo Tracking
 // ============================================
 function setupPromoTracking() {
@@ -2714,6 +2749,8 @@ function setupPromoTracking() {
         promoName = "Probability Converter";
       } else if (box.classList.contains("celestial-promo")) {
         promoName = "Celestial Clan";
+      } else if (box.classList.contains("alliance-promo")) {
+        promoName = "Celestial x Dragon Alliance";
       }
 
       if (typeof analytics !== "undefined") {

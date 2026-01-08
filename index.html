@@ -192,6 +192,23 @@
                         </p>
                         <span class="promo-cta">💰 See Full Analysis →</span>
                     </div>
+                    <!-- NEW: Celestial x Dragon Alliance Promotional Box (BOX #2) -->
+                    <div class="promo-box alliance-promo featured-promo"
+                         onclick="openAllianceModal()">
+                        <div class="promo-icon-dual">
+                            <img src="assets/celestial.png" alt="Celestial" class="promo-img-dual">
+                            <span class="alliance-cross">✕</span>
+                            <img src="assets/dragon clan.png" alt="Dragon" class="promo-img-dual">
+                        </div>
+                        <h3>⚔️ Celestial × Dragon Alliance</h3>
+                        <p>
+                            Join the <strong>Celestial × Dragon alliance</strong> — whether you're <strong>Cerulean Order</strong> or <strong>Crimson Legion</strong>, our alliance is happy to take you in!
+                        </p>
+                        <p class="highlight-text">
+                            <strong>Two factions. One community.</strong>
+                        </p>
+                        <span class="promo-cta">🛡️ See Details →</span>
+                    </div>
                     <div class="promo-box sf-promo"
                          onclick="window.location.hash='sf-calculator'">
                         <div class="promo-icon">📊</div>
@@ -1025,6 +1042,134 @@
         <audio id="alarm-sound" preload="auto">
             <source src="assets/notification.mp3" type="audio/mpeg">
         </audio>
+        <!-- Alliance Modal -->
+        <div id="alliance-modal" class="modal">
+            <div class="modal-content">
+                <span class="modal-close" onclick="closeAllianceModal()">&times;</span>
+                <h2 class="modal-title">⚔️ Celestial × Dragon Alliance</h2>
+                <p class="modal-subtitle">Two factions. One community. Join us today!</p>
+                <!-- Celestial Clan Section -->
+                <div class="clan-section cerulean-section">
+                    <div class="clan-header">
+                        <img src="assets/celestial.png" alt="Celestial" class="clan-icon">
+                        <div class="clan-info">
+                            <h3>Celestial (Cerulean Order)</h3>
+                            <p class="clan-leader">
+                                👑 Leader: <strong>Niami Kiri</strong> (Discord: <strong>Älskade Åsna</strong>)
+                            </p>
+                        </div>
+                    </div>
+                    <div class="clan-details">
+                        <p class="intro-text">
+                            Hello! I'm Kiri, clan leader for <strong>Celestial & Celestials</strong>. We're currently looking for more Cerulean players to join us!
+                        </p>
+                        <div class="clan-stats">
+                            <h4>📊 Clan Rankings (Updated: Jan 6, 2026)</h4>
+                            <ul>
+                                <li>
+                                    <strong>Celestial</strong> — 34/40 members — <span class="rank-badge rank-9">Rank 9</span>
+                                </li>
+                                <li>
+                                    <strong>Celestials</strong> — 16/30 members — <span class="rank-badge rank-5">Rank 5</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="benefits-section">
+                            <img src="assets/celestial clan fee reduction.png"
+                                 alt="Clan Benefits"
+                                 class="benefits-img">
+                        </div>
+                        <div class="what-we-offer">
+                            <h4>✨ What We Offer:</h4>
+                            <p>
+                                An active and friendly community to find dungeon parties, ask questions, and most importantly, have fun together!
+                            </p>
+                        </div>
+                        <div class="what-we-seek">
+                            <h4>🔍 What We're Looking For:</h4>
+                            <ul>
+                                <li>
+                                    <strong>Active & Social Players</strong> — We're a bunch of big yappers trying to progress together!
+                                </li>
+                                <li>
+                                    <strong>8k+ SF Recommended</strong> — Looking for fairly established players ready for purple dungeons
+                                </li>
+                                <li>
+                                    <strong>Discord Required</strong> — Communication is key! (No voice chat obligation, just text)
+                                </li>
+                                <li>
+                                    <strong>Gold Donations</strong> — Small contributions when possible help us expand
+                                </li>
+                            </ul>
+                            <p class="casual-note">
+                                <em>Note: We're also open to casual players as long as you're active!</em>
+                            </p>
+                        </div>
+                        <div class="contact-section">
+                            <p>
+                                💬 <strong>Interested?</strong> Message <strong>Niami Kiri</strong> in-game or DM <strong>Älskade Åsna</strong> on Discord!
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- Dragon Clan Section -->
+                <div class="clan-section crimson-section">
+                    <div class="clan-header">
+                        <img src="assets/dragon clan.png" alt="Dragon" class="clan-icon">
+                        <div class="clan-info">
+                            <h3>Dragon (Crimson Legion)</h3>
+                            <p class="clan-leader">
+                                👑 Leader: <strong>Maple Leaf</strong> (Discord: <strong>Maple Leaf/Lardino</strong>)
+                            </p>
+                        </div>
+                    </div>
+                    <div class="clan-details">
+                        <p class="intro-text">
+                            Hello! I'm Maple Leaf, leader of <strong>Dragon EU</strong>. We're looking for members to revive and grow our clan!
+                        </p>
+                        <div class="clan-stats">
+                            <h4>📊 Clan Rankings</h4>
+                            <ul>
+                                <li>
+                                    <strong>Dragon</strong> — 11/30 members — <span class="rank-badge rank-5">Rank 5</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="what-we-offer">
+                            <h4>✨ What We Offer:</h4>
+                            <p>
+                                Friendship and access to a helpful community that plays various games including BNS NEO. We're part of the Celestial alliance Discord!
+                            </p>
+                        </div>
+                        <div class="what-we-seek">
+                            <h4>🔍 What We're Looking For:</h4>
+                            <ul>
+                                <li>
+                                    <strong>Mains Welcome</strong> — Looking for committed players to help the clan grow
+                                </li>
+                                <li>
+                                    <strong>No SF Requirement</strong> — Beginner and returner friendly!
+                                </li>
+                                <li>
+                                    <strong>Discord Access</strong> — Join our merged Discord with Celestial
+                                </li>
+                                <li>
+                                    <em>5 months inactivity will result in removal from clan</em>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="contact-section">
+                            <p>
+                                💬 <strong>Interested?</strong> Message <strong>Maple Leaf</strong> in-game or DM <strong>Maple Leaf/Lardino</strong> on Discord!
+                            </p>
+                            <p class="discord-link">
+                                🔗 Discord: <strong>73vNzKcqWy</strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script src="dungeons.js?v=1.8.2"></script>
         <script src="script.js?v=1.8.2"></script>
     </body>
