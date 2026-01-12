@@ -1,8 +1,8 @@
 // BNS Neo Field Boss Timer - Service Worker
 // Provides offline functionality and caching
 
-const CACHE_NAME = "bns-timer-v1.8.2";
-const RUNTIME_CACHE = "bns-timer-runtime-v1.8.2";
+const CACHE_NAME = "bns-timer-v1.8.3";
+const RUNTIME_CACHE = "bns-timer-runtime-v1.8.3";
 
 // Determine base path (localhost vs GitHub Pages)
 const BASE_PATH =
