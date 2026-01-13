@@ -350,6 +350,20 @@ function renderBossList() {
   const serverNow = getServerTime(now);
   const currentDay = DAYS[serverNow.getUTCDay()];
 
+  // Clear boss states from previous days to prevent memory buildup
+  // Keep only states that match current day
+  const currentDayStates = new Map();
+  for (const [spawnId, spawnState] of state.bossStates.entries()) {
+    // spawnId format: "region-DayName-index"
+    // Check if the spawn ID contains the current day name
+    const parts = spawnId.split("-");
+    const dayInId = parts[parts.length - 2]; // Day is second-to-last part
+    if (dayInId === currentDay) {
+      currentDayStates.set(spawnId, spawnState);
+    }
+  }
+  state.bossStates = currentDayStates;
+
   // Create horizontal container for regions
   const regionsContainer = document.createElement("div");
   regionsContainer.className = "regions-container";
@@ -390,12 +404,14 @@ function renderBossList() {
     todaySchedule.forEach((spawn, index) => {
       const spawnId = `${region}-${currentDay}-${index}`;
 
-      // Initialize spawn state
-      state.bossStates.set(spawnId, {
-        status: "normal",
-        spawningEndTime: null,
-        alarmPlayed: false,
-      });
+      // Initialize spawn state only if it doesn't exist
+      if (!state.bossStates.has(spawnId)) {
+        state.bossStates.set(spawnId, {
+          status: "normal",
+          spawningEndTime: null,
+          alarmPlayed: false,
+        });
+      }
 
       const li = document.createElement("li");
       li.className = "boss-item normal";
