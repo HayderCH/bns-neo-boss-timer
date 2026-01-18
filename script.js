@@ -30,6 +30,7 @@ const DAYS = [
 
 // DOM Elements
 let alarmSound;
+let primevalSound;
 let volumeSlider;
 let volumeValue;
 let bossContainer;
@@ -46,6 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   alarmSound = document.getElementById("alarm-sound");
+  primevalSound = document.getElementById("primeval-alarm");
   volumeSlider = document.getElementById("volume-slider");
   volumeValue = document.getElementById("volume-value");
   bossContainer = document.getElementById("boss-container");
@@ -56,6 +58,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     volumeSlider.value = volumePercent;
     volumeValue.textContent = `${volumePercent}%`;
     alarmSound.volume = state.volume;
+    if (primevalSound) {
+      primevalSound.volume = state.volume;
+    }
   }
 
   setupAudio();
@@ -146,16 +151,11 @@ document.addEventListener(
       footer.textContent = "🔊 Sound notifications enabled!";
       footer.classList.add("sound-enabled");
 
-      // Test play to unlock audio
-      alarmSound.volume = 0;
-      alarmSound
-        .play()
-        .then(() => {
-          alarmSound.pause();
-          alarmSound.currentTime = 0;
-          alarmSound.volume = state.volume;
-        })
-        .catch(() => {});
+      // Test play to unlock audio (browsers require user gesture)
+      Promise.all([
+        unlockAudioElement(alarmSound),
+        unlockAudioElement(primevalSound),
+      ]);
     }
   },
   { once: true }
@@ -168,11 +168,27 @@ document.addEventListener(
 // Web Audio API context for fallback beep
 let audioContext = null;
 
+function unlockAudioElement(audioEl) {
+  if (!audioEl) return Promise.resolve();
+  audioEl.volume = 0;
+  return audioEl
+    .play()
+    .then(() => {
+      audioEl.pause();
+      audioEl.currentTime = 0;
+      audioEl.volume = state.volume;
+    })
+    .catch(() => {});
+}
+
 function setupAudio() {
   volumeSlider.addEventListener("input", (e) => {
     const value = e.target.value;
     state.volume = value / 100;
     alarmSound.volume = state.volume;
+    if (primevalSound) {
+      primevalSound.volume = state.volume;
+    }
     volumeValue.textContent = `${value}%`;
     // Save volume preference
     localStorage.setItem("bns-volume", state.volume);
@@ -218,11 +234,32 @@ function playBeep() {
   }, 900);
 }
 
-function playAlarm() {
+function getAlarmAudio(location) {
+  const loc = (location || "").toLowerCase();
+  if (loc.includes("primeval forest") && primevalSound) {
+    return primevalSound;
+  }
+  return alarmSound;
+}
+
+function playAlarm(location) {
   if (state.audioEnabled && state.volume > 0) {
-    // Try MP3 first, fallback to beep only if it fails
-    alarmSound.currentTime = 0;
-    alarmSound.play().catch(() => {
+    const audioEl = getAlarmAudio(location);
+
+    const tryPlay = (audio) => {
+      if (!audio) return Promise.reject();
+      audio.currentTime = 0;
+      audio.volume = state.volume;
+      return audio.play();
+    };
+
+    tryPlay(audioEl).catch(() => {
+      if (audioEl !== alarmSound && alarmSound) {
+        tryPlay(alarmSound).catch(() => {
+          playBeep();
+        });
+        return;
+      }
       playBeep();
     });
   }
@@ -625,7 +662,7 @@ function updateAllCountdowns() {
 
         if (!spawnState.alarmPlayed) {
           spawnState.alarmPlayed = true;
-          playAlarm();
+          playAlarm(spawn.location);
         }
 
         // Send browser notification

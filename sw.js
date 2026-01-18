@@ -19,7 +19,10 @@ const CORE_ASSETS = [
 ];
 
 // Media files to cache separately (can handle partial responses)
-const MEDIA_ASSETS = [`${BASE_PATH}/assets/notification.mp3`];
+const MEDIA_ASSETS = [
+  `${BASE_PATH}/assets/notification.mp3`,
+  `${BASE_PATH}/assets/workfaster.mp3`,
+];
 
 // Install event - cache core assets
 self.addEventListener("install", (event) => {
