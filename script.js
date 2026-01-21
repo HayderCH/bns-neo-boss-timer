@@ -3,8 +3,14 @@
 // Day-based schedule system
 // ============================================
 
+// ===========================================
+// MAINTENANCE MODE - Set to true during patch updates
+// When true, boss timers won't render and maintenance message shows
+// ===========================================
+const MAINTENANCE_MODE = true;
+
 // Cache Version Check - Force reload if stale CSS/JS
-const CACHE_VERSION = "1.8.4";
+const CACHE_VERSION = "1.8.5";
 // Note: Main version check is now inline in index.html <head> for reliability
 
 // State Management
@@ -66,11 +72,14 @@ document.addEventListener("DOMContentLoaded", async () => {
   setupAudio();
   initializeTheme();
 
-  // Show skeleton loader
-  showSkeletonLoader();
+  // Skip boss loading during maintenance mode
+  if (!MAINTENANCE_MODE) {
+    // Show skeleton loader
+    showSkeletonLoader();
 
-  await loadBosses();
-  renderBossList();
+    await loadBosses();
+    renderBossList();
+  }
 
   // Hide loading bar after content loads
   setTimeout(() => {
@@ -158,7 +167,7 @@ document.addEventListener(
       ]);
     }
   },
-  { once: true }
+  { once: true },
 );
 
 // ============================================
@@ -366,7 +375,7 @@ function setupAnimationObserver() {
         }
       });
     },
-    { threshold: 0.1, rootMargin: "50px" }
+    { threshold: 0.1, rootMargin: "50px" },
   );
 
   // Observe all boss items and sections
@@ -381,6 +390,9 @@ function setupAnimationObserver() {
 // ============================================
 
 function renderBossList() {
+  // Skip rendering during maintenance mode
+  if (MAINTENANCE_MODE) return;
+
   bossContainer.innerHTML = "";
 
   const now = new Date();
@@ -526,14 +538,14 @@ function scheduleMiddnightRefresh() {
       0,
       0,
       0,
-      0
-    )
+      0,
+    ),
   );
 
   // Convert back to user's time
   const offsetHours = state.currentRegion === "na" ? -6 : 1;
   const userMidnight = new Date(
-    serverMidnight.getTime() - offsetHours * 3600000
+    serverMidnight.getTime() - offsetHours * 3600000,
   );
   const msUntilMidnight = userMidnight - now;
 
@@ -579,8 +591,8 @@ function updateAllCountdowns() {
             hours + 6, // Add 6 to convert UTC-6 to UTC
             minutes,
             0,
-            0
-          )
+            0,
+          ),
         );
       } else {
         // EU server time is UTC+1 (default)
@@ -593,8 +605,8 @@ function updateAllCountdowns() {
             hours - 1, // Subtract 1 to convert UTC+1 to UTC
             minutes,
             0,
-            0
-          )
+            0,
+          ),
         );
       }
 
@@ -616,7 +628,7 @@ function updateAllCountdowns() {
           // Still spawning
           element.className = "boss-item spawning";
           timerEl.textContent = formatTime(
-            Math.floor(spawningRemaining / 1000)
+            Math.floor(spawningRemaining / 1000),
           );
           statusEl.textContent = "SPAWNING";
           return;
@@ -634,7 +646,7 @@ function updateAllCountdowns() {
         if (spawnState.status !== "spawning") {
           spawnState.status = "spawning";
           spawnState.spawningEndTime = new Date(
-            spawnTime.getTime() + 5 * 60 * 1000
+            spawnTime.getTime() + 5 * 60 * 1000,
           );
         }
         element.className = "boss-item spawning";
@@ -716,7 +728,7 @@ function toggleNotifications() {
     }
   } else if (Notification.permission === "denied") {
     alert(
-      "🔕 Notifications are blocked. Please enable them in your browser settings."
+      "🔕 Notifications are blocked. Please enable them in your browser settings.",
     );
   } else {
     // Request permission
@@ -814,7 +826,7 @@ function initializeTheme() {
   } else {
     // Detect system preference
     const prefersDark = window.matchMedia(
-      "(prefers-color-scheme: dark)"
+      "(prefers-color-scheme: dark)",
     ).matches;
     applyTheme(prefersDark ? "dark" : "light");
   }
@@ -881,7 +893,7 @@ function setupSwipeGestures() {
       touchStartX = e.changedTouches[0].screenX;
       touchStartY = e.changedTouches[0].screenY;
     },
-    { passive: true }
+    { passive: true },
   );
 
   bossContainer.addEventListener(
@@ -891,7 +903,7 @@ function setupSwipeGestures() {
       touchEndY = e.changedTouches[0].screenY;
       handleSwipe();
     },
-    { passive: true }
+    { passive: true },
   );
 
   function handleSwipe() {
@@ -1193,8 +1205,8 @@ function exportToCalendar() {
             hours + 6, // Add 6 to convert UTC-6 to UTC
             minutes,
             0,
-            0
-          )
+            0,
+          ),
         );
       } else {
         // EU server time is UTC+1 (default)
@@ -1206,8 +1218,8 @@ function exportToCalendar() {
             hours - 1, // Subtract 1 to convert UTC+1 to UTC
             minutes,
             0,
-            0
-          )
+            0,
+          ),
         );
       }
 
@@ -1284,7 +1296,7 @@ function generateICS(events, dayName, regionLabel = "EU") {
     ics.push(`DTEND:${formatICSDate(endTime)}`);
     ics.push(`SUMMARY:🗡️ BNS Field Boss - ${event.location}`);
     ics.push(
-      `DESCRIPTION:Field Boss spawn in ${event.region} at ${event.location}\nPrepare 5 minutes before!`
+      `DESCRIPTION:Field Boss spawn in ${event.region} at ${event.location}\nPrepare 5 minutes before!`,
     );
     ics.push(`LOCATION:${event.region} - ${event.location}`);
 
@@ -1509,8 +1521,8 @@ class SFCalculatorUI {
       slotDiv.innerHTML = `
         <div class="slot-header">
           <span class="slot-label">Slot ${i + 1}${
-        i === 0 ? " (You)" : ""
-      }</span>
+            i === 0 ? " (You)" : ""
+          }</span>
           ${
             i > 0
               ? '<button class="clear-slot-btn hidden" data-slot="' +
@@ -1540,23 +1552,23 @@ class SFCalculatorUI {
         analytics.track(
           "sf_calculator",
           "dungeon_select",
-          this.dungeonSelector.value
+          this.dungeonSelector.value,
         );
       }
       this.onDungeonChange();
     });
     this.minSFInput.addEventListener("input", () =>
-      this.onRequirementsChange()
+      this.onRequirementsChange(),
     );
     this.maxAvgInput.addEventListener("input", () =>
-      this.onRequirementsChange()
+      this.onRequirementsChange(),
     );
     this.resetPresetBtn.addEventListener("click", () => {
       if (typeof analytics !== "undefined") {
         analytics.track(
           "sf_calculator",
           "reset_preset",
-          this.dungeonSelector.value
+          this.dungeonSelector.value,
         );
       }
       this.onResetPreset();
@@ -1572,7 +1584,7 @@ class SFCalculatorUI {
         analytics.track(
           "sf_calculator",
           "copy_world_chat",
-          this.dungeonSelector.value
+          this.dungeonSelector.value,
         );
       }
       this.copyForWorldChat();
@@ -1642,7 +1654,7 @@ class SFCalculatorUI {
   onClearSlot(slot) {
     this.calculator.clearMember(slot);
     const input = this.partySlotsContainer.querySelector(
-      `input[data-slot="${slot}"]`
+      `input[data-slot="${slot}"]`,
     );
     if (input) input.value = "";
     this.updateSlotClearButton(slot);
@@ -1666,7 +1678,7 @@ class SFCalculatorUI {
     let dungeonName = "SF Calculator";
     if (this.dungeonSelector.value !== "manual") {
       const selectedDungeon = this.dungeonManager.presets.find(
-        (d) => d.id === this.dungeonSelector.value
+        (d) => d.id === this.dungeonSelector.value,
       );
       if (selectedDungeon) {
         dungeonName = selectedDungeon.name;
@@ -1726,11 +1738,11 @@ class SFCalculatorUI {
 
   updateSlotClearButton(slot) {
     const clearBtn = this.partySlotsContainer.querySelector(
-      `.clear-slot-btn[data-slot="${slot}"]`
+      `.clear-slot-btn[data-slot="${slot}"]`,
     );
     if (clearBtn) {
       const input = this.partySlotsContainer.querySelector(
-        `input[data-slot="${slot}"]`
+        `input[data-slot="${slot}"]`,
       );
       if (input && input.value.trim() !== "") {
         clearBtn.classList.remove("hidden");
@@ -1792,7 +1804,7 @@ class SFCalculatorUI {
 
       // Check if any member is below minimum SF
       const membersBelowMin = this.calculator.party.filter(
-        (sf) => sf !== null && sf < reqs.minSF
+        (sf) => sf !== null && sf < reqs.minSF,
       );
 
       if (membersBelowMin.length > 0) {
@@ -1813,7 +1825,7 @@ class SFCalculatorUI {
     } else if (range.status === "valid") {
       const reqs = this.dungeonManager.getCurrentRequirements();
       const membersBelowMin = this.calculator.party.filter(
-        (sf) => sf !== null && sf < reqs.minSF
+        (sf) => sf !== null && sf < reqs.minSF,
       );
 
       if (membersBelowMin.length > 0) {
@@ -2175,7 +2187,7 @@ class ConverterUI {
         analytics.track(
           "converter",
           "add_step",
-          `total_steps_${this.steps.length + 1}`
+          `total_steps_${this.steps.length + 1}`,
         );
       }
       this.addStep();
@@ -2185,7 +2197,7 @@ class ConverterUI {
         analytics.track(
           "converter",
           "reset_all",
-          `had_${this.steps.length}_steps`
+          `had_${this.steps.length}_steps`,
         );
       }
       this.resetAll();
@@ -2265,8 +2277,8 @@ class ConverterUI {
           <input type="text" class="currency-input" list="currency-list-${
             step.id
           }-from" data-field="inputFrom" data-step-id="${
-      step.id
-    }" placeholder="Currency name">
+            step.id
+          }" placeholder="Currency name">
           <datalist id="currency-list-${step.id}-from">
           </datalist>
         </div>
@@ -2289,8 +2301,8 @@ class ConverterUI {
           <input type="text" class="currency-input" list="currency-list-${
             step.id
           }-to" data-field="outputTo" data-step-id="${
-      step.id
-    }" placeholder="Currency name">
+            step.id
+          }" placeholder="Currency name">
           <datalist id="currency-list-${step.id}-to">
           </datalist>
         </div>
@@ -2403,7 +2415,7 @@ class ConverterUI {
 
   updateStepVisibility(step) {
     const stepDiv = this.stepsContainer.querySelector(
-      `[data-step-id="${step.id}"]`
+      `[data-step-id="${step.id}"]`,
     );
     const probRow = stepDiv.querySelector(".probability-row");
     const rateRow = stepDiv.querySelector(".rate-row");
@@ -2478,10 +2490,10 @@ class ConverterUI {
         // Update the input display if we're inheriting
         if (step.inheritFrom !== "none") {
           const amountInput = this.stepsContainer.querySelector(
-            `.amount-input[data-step-id="${step.id}"]`
+            `.amount-input[data-step-id="${step.id}"]`,
           );
           const currencyInput = this.stepsContainer.querySelector(
-            `.currency-input[data-field="inputFrom"][data-step-id="${step.id}"]`
+            `.currency-input[data-field="inputFrom"][data-step-id="${step.id}"]`,
           );
           if (amountInput) {
             amountInput.value = step.inputAmount?.toFixed(2) || "";
@@ -2494,10 +2506,10 @@ class ConverterUI {
         } else {
           // For manual input, make fields editable
           const amountInput = this.stepsContainer.querySelector(
-            `.amount-input[data-step-id="${step.id}"]`
+            `.amount-input[data-step-id="${step.id}"]`,
           );
           const currencyInput = this.stepsContainer.querySelector(
-            `.currency-input[data-field="inputFrom"][data-step-id="${step.id}"]`
+            `.currency-input[data-field="inputFrom"][data-step-id="${step.id}"]`,
           );
           if (amountInput) amountInput.readOnly = false;
           if (currencyInput) currencyInput.readOnly = false;
@@ -2508,7 +2520,7 @@ class ConverterUI {
 
       // Find the step-result container directly by step ID
       const stepDiv = this.stepsContainer.querySelector(
-        `.conversion-step[data-step-id="${step.id}"]`
+        `.conversion-step[data-step-id="${step.id}"]`,
       );
       if (stepDiv) {
         const stepResult = stepDiv.querySelector(".step-result");
@@ -2549,16 +2561,16 @@ class ConverterUI {
     // Apply probability
     if (step.type === "probability" || step.type === "mixed") {
       console.log(
-        `calculateStep: step.probability = ${step.probability} (before check)`
+        `calculateStep: step.probability = ${step.probability} (before check)`,
       );
       if (step.probability === null || step.probability === undefined) {
         console.log(
-          `Setting step.probability to 100 because it was null/undefined`
+          `Setting step.probability to 100 because it was null/undefined`,
         );
         step.probability = 100;
       }
       console.log(
-        `calculateStep: step.probability = ${step.probability} (after check)`
+        `calculateStep: step.probability = ${step.probability} (after check)`,
       );
       const successRate = step.probability / 100;
       console.log(`successRate = ${successRate}`);
@@ -2576,7 +2588,7 @@ class ConverterUI {
           if (successRate === 0) return Infinity;
           if (successRate >= 1) return 1;
           const result = Math.ceil(
-            Math.log(1 - confidence) / Math.log(1 - successRate)
+            Math.log(1 - confidence) / Math.log(1 - successRate),
           );
           return isFinite(result) && result > 0 ? result : 0;
         };
@@ -2607,33 +2619,33 @@ class ConverterUI {
             <div class="expected-value">📊 <strong>${
               step.probability
             }%</strong> chance per attempt (costs <strong>${formatNumber(
-          costPerAttempt
-        )} ${inputName}</strong> per attempt)</div>
+              costPerAttempt,
+            )} ${inputName}</strong> per attempt)</div>
             <div class="expected-value">📈 Average cost to get 1 ${itemName}: <strong>${formatNumber(
-          Math.round(avgCostPerItem)
-        )} ${inputName}</strong></div>
+              Math.round(avgCostPerItem),
+            )} ${inputName}</strong></div>
             <div class="confidence-explained">
               <div class="confidence-intro">💡 <strong>What this means for you:</strong></div>
               <div class="confidence-line">• <strong>Most players</strong> (63%) get their first ${itemName} within <strong>${formatNumber(
-          attempts63
-        )} attempts</strong> (${formatNumber(
-          attempts63 * costPerAttempt
-        )} ${inputName})</div>
+                attempts63,
+              )} attempts</strong> (${formatNumber(
+                attempts63 * costPerAttempt,
+              )} ${inputName})</div>
               <div class="confidence-line">• <strong>Lucky players</strong> (50%) get it even faster, within <strong>${formatNumber(
-                attempts50
+                attempts50,
               )} attempts</strong> (${formatNumber(
-          attempts50 * costPerAttempt
-        )} ${inputName})</div>
+                attempts50 * costPerAttempt,
+              )} ${inputName})</div>
               <div class="confidence-line">• <strong>Almost everyone</strong> (90%) gets it by <strong>${formatNumber(
-                attempts90
+                attempts90,
               )} attempts</strong> (${formatNumber(
-          attempts90 * costPerAttempt
-        )} ${inputName})</div>
+                attempts90 * costPerAttempt,
+              )} ${inputName})</div>
               <div class="confidence-line">• Even <strong>very unlucky players</strong> (99%) get it by <strong>${formatNumber(
-                attempts99
+                attempts99,
               )} attempts</strong> (${formatNumber(
-          attempts99 * costPerAttempt
-        )} ${inputName})</div>
+                attempts99 * costPerAttempt,
+              )} ${inputName})</div>
             </div>
           </div>
         `;
@@ -2656,7 +2668,7 @@ class ConverterUI {
 
     // Check if we have valid data to show
     const validSteps = this.steps.filter(
-      (s) => s.inputAmount && s.inputFrom && s.outputTo
+      (s) => s.inputAmount && s.inputFrom && s.outputTo,
     );
     if (validSteps.length === 0) {
       this.cumulativeResults.classList.add("hidden");
@@ -2698,16 +2710,16 @@ class ConverterUI {
           ? step.inheritFrom === "output"
             ? "← prev output"
             : step.inheritFrom === "input"
-            ? "← prev input"
-            : "← manual"
+              ? "← prev input"
+              : "← manual"
           : "";
 
       summaryHTML += `
         <div class="chain-step-row">
           <span class="chain-step-num">Step ${stepNum}</span>
           <span class="chain-step-flow">${formatNumber(step.inputAmount)} ${
-        step.inputFrom || "?"
-      } → ${formatNumber(step.outputAmount || 0)} ${step.outputTo}</span>
+            step.inputFrom || "?"
+          } → ${formatNumber(step.outputAmount || 0)} ${step.outputTo}</span>
           <span class="chain-step-type">${stepDesc}</span>
           ${
             inheritDesc
@@ -2725,7 +2737,7 @@ class ConverterUI {
   deleteStep(stepId) {
     this.steps = this.steps.filter((s) => s.id !== stepId);
     const stepDiv = this.stepsContainer.querySelector(
-      `[data-step-id="${stepId}"]`
+      `[data-step-id="${stepId}"]`,
     );
     if (stepDiv) stepDiv.remove();
     this.reRenderAllSteps();

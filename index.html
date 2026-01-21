@@ -37,12 +37,12 @@
         <link rel="apple-touch-icon" href="assets/icon-192.svg">
         <link rel="icon" type="image/svg+xml" href="assets/icon-192.svg">
         <link rel="icon" type="image/x-icon" href="favicon.ico">
-        <link rel="stylesheet" href="styles.css?v=1.8.2">
+        <link rel="stylesheet" href="styles.css?v=1.8.5">
         <link rel="canonical" href="https://hayderch.github.io/bns-neo-boss-timer/">
         <!-- Inline version check - runs BEFORE cached script.js -->
         <script>
             (function() {
-                var APP_VERSION = '1.8.2';
+                var APP_VERSION = '1.8.5';
                 var stored = localStorage.getItem('bns-app-version');
                 if (stored && stored !== APP_VERSION) {
                     localStorage.setItem('bns-app-version', APP_VERSION);
@@ -168,24 +168,7 @@
             <div class="timer-layout" id="timer-layout">
                 <!-- Promotional Sidebar -->
                 <aside class="promo-sidebar" id="promo-sidebar">
-                    <!-- NEW: Street Outfit Chest Promotional Box (TOP POSITION) -->
-                    <div class="promo-box street-outfit-promo featured-promo"
-                         onclick="window.location.hash='market-news'">
-                        <div class="promo-icon">
-                            <img src="assets/Street outfit chest.png"
-                                 alt="Street Outfit Chest"
-                                 class="promo-img">
-                        </div>
-                        <div class="event-badge">⏰ Jan 6-20, 2026</div>
-                        <h3>💎 Convert Gems to Gold!</h3>
-                        <p>
-                            Turn <strong>100g equivalent = 1,879 gems</strong> instantly! Better than marketplace (need 1,879 gems for 100g via chests vs 2,000 gems on marketplace).
-                        </p>
-                        <p class="highlight-text">
-                            <strong>Get MORE gold per gem</strong> + skip marketplace hassle!
-                        </p>
-                        <span class="promo-cta">💰 See Full Analysis →</span>
-                    </div>
+                    <!-- Street Outfit Chest Promotional Box - REMOVED (Event Ended) -->
                     <!-- NEW: Celestial x Dragon Alliance Promotional Box (BOX #2) -->
                     <div class="promo-box alliance-promo featured-promo"
                          onclick="openAllianceModal()">
@@ -237,7 +220,42 @@
                 </aside>
                 <main id="boss-container" class="tool-view active">
                     <!-- Boss regions and timers will be rendered here by JavaScript -->
-                    <p class="loading">Loading boss schedules...</p>
+                    <!-- PATCH UPDATE: Timer code temporarily disabled - DO NOT DELETE -->
+                    <!-- <p class="loading">Loading boss schedules...</p> -->
+                    <!-- Maintenance Message -->
+                    <div class="maintenance-message"
+                         style="text-align: center;
+                                padding: 3rem 2rem;
+                                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                                border-radius: 12px;
+                                margin: 2rem auto;
+                                max-width: 600px;
+                                box-shadow: 0 4px 20px rgba(0,0,0,0.3)">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">🔧</div>
+                        <h2 style="color: #ffc107; margin-bottom: 1rem; font-size: 1.8rem;">
+                            ⚠️ Patch Update - Data Recollection in Progress
+                        </h2>
+                        <p style="color: #e0e0e0;
+                                  font-size: 1.1rem;
+                                  line-height: 1.6;
+                                  margin-bottom: 1rem">A new game patch has changed boss spawn times.</p>
+                        <p style="color: #b0b0b0;
+                                  font-size: 1rem;
+                                  line-height: 1.6;
+                                  margin-bottom: 1.5rem">
+                            We are currently collecting new timing data from the community. This process typically takes <strong style="color: #4fc3f7;">approximately one week</strong>.
+                        </p>
+                        <div style="background: rgba(255,193,7,0.1);
+                                    border: 1px solid #ffc107;
+                                    border-radius: 8px;
+                                    padding: 1rem;
+                                    margin-top: 1rem">
+                            <p style="color: #ffc107; margin: 0; font-size: 0.95rem;">
+                                📅 <strong>Expected Return:</strong> ~January 28, 2026
+                            </p>
+                        </div>
+                        <p style="color: #888; font-size: 0.9rem; margin-top: 1.5rem;">Thank you for your patience! 🙏</p>
+                    </div>
                 </main>
             </div>
             <!-- SF Calculator View -->
@@ -352,663 +370,23 @@
             <!-- Market News View -->
             <main id="market-news-container" class="tool-view">
                 <div class="market-news-tool">
-                    <h2 class="market-news-title">💎 Market News: Street Outfit Chest Event</h2>
-                    <p class="market-news-subtitle">Limited Time: Jan 6-20, 2026 | Convert gems to gold more efficiently!</p>
-                    <!-- Event Overview Section -->
-                    <section class="event-overview">
-                        <div class="event-header">
-                            <img src="assets/Street outfit chest.png"
-                                 alt="Street Outfit Chest"
-                                 class="event-chest-icon">
-                            <div class="event-info">
-                                <h3>Street Outfit Chest Event</h3>
-                                <p>
-                                    <strong>Available:</strong> Jan 6 - Jan 20, 2026 | <strong>Unlimited Purchases</strong>
-                                </p>
-                                <p class="event-cost">
-                                    <strong>Cost:</strong> 500
-                                    <img src="assets/divine gem.png" alt="Divine Gems" class="inline-icon">
-                                    Divine Gems
-                                </p>
-                            </div>
-                        </div>
-                    </section>
-                    <!-- Drop Table Section -->
-                    <section class="drop-table-section">
-                        <h3 class="section-title">🎁 What's Inside?</h3>
-                        <div class="outfit-drops">
-                            <div class="outfit-card common">
-                                <img src="assets/Hope icon.png" alt="Hope Outfit" class="outfit-icon">
-                                <div class="outfit-details">
-                                    <h4>Hope Outfit Chest</h4>
-                                    <div class="outfit-stats">
-                                        <span class="probability">📊 Probability: <strong>90%</strong></span>
-                                        <span class="sell-price">💰 Sell Price: <strong>25g</strong></span>
-                                        <span class="customizable">✨ Customizable: <strong>❌</strong></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="outfit-card uncommon">
-                                <img src="assets/Final Showdown icon.png"
-                                     alt="Final Showdown Outfit"
-                                     class="outfit-icon">
-                                <div class="outfit-details">
-                                    <h4>Final Showdown Outfit Chest</h4>
-                                    <div class="outfit-stats">
-                                        <span class="probability">📊 Probability: <strong>8%</strong></span>
-                                        <span class="sell-price">💰 Sell Price: <strong>26.5g</strong></span>
-                                        <span class="customizable">✨ Customizable: <strong>❌</strong></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="outfit-card rare">
-                                <img src="assets/Cargo Pants icon.png"
-                                     alt="Cargo Pants Outfit"
-                                     class="outfit-icon">
-                                <div class="outfit-details">
-                                    <h4>Cargo Pants Outfit Chest ⭐ RARE</h4>
-                                    <div class="outfit-stats">
-                                        <span class="probability">📊 Probability: <strong>2%</strong></span>
-                                        <span class="sell-price">💰 Sell Price: <strong>100g</strong></span>
-                                        <span class="customizable">✨ Customizable: <strong>✅</strong></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Collapsible Previews -->
-                        <button class="preview-toggle" id="preview-toggle">📸 Show Outfit Previews ▼</button>
-                        <div class="outfit-previews hidden" id="outfit-previews">
-                            <div class="preview-item">
-                                <img src="assets/Cargo Pants Preview.png"
-                                     alt="Cargo Pants Preview"
-                                     class="preview-image">
-                                <h4>🎨 Cargo Pants</h4>
-                                <p>
-                                    Cargo Pants Preview features a modern, casual design built around comfort and mobility. The outfit includes loose cargo-style pants paired with fitted and oversized tops, creating a balanced look that works naturally across all races: Lyn, Jin, Yun, and Gon.
-                                </p>
-                                <p>
-                                    The color palette uses muted earth tones, giving the outfit a clean and grounded appearance that fits well in both urban and fantasy environments. The relaxed fit allows animations and combat movements to feel fluid without visual clutter.
-                                </p>
-                                <p>
-                                    This outfit is ideal for players who prefer a simple, practical style that still looks coordinated and stylish in group settings.
-                                </p>
-                            </div>
-                            <div class="preview-item">
-                                <img src="assets/Final Showdown preview.png"
-                                     alt="Final Showdown Preview"
-                                     class="preview-image">
-                                <h4>⚔️ Final Showdown</h4>
-                                <p>
-                                    Final Showdown Preview offers a sleek and compact design with a sharper, more focused appearance. The outfit features fitted clothing with light armor details and animal-themed accessories, creating a distinct but balanced look across all races.
-                                </p>
-                                <p>
-                                    The darker tones and refined textures give the outfit a serious, battle-ready feel, while the streamlined shape highlights character movement and stance during combat. Despite the animal elements, the design remains neutral and adaptable, ensuring it does not favor any single race.
-                                </p>
-                                <p>This outfit suits players looking for a clean, high-impact style that stands out without being exaggerated.</p>
-                            </div>
-                            <div class="preview-item">
-                                <img src="assets/Hope preview.png"
-                                     alt="Hope Preview"
-                                     class="preview-image">
-                                <h4>✨ Hope</h4>
-                                <p>
-                                    Hope Preview features a refined, formal design with strong Eastern-inspired detailing. The outfit combines a fitted upper garment with wide sleeves and clean decorative patterns, paired with slim trousers and structured boots for a sharp, balanced silhouette.
-                                </p>
-                                <p>
-                                    The red and gold color scheme gives the outfit a bold but controlled presence, making it visually striking without being excessive. Metallic accents and embroidered details add depth, while the tailored fit adapts well across all races — Lyn, Jin, Yun, and Gon — maintaining proportion and clarity in both idle and combat animations.
-                                </p>
-                                <p>
-                                    This outfit is suited for players who prefer an elegant, confident look that blends tradition with a modern, battle-ready finish.
-                                </p>
-                            </div>
-                        </div>
-                    </section>
-                    <!-- Expected Value Section -->
-                    <section class="expected-value-section">
-                        <h3 class="section-title">💰 Expected Returns Analysis</h3>
-                        <div class="calculation-box">
-                            <h4>Average Gold Per Chest (Expected Value):</h4>
-                            <div class="calculation-details">
-                                <p>
-                                    <strong>Calculation:</strong>
-                                </p>
-                                <p>(90% × 25g) + (8% × 26.5g) + (2% × 100g)</p>
-                                <p>= 22.5g + 2.12g + 2g</p>
-                                <p class="result">
-                                    <strong>= 26.62g per chest</strong>
-                                </p>
-                            </div>
-                            <div class="cost-summary">
-                                <p>
-                                    <strong>Cost per chest:</strong> 500 Divine Gems
-                                </p>
-                                <p>
-                                    <strong>Average return:</strong> 26.62g per chest
-                                </p>
-                                <p>
-                                    <strong>Per 100g cost:</strong> 1,879 gems (18.79 gems per 1g)
-                                </p>
-                            </div>
-                            <div class="quick-reference">
-                                <h4>📊 Quick Reference (Per 100g):</h4>
-                                <ul>
-                                    <li>For 100g: Need ~3.76 chests = 1,879 gems average</li>
-                                    <li>For 500g: Need ~18.8 chests = 9,395 gems average</li>
-                                    <li>For 1,000g: Need ~37.6 chests = 18,790 gems average</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </section>
-                    <!-- Market Impact Section -->
-                    <section class="market-impact-section">
-                        <h3 class="section-title">📉 How This Impacts the Gold Market</h3>
-                        <div class="market-comparison">
-                            <div class="comparison-card baseline">
-                                <h4>📊 Marketplace Price Evolution</h4>
-                                <div class="price-status-banner">
-                                    <div class="status-badge active">⚡ LIVE: Prices Dropping!</div>
-                                    <div class="price-evolution">
-                                        <span class="old-price">Was: ~2,000 gems/100g</span>
-                                        <span class="arrow">→</span>
-                                        <span class="current-price">Now: ~1,750-1,850 gems/100g</span>
-                                    </div>
-                                </div>
-                                <p>
-                                    <strong>MARKETPLACE - Player-Set Prices (Dynamic):</strong>
-                                </p>
-                                <div class="market-stats">
-                                    <div class="stat-group">
-                                        <h5>👤 Gold Sellers (Want Gems):</h5>
-                                        <ul>
-                                            <li>
-                                                <strike>Initial: 100g = ~2,000 gems</strike> → <strong>Current: ~1,750-1,850 gems</strong>
-                                            </li>
-                                            <li>After 8% fee: Now receiving ~1,610-1,702 gems (down from 1,840)</li>
-                                            <li>Sellers adapting to chest competition!</li>
-                                        </ul>
-                                    </div>
-                                    <div class="stat-group">
-                                        <h5>👤 Gold Buyers (Want Gold):</h5>
-                                        <ul>
-                                            <li>
-                                                <strike>Was: ~20 gems per 1g</strike> → <strong>Now: ~17.5-18.5 gems per 1g</strong>
-                                            </li>
-                                            <li>Prices still higher than chests (18.79 gems/1g via chests)</li>
-                                            <li>Market adjusting to event economics!</li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="comparison-card chest-method">
-                                <h4>Street Outfit Chest Economics (FIXED RATE)</h4>
-                                <ul class="benefit-list">
-                                    <li>For 100g: Open ~3.76 chests (1,879 gems total)</li>
-                                    <li>
-                                        Cost: 18.79 gems per 1g <strong>(ALWAYS THE SAME!)</strong>
-                                    </li>
-                                    <li>NO FEES on outfit sales to NPCs!</li>
-                                </ul>
-                                <p class="highlight-benefit">📈 Current status: Marketplace now competitive (~1,750-1,850 vs 1,879 gems/100g)</p>
-                                <p class="highlight-benefit">💰 Chests still win for convenience - no waiting, guaranteed rate!</p>
-                                <div class="chest-advantage">
-                                    <strong>Why chests remain attractive:</strong> No fees, instant conversion, no market timing needed!
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Break-Even Analysis -->
-                        <div class="breakeven-analysis">
-                            <h4>🎯 Break-Even Analysis: Converting Gems → Gold</h4>
-                            <div class="method-comparison">
-                                <div class="method-card chest-card">
-                                    <h5>Method 1: Street Outfit Chests (THIS EVENT!)</h5>
-                                    <ul class="pros-cons">
-                                        <li class="pro">✅ For 100g: Open ~3.76 chests (1,879 gems)</li>
-                                        <li class="pro">✅ Cost: 18.79 gems per 1g (FIXED - based on RNG)</li>
-                                        <li class="pro">✅ No marketplace fees</li>
-                                        <li class="con">⚠️ Requires time to open & sell outfits to NPCs</li>
-                                        <li class="con">⚠️ Subject to RNG variance (gambling element)</li>
-                                    </ul>
-                                </div>
-                                <div class="method-card marketplace-card">
-                                    <h5>Method 2: Buy Gold from Marketplace</h5>
-                                    <ul class="pros-cons">
-                                        <li class="pro">✅ Instant, guaranteed transaction</li>
-                                        <li class="pro">✅ No RNG, no time investment</li>
-                                        <li class="con">❌ Cost: ~20 gems per 1g (VARIABLE - player-set prices)</li>
-                                        <li class="con">❌ Currently ~2,000 gems/100g (6.1% MORE expensive!)</li>
-                                        <li class="info">💡 May drop to ~1,700-1,800/100g if sellers compete</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <p class="conclusion">
-                                💡 Chests are better value unless marketplace drops below ~1,878 gems/100g! Use marketplace only if you need gold INSTANTLY and can't wait.
-                            </p>
-                        </div>
-                        <!-- Player Advice -->
-                        <div class="player-advice">
-                            <div class="advice-card gem-holders">
-                                <h4>💎 For Players with DIVINE GEMS (Want Gold)</h4>
-                                <p class="advice-intro">✨ YOU BENEFIT FROM THIS EVENT! ✨</p>
-                                <div class="strategy">
-                                    <h5>Best Strategy: Open Street Outfit Chests</h5>
-                                    <ul>
-                                        <li>✅ For 100g: Open ~3.76 chests (1,879 gems)</li>
-                                        <li>✅ Cost: 18.79 gems per 1g (BEST RATE!)</li>
-                                        <li>✅ 6.1% cheaper than buying gold on marketplace</li>
-                                        <li>⚠️ Takes time to open chests & sell to NPCs</li>
-                                        <li>⚠️ RNG variance (but evens out over volume)</li>
-                                    </ul>
-                                </div>
-                                <div class="strategy alternative">
-                                    <h5>Alternative: Buy Gold from Marketplace</h5>
-                                    <ul>
-                                        <li>✅ Instant, guaranteed transaction</li>
-                                        <li>✅ No RNG, no time investment</li>
-                                        <li>❌ Pay ~2,000 gems for 100g (more expensive)</li>
-                                        <li>❌ 6.1% higher cost than chests</li>
-                                    </ul>
-                                </div>
-                                <p class="recommendation">
-                                    💡 <strong>Recommendation:</strong> Open chests unless you need gold INSTANTLY. Save 6.1% on every gold!
-                                </p>
-                            </div>
-                            <div class="advice-card gold-holders">
-                                <h4>💰 For Players with GOLD (Want Divine Gems)</h4>
-                                <p class="advice-intro warning">⚠️ THIS EVENT HURTS YOUR BUSINESS! ⚠️</p>
-                                <div class="situation">
-                                    <h5>Your Situation:</h5>
-                                    <ul>
-                                        <li>You list 100g on marketplace (currently ~2,000 gems)</li>
-                                        <li>After 8% fee: You receive ~1,840 gems</li>
-                                        <li>Buyers now have BETTER option (chests at 1,878 gems)</li>
-                                        <li>Your marketplace listings will get less attention</li>
-                                    </ul>
-                                </div>
-                                <div class="options">
-                                    <h5>What You CAN Do:</h5>
-                                    <ul>
-                                        <li>
-                                            💡 <strong>Option 1:</strong> Lower your listing price
-                                            <ul>
-                                                <li>List at ~1,700-1,800 gems/100g to compete</li>
-                                                <li>Accept lower profit for faster sales</li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            💡 <strong>Option 2:</strong> Hold gold until after event (Jan 20+)
-                                            <ul>
-                                                <li>Prices should return to ~2,000 gems/100g</li>
-                                                <li>No profit loss, just patience required</li>
-                                            </ul>
-                                        </li>
-                                        <li>
-                                            💡 <strong>Option 3:</strong> Focus on other gem-earning methods
-                                        </li>
-                                    </ul>
-                                </div>
-                                <p class="good-news">
-                                    🔮 <strong>Good News:</strong> This is temporary! Market normalizes after!
-                                </p>
-                            </div>
-                        </div>
-                        <!-- Market Predictions -->
-                        <div class="market-predictions">
-                            <h4>📊 Market Reality Check - IT'S HAPPENING!</h4>
-                            <div class="predictions-grid">
-                                <div class="prediction-card buyers success">
-                                    <h5>✅ For GOLD BUYERS (Have Gems, Want Gold):</h5>
-                                    <ul>
-                                        <li>
-                                            <strong>Initial:</strong> Marketplace was ~2,000 gems per 100g
-                                        </li>
-                                        <li>
-                                            <strong>NOW (Day 2):</strong> Dropped to ~1,750-1,850 gems per 100g! 📉
-                                        </li>
-                                        <li>
-                                            <strong>Chest rate:</strong> Still 1,879 gems per 100g (fixed)
-                                        </li>
-                                        <li>
-                                            <strong>Status:</strong> Market nearly competitive with chests!
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="prediction-card sellers warning">
-                                    <h5>⚠️ For GOLD SELLERS (Have Gold, Want Gems):</h5>
-                                    <ul>
-                                        <li>
-                                            <strong>Reality:</strong> Had to drop prices 10-12.5% already!
-                                        </li>
-                                        <li>
-                                            <strong>Was receiving:</strong> 1,840 gems per 100g (after fees)
-                                        </li>
-                                        <li>
-                                            <strong>Now receiving:</strong> ~1,610-1,702 gems per 100g
-                                        </li>
-                                        <li>
-                                            <strong>Your options NOW:</strong>
-                                            <ul>
-                                                <li>✅ Compete at current ~1,750-1,850 range</li>
-                                                <li>⏳ Hold gold until post-event (Jan 20+)</li>
-                                                <li>🎯 Price floor likely hit - chest rate is baseline</li>
-                                            </ul>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="timeline">
-                                <h5>📅 Event Price Timeline (Jan 6-20, 2026):</h5>
-                                <ul>
-                                    <li class="completed">
-                                        <strong>✅ Day 1 (Jan 6):</strong> Event starts - Market at ~2,000 gems/100g
-                                    </li>
-                                    <li class="active">
-                                        <strong>⚡ Day 2 (Jan 7 - TODAY):</strong> Rapid drop to ~1,750-1,850 gems/100g - Faster than expected!
-                                    </li>
-                                    <li class="upcoming">
-                                        <strong>🔮 Day 3-7 (Jan 8-12):</strong> Expected stabilization around chest baseline (~1,750-1,879 range)
-                                    </li>
-                                    <li class="upcoming">
-                                        <strong>🔮 Day 8-13 (Jan 13-18):</strong> Possible slight recovery as supply increases (~1,800-1,900)
-                                    </li>
-                                    <li class="upcoming">
-                                        <strong>🔮 Day 14-15 (Jan 19-20):</strong> Event ending - Last-minute activity, prices may fluctuate
-                                    </li>
-                                    <li class="future">
-                                        <strong>📈 Post-Event (Jan 21+):</strong> Expected recovery toward ~2,000 gems/100g as chest option disappears
-                                    </li>
-                                </ul>
-                                <div class="timeline-insight">
-                                    <strong>💡 Key Insight:</strong> Market reacted faster than predicted! Sellers quickly adapted to compete with chests. Current prices show the market is efficient and responsive.
-                                </div>
-                            </div>
-                            <p class="bottom-line">
-                                🎯 <strong>Bottom Line (Updated Jan 7):</strong> Market adapting rapidly! Prices dropped 10-12.5% in just 2 days. Chests vs Marketplace now nearly equal - choose based on convenience vs. instant access.
-                            </p>
-                        </div>
-                    </section>
-                    <!-- Rare Outfit Hunters Section -->
-                    <section class="rare-hunters-section">
-                        <h3 class="section-title">🎣 For Rare Outfit Hunters (Chasing Cargo Pants!)</h3>
-                        <div class="hunter-intro">
-                            <p>
-                                <strong>Hunting for the rare Cargo Pants outfit (2% drop rate)?</strong> Here's the complete economic breakdown of what happens when you open chests, recycle unwanted outfits, and convert your gold back to gems through the F5 marketplace.
-                            </p>
-                        </div>
-                        <div class="hunter-economics">
-                            <h4>💰 The Complete Recycling Chain</h4>
-                            <div class="chain-steps">
-                                <div class="chain-step">
-                                    <h5>Step 1: Open Chests</h5>
-                                    <p>You buy and open Street Outfit Chests looking for Cargo Pants (2% chance per chest)</p>
-                                    <ul>
-                                        <li>Cost: 500 gems per chest</li>
-                                        <li>Average drops per 100g worth of chests (~3.76 chests):</li>
-                                        <ul>
-                                            <li>~3.38 Hope Outfits (90% chance)</li>
-                                            <li>~0.30 Final Showdown Outfits (8% chance)</li>
-                                            <li>~0.08 Cargo Pants Outfits (2% chance)</li>
-                                        </ul>
-                                    </ul>
-                                </div>
-                                <div class="chain-step">
-                                    <h5>Step 2: Sort Your Drops</h5>
-                                    <p>Separate the rare outfit from the common ones</p>
-                                    <ul>
-                                        <li>
-                                            <strong>KEEP:</strong> Cargo Pants (if you got it!) - your prize! 🎉
-                                        </li>
-                                        <li>
-                                            <strong>RECYCLE:</strong> Hope & Final Showdown outfits → sell to NPC for gold
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="chain-step">
-                                    <h5>Step 3: Recycle Non-Rare Outfits to Gold</h5>
-                                    <p>Sell unwanted outfits to NPCs (instant, no fees)</p>
-                                    <ul>
-                                        <li>Hope Outfit → 25g each</li>
-                                        <li>Final Showdown → 26.5g each</li>
-                                        <li>
-                                            <strong>Per 100g worth of chests (1,879 gems spent):</strong>
-                                        </li>
-                                        <ul>
-                                            <li>~3.38 Hope × 25g = 84.5g</li>
-                                            <li>~0.30 Final Showdown × 26.5g = 7.95g</li>
-                                            <li>
-                                                <strong>Total recycled gold: ~92.45g</strong>
-                                            </li>
-                                        </ul>
-                                    </ul>
-                                </div>
-                                <div class="chain-step">
-                                    <h5>Step 4: Convert Gold Back to Gems via F5 Marketplace</h5>
-                                    <p>Sell your recycled gold using 100g certificates on F5 marketplace</p>
-                                    <ul>
-                                        <li>
-                                            <strong>You list:</strong> 100g certificate
-                                        </li>
-                                        <li>
-                                            <strong>Current price (EU):</strong> ~1,900 gems per 100g
-                                        </li>
-                                        <li>
-                                            <strong>After 8% marketplace fee:</strong> You receive ~1,748 gems
-                                        </li>
-                                        <li class="price-note"
-                                            style="color: #ff9800;
-                                                   font-size: 0.9em;
-                                                   margin-top: 0.5rem">
-                                            ⚠️ <em>Price fluctuates! Typical range: 1,800-2,000 gems (1,656-1,840 after fee)</em>
-                                        </li>
-                                    </ul>
-                                    <div class="calculation-box">
-                                        <p>
-                                            <strong>Your 92.45g from recycling =</strong>
-                                        </p>
-                                        <p>= 92.45g × (1,748 gems ÷ 100g)</p>
-                                        <p>= 92.45g × 17.48 gems/g</p>
-                                        <p class="result">
-                                            <strong>= ~1,616 gems recovered (at current 1,900 price)</strong>
-                                        </p>
-                                        <p style="font-size: 0.9em;
-                                                  color: #2c3e50;
-                                                  background: #e8f4f8;
-                                                  padding: 0.4rem 0.6rem;
-                                                  border-radius: 4px;
-                                                  margin-top: 0.5rem;
-                                                  border-left: 3px solid #3498db">
-                                            <strong>Range: 1,531-1,701 gems</strong> (at 1,800-2,000 price)
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="chain-step net-cost">
-                                    <h5>🎯 Net Cost Per 100g Worth of Attempts:</h5>
-                                    <div class="calculation-box">
-                                        <p>
-                                            <strong>Spent:</strong> 1,879 gems (to open ~3.76 chests)
-                                        </p>
-                                        <p>
-                                            <strong>Recovered at current 1,900 price:</strong> ~1,616 gems (86% recovery)
-                                        </p>
-                                        <p class="result">
-                                            <strong>NET COST: ~263 gems (14% of upfront cost)</strong>
-                                        </p>
-                                        <p style="font-size: 0.95em;
-                                                  color: #2c3e50;
-                                                  background: #fff9e6;
-                                                  padding: 0.5rem 0.8rem;
-                                                  border-radius: 4px;
-                                                  margin-top: 0.5rem;
-                                                  border-left: 3px solid #f39c12">
-                                            <strong>📊 Recovery range: 77-90.5%</strong> depending on gold price (1,700-2,000 gems)
-                                        </p>
-                                        <p style="font-size: 0.95em;
-                                                  color: #2c3e50;
-                                                  background: #ffe8e8;
-                                                  padding: 0.5rem 0.8rem;
-                                                  border-radius: 4px;
-                                                  margin-top: 0.5rem;
-                                                  border-left: 3px solid #e74c3c">
-                                            <strong>💸 Net cost range: 178-433 gems</strong> per 100g worth of attempts
-                                        </p>
-                                        <p class="highlight-benefit">💎 The recycling chain recovers most of your investment!</p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hunter-scenarios">
-                            <h4>📊 Real Hunting Scenarios (Per 100g Worth)</h4>
-                            <div class="scenario-grid">
-                                <div class="scenario-card">
-                                    <h5>Small Hunt: 10 Chests (5,000 gems)</h5>
-                                    <ul>
-                                        <li>
-                                            <strong>Expected drops:</strong> 9 Hope, 0.8 Final Showdown, 0.2 Cargo Pants
-                                        </li>
-                                        <li>
-                                            <strong>Recycled gold:</strong> ~246g from non-rares
-                                        </li>
-                                        <li>
-                                            <strong>Gems recovered (at 1,900):</strong> 246g × 17.48 = ~4,300 gems
-                                        </li>
-                                        <li>
-                                            <strong>Net cost:</strong> 5,000 - 4,300 = ~700 gems
-                                        </li>
-                                        <li style="font-size: 0.85em; color: #888;">
-                                            <em>Range: 474-926 gems (at 1,800-2,000 price)</em>
-                                        </li>
-                                        <li class="chance">🎲 18.3% chance to get Cargo Pants</li>
-                                    </ul>
-                                </div>
-                                <div class="scenario-card">
-                                    <h5>Medium Hunt: 50 Chests (25,000 gems)</h5>
-                                    <ul>
-                                        <li>
-                                            <strong>Expected drops:</strong> 45 Hope, 4 Final Showdown, 1 Cargo Pants
-                                        </li>
-                                        <li>
-                                            <strong>Recycled gold:</strong> ~1,231g from non-rares
-                                        </li>
-                                        <li>
-                                            <strong>Gems recovered (at 1,900):</strong> 1,231g × 17.48 = ~21,518 gems
-                                        </li>
-                                        <li>
-                                            <strong>Net cost:</strong> 25,000 - 21,518 = ~3,482 gems
-                                        </li>
-                                        <li style="font-size: 0.85em; color: #888;">
-                                            <em>Range: 2,350-4,614 gems (at 1,800-2,000 price)</em>
-                                        </li>
-                                        <li class="chance">🎲 63.6% chance to get Cargo Pants</li>
-                                    </ul>
-                                </div>
-                                <div class="scenario-card">
-                                    <h5>Large Hunt: 100 Chests (50,000 gems)</h5>
-                                    <ul>
-                                        <li>
-                                            <strong>Expected drops:</strong> 90 Hope, 8 Final Showdown, 2 Cargo Pants
-                                        </li>
-                                        <li>
-                                            <strong>Recycled gold:</strong> ~2,462g from non-rares
-                                        </li>
-                                        <li>
-                                            <strong>Gems recovered (at 1,900):</strong> 2,462g × 17.48 = ~43,035 gems
-                                        </li>
-                                        <li>
-                                            <strong>Net cost:</strong> 50,000 - 43,035 = ~6,965 gems
-                                        </li>
-                                        <li style="font-size: 0.85em; color: #888;">
-                                            <em>Range: 4,700-9,229 gems (at 1,800-2,000 price)</em>
-                                        </li>
-                                        <li class="chance">🎲 86.7% chance to get Cargo Pants</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="hunter-tips">
-                            <h4>💡 Pro Tips for Rare Outfit Hunters</h4>
-                            <ol>
-                                <li>
-                                    <strong>Recycle immediately:</strong> Sell non-rare outfits to NPCs right away to free up inventory and start accumulating gold.
-                                </li>
-                                <li>
-                                    <strong>Batch your F5 sales:</strong> Wait until you have at least 100g to list on marketplace (using 100g certificates) to minimize listing effort.
-                                </li>
-                                <li>
-                                    <strong>Watch marketplace prices:</strong> Current price is ~1,900 gems per 100g (1,748 after 8% fee). Prices can drop to 1,800 or rise to 2,000+. Consider holding gold if price drops significantly, or sell immediately at 1,900+ to lock in value.
-                                </li>
-                                <li>
-                                    <strong>Calculate your budget:</strong> For ~86.7% chance of Cargo Pants, you need 100 chests. Net cost after recycling: ~6,965 gems at current prices (range: 4,700-9,229 depending on market).
-                                </li>
-                                <li>
-                                    <strong>RNG variance is real:</strong> You might get Cargo Pants on your first chest or your 150th. The recycling chain minimizes your losses when hunting.
-                                </li>
-                                <li>
-                                    <strong>Multiple Cargo Pants?</strong> If you get more than one, you can either keep them for alts or sell the extras for 100g each!
-                                </li>
-                            </ol>
-                        </div>
-                        <div class="hunter-bottomline">
-                            <h4>🎯 The Bottom Line for Hunters</h4>
-                            <p>
-                                <strong>The recycling chain recovers 77-90.5% of your gem investment</strong> depending on current gold prices (1,700-2,000 gems per 100g). At current prices (~1,900), you recover about <strong>86%</strong> of your spending. This means hunting for rare outfits is far more economical than it appears at first glance.
-                            </p>
-                            <p>
-                                <strong>Per chest cost after recycling:</strong> ~70 gems at 1,900 price (range: 47-115 gems depending on market)
-                            </p>
-                            <p class="highlight-benefit">
-                                💎 With the F5 marketplace recycling loop, rare outfit hunting becomes a low-cost, high-reward strategy for collectors!
-                            </p>
-                        </div>
-                    </section>
-                    <!-- Pro Tips Section -->
-                    <section class="pro-tips-section">
-                        <h3 class="section-title">💡 Smart Player Strategies</h3>
-                        <div class="tips-grid">
-                            <div class="tip-card gem-tips">
-                                <h4>✅ For GEM HOLDERS (Want Gold):</h4>
-                                <ol>
-                                    <li>PRIMARY: Open chests! (18.79 gems per 1g = 1,879 gems per 100g)</li>
-                                    <li>Open in batches - RNG evens out over volume</li>
-                                    <li>Sell outfits to NPCs immediately</li>
-                                    <li>Only buy marketplace gold if need INSTANT (6.1% premium)</li>
-                                </ol>
-                            </div>
-                            <div class="tip-card gold-tips">
-                                <h4>✅ For GOLD HOLDERS (Want Gems):</h4>
-                                <ol>
-                                    <li>Assess: Can you wait until Jan 20+? (BEST option)</li>
-                                    <li>If selling now: Consider lowering to ~1,700-1,800/100g</li>
-                                    <li>Monitor marketplace - if others drop prices, adapt</li>
-                                    <li>Don't panic - this event is temporary (14 days)</li>
-                                </ol>
-                            </div>
-                        </div>
-                        <div class="philosophy">
-                            <h4>⚖️ Fair Trading Philosophy:</h4>
-                            <ul>
-                                <li>Gem holders: This event is YOUR advantage - use it!</li>
-                                <li>Gold holders: Unlucky timing, demand will drop</li>
-                                <li>Chests = 6.1% cheaper gems→gold conversion</li>
-                                <li>Marketplace = instant but costs more for gem holders</li>
-                                <li>Event temporarily shifts market favor to gem holders</li>
-                            </ul>
-                        </div>
-                        <div class="risk-reward">
-                            <h4>🎲 Risk vs Reward (Cargo Pants - 2% per chest):</h4>
-                            <ul>
-                                <li>Opening 10 chests: 18.3% chance of Cargo Pants</li>
-                                <li>Opening 50 chests: 63.6% chance of Cargo Pants</li>
-                                <li>Opening 100 chests: 86.7% chance of Cargo Pants</li>
-                                <li>Even with bad RNG: 26.62g average is still 6.1% better!</li>
-                                <li>Marketplace gold: Guaranteed but costs 6.1% more</li>
-                            </ul>
-                        </div>
-                        <div class="outlook">
-                            <h4>🔮 Long-Term Outlook:</h4>
-                            <p>
-                                Events like this temporarily increase gold circulation, benefiting the overall economy. Both sellers and buyers benefit when the market is competitive and fair!
-                            </p>
-                        </div>
-                    </section>
+                    <h2 class="market-news-title">💎 Market News</h2>
+                    <p class="market-news-subtitle">Stay tuned for upcoming market analysis and events!</p>
+                    <!-- Empty State Message -->
+                    <div style="text-align: center;
+                                padding: 4rem 2rem;
+                                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+                                border-radius: 12px;
+                                margin: 2rem 0">
+                        <div style="font-size: 4rem; margin-bottom: 1rem;">📰</div>
+                        <h3 style="color: #4fc3f7; margin-bottom: 1rem;">No Active Market News</h3>
+                        <p style="color: #b0b0b0; font-size: 1rem; line-height: 1.6;">
+                            There are currently no special events or market updates to report.
+                        </p>
+                        <p style="color: #888; font-size: 0.9rem; margin-top: 1rem;">
+                            Check back soon for the latest gem-to-gold analysis and event coverage!
+                        </p>
+                    </div>
                 </div>
             </main>
             <footer>
@@ -1167,7 +545,7 @@
                 </div>
             </div>
         </div>
-        <script src="dungeons.js?v=1.8.2"></script>
-        <script src="script.js?v=1.8.2"></script>
+        <script src="dungeons.js?v=1.8.5"></script>
+        <script src="script.js?v=1.8.5"></script>
     </body>
 </html>
