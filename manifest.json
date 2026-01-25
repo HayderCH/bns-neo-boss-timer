@@ -1,7 +1,7 @@
 {
   "name": "BNS Neo Field Boss Timer",
   "short_name": "BNS Timer",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Track Blade & Soul Neo EU/NA field boss spawns with real-time alerts",
   "start_url": "./",
   "scope": "./",
