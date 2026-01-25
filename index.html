@@ -37,7 +37,7 @@
         <link rel="apple-touch-icon" href="assets/icon-192.svg">
         <link rel="icon" type="image/svg+xml" href="assets/icon-192.svg">
         <link rel="icon" type="image/x-icon" href="favicon.ico">
-        <link rel="stylesheet" href="styles.css?v=1.8.5">
+        <link rel="stylesheet" href="styles.css?v=1.8.6">
         <link rel="canonical" href="https://hayderch.github.io/bns-neo-boss-timer/">
         <!-- Inline version check - runs BEFORE cached script.js -->
         <script>
@@ -113,6 +113,23 @@
                             title="Download today's spawns as calendar file">📅 Export to Calendar</button>
                 </div>
             </header>
+            <!-- Support Section -->
+            <section class="support-section">
+                <h2>☕ Support This Project</h2>
+                <p>
+                    If you find this tool helpful, consider buying me a coffee! Your support helps keep the servers running and motivates me to add more features.
+                </p>
+                <div class="support-buttons">
+                    <a href="https://ko-fi.com/hayderch"
+                       target="_blank"
+                       rel="noopener noreferrer"
+                       class="support-btn kofi-btn">
+                        <span class="support-icon">☕</span>
+                        <span>Support on Ko-fi</span>
+                    </a>
+                </div>
+                <p class="support-note">💙 Every donation is deeply appreciated!</p>
+            </section>
             <!-- Boss Timer Message -->
             <div class="community-message" id="boss-timer-message">
                 <p style="font-size: 0.95em; margin-bottom: 0.5rem;">
@@ -394,9 +411,19 @@
         <div id="add-boss-time-modal" class="modal">
             <div class="modal-content add-boss-modal-content">
                 <span class="modal-close" onclick="closeAddBossTimeModal()">&times;</span>
-                <h2 class="modal-title">➕ Submit Field Boss Time</h2>
-                <p class="modal-subtitle">Help the community by reporting boss spawn times!</p>
+                <h2 class="modal-title">➕ Submit Field Boss Report</h2>
+                <p class="modal-subtitle">Help the community by reporting boss events!</p>
                 <form id="add-boss-time-form" class="boss-time-form">
+                    <div class="form-group">
+                        <label for="boss-type-select">Submission Type</label>
+                        <select id="boss-type-select" required>
+                            <option value="">Select Type...</option>
+                            <option value="Spawn">🟢 Spawn - Boss just spawned</option>
+                            <option value="Death">💀 Death - Boss just died</option>
+                            <option value="Announcement">📢 Announcement - Boss announced in chat</option>
+                        </select>
+                        <small class="form-hint">What event are you reporting?</small>
+                    </div>
                     <div class="form-group">
                         <label for="boss-region-select">Region</label>
                         <select id="boss-region-select" required>
@@ -426,8 +453,9 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="boss-time-input">Spawn Time (Server Time HH:MM)</label>
+                        <label for="boss-time-input">Event Time (Server Time HH:MM)</label>
                         <input type="time" id="boss-time-input" required>
+                        <small class="form-hint">Enter the time the event occurred</small>
                     </div>
                     <div class="form-info">
                         <p>
@@ -436,7 +464,7 @@
                         <p>🔒 All submissions are securely logged and cannot be deleted by others.</p>
                     </div>
                     <div class="form-actions">
-                        <button type="submit" class="submit-boss-btn" id="submit-boss-btn">📤 Submit Boss Time</button>
+                        <button type="submit" class="submit-boss-btn" id="submit-boss-btn">📤 Submit Report</button>
                         <button type="button" class="cancel-btn" onclick="closeAddBossTimeModal()">Cancel</button>
                     </div>
                 </form>

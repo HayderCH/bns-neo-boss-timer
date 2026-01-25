@@ -2897,12 +2897,13 @@ async function handleBossTimeSubmission(event) {
   const submitBtn = document.getElementById("submit-boss-btn");
   const statusDiv = document.getElementById("submit-status");
 
+  const type = document.getElementById("boss-type-select").value;
   const region = document.getElementById("boss-region-select").value;
   const location = document.getElementById("boss-location-select").value;
   const day = document.getElementById("boss-day-select").value;
   const time = document.getElementById("boss-time-input").value;
 
-  if (!region || !location || !day || !time) {
+  if (!type || !region || !location || !day || !time) {
     showSubmitStatus("error", "Please fill in all fields.");
     return;
   }
@@ -2924,6 +2925,7 @@ async function handleBossTimeSubmission(event) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        type,
         region,
         location,
         day,
@@ -2936,14 +2938,14 @@ async function handleBossTimeSubmission(event) {
     // But if fetch didn't throw, the request was sent
     showSubmitStatus(
       "success",
-      "✅ Boss time submitted successfully! Thank you for contributing.",
+      "✅ Report submitted successfully! Thank you for contributing.",
     );
 
     if (typeof analytics !== "undefined") {
       analytics.track(
         "boss_submission",
         "submit_success",
-        `${region} - ${location}`,
+        `${type} - ${region} - ${location}`,
       );
     }
 
