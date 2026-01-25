@@ -441,7 +441,7 @@ function renderBossList() {
     if (todaySchedule.length === 0) {
       const note = document.createElement("p");
       note.className = "region-note";
-      note.innerHTML = `Not enough data - contribute with boss timers at <a href="https://docs.google.com/spreadsheets/d/1unXxTlJ53VZBLMOs7XtpWqMyWC7WYHQ0KN3MmqejGIY/edit?gid=0#gid=0" target="_blank">this spreadsheet</a> 📝`;
+      note.innerHTML = `Not enough data - <a href="#" onclick="openAddBossTimeModal(); return false;" style="color: var(--accent-color); cursor: pointer;">Click here to contribute a boss timer</a> 📝`;
       section.appendChild(note);
       regionsContainer.appendChild(section);
       continue;
