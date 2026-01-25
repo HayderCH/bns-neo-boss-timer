@@ -7,7 +7,7 @@
 // MAINTENANCE MODE - Set to true during patch updates
 // When true, boss timers won't render and maintenance message shows
 // ===========================================
-const MAINTENANCE_MODE = true;
+const MAINTENANCE_MODE = false;
 
 // Cache Version Check - Force reload if stale CSS/JS
 const CACHE_VERSION = "1.8.5";
@@ -2798,7 +2798,183 @@ window.addEventListener("click", (event) => {
   if (event.target === modal) {
     closeAllianceModal();
   }
+  const bossModal = document.getElementById("add-boss-time-modal");
+  if (event.target === bossModal) {
+    closeAddBossTimeModal();
+  }
 });
+
+// ============================================
+// Add Boss Time Modal Functions
+// ============================================
+const BOSS_LOCATIONS = {
+  "Dawn Crest": [
+    "Divine Fist Wasteland",
+    "Righteous Blade Canyon",
+    "Forest of Wisdom",
+    "Earthbreaker Mountains",
+  ],
+  Silverfrost: ["Primeval Forest", "Skypetal Plains"],
+  Moonwater: ["Profane", "Sajifi", "Lycan", "Kaari Lord"],
+};
+
+function openAddBossTimeModal() {
+  const modal = document.getElementById("add-boss-time-modal");
+  if (modal) {
+    modal.style.display = "block";
+    document.body.style.overflow = "hidden";
+
+    // Reset form
+    const form = document.getElementById("add-boss-time-form");
+    if (form) form.reset();
+
+    // Reset location dropdown
+    const locationSelect = document.getElementById("boss-location-select");
+    if (locationSelect) {
+      locationSelect.innerHTML =
+        '<option value="">Select Region First...</option>';
+      locationSelect.disabled = true;
+    }
+
+    // Hide status
+    const status = document.getElementById("submit-status");
+    if (status) {
+      status.classList.add("hidden");
+      status.className = "submit-status hidden";
+    }
+
+    if (typeof analytics !== "undefined") {
+      analytics.track("boss_submission", "modal_open", "Add Boss Time");
+    }
+  }
+}
+
+function closeAddBossTimeModal() {
+  const modal = document.getElementById("add-boss-time-modal");
+  if (modal) {
+    modal.style.display = "none";
+    document.body.style.overflow = "auto";
+  }
+}
+
+// Update locations when region changes
+document.addEventListener("DOMContentLoaded", () => {
+  const regionSelect = document.getElementById("boss-region-select");
+  const locationSelect = document.getElementById("boss-location-select");
+
+  if (regionSelect && locationSelect) {
+    regionSelect.addEventListener("change", () => {
+      const region = regionSelect.value;
+
+      if (region && BOSS_LOCATIONS[region]) {
+        locationSelect.disabled = false;
+        locationSelect.innerHTML =
+          '<option value="">Select Location...</option>';
+        BOSS_LOCATIONS[region].forEach((location) => {
+          const option = document.createElement("option");
+          option.value = location;
+          option.textContent = location;
+          locationSelect.appendChild(option);
+        });
+      } else {
+        locationSelect.disabled = true;
+        locationSelect.innerHTML =
+          '<option value="">Select Region First...</option>';
+      }
+    });
+  }
+
+  // Handle form submission
+  const form = document.getElementById("add-boss-time-form");
+  if (form) {
+    form.addEventListener("submit", handleBossTimeSubmission);
+  }
+});
+
+async function handleBossTimeSubmission(event) {
+  event.preventDefault();
+
+  const submitBtn = document.getElementById("submit-boss-btn");
+  const statusDiv = document.getElementById("submit-status");
+
+  const region = document.getElementById("boss-region-select").value;
+  const location = document.getElementById("boss-location-select").value;
+  const day = document.getElementById("boss-day-select").value;
+  const time = document.getElementById("boss-time-input").value;
+
+  if (!region || !location || !day || !time) {
+    showSubmitStatus("error", "Please fill in all fields.");
+    return;
+  }
+
+  // Disable button while submitting
+  submitBtn.disabled = true;
+  submitBtn.textContent = "📤 Submitting...";
+
+  try {
+    // Google Apps Script Web App URL for secure submissions
+    const GOOGLE_SCRIPT_URL =
+      "https://script.google.com/macros/s/AKfycbxt2SoM3rWqYrSLvebywyz2iyc_hS7zKPiO5-sY_Nez7Us25nNKP5XYUu9VEpht99aD/exec";
+
+    // Submit to Google Apps Script
+    const response = await fetch(GOOGLE_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        region,
+        location,
+        day,
+        time,
+        timestamp: new Date().toISOString(),
+      }),
+    });
+
+    // Since mode is no-cors, we can't read the response
+    // But if fetch didn't throw, the request was sent
+    showSubmitStatus(
+      "success",
+      "✅ Boss time submitted successfully! Thank you for contributing.",
+    );
+
+    if (typeof analytics !== "undefined") {
+      analytics.track(
+        "boss_submission",
+        "submit_success",
+        `${region} - ${location}`,
+      );
+    }
+
+    // Reset form after successful submission
+    setTimeout(() => {
+      document.getElementById("add-boss-time-form").reset();
+      document.getElementById("boss-location-select").disabled = true;
+      document.getElementById("boss-location-select").innerHTML =
+        '<option value="">Select Region First...</option>';
+    }, 2000);
+  } catch (error) {
+    console.error("Submission error:", error);
+    showSubmitStatus("error", "❌ Failed to submit. Please try again later.");
+
+    if (typeof analytics !== "undefined") {
+      analytics.track("boss_submission", "submit_error", error.message);
+    }
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "📤 Submit Boss Time";
+  }
+}
+
+function showSubmitStatus(type, message) {
+  const statusDiv = document.getElementById("submit-status");
+  if (statusDiv) {
+    statusDiv.textContent = message;
+    statusDiv.className = `submit-status ${type}`;
+    statusDiv.classList.remove("hidden");
+  }
+}
 
 // ============================================
 // Analytics - Setup Promo Tracking

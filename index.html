@@ -116,10 +116,12 @@
             <!-- Boss Timer Message -->
             <div class="community-message" id="boss-timer-message">
                 <p style="font-size: 0.95em; margin-bottom: 0.5rem;">
-                    🌏 These boss times are based on data collected by our friends from the Taiwanese community. Thank you for your contributions!
+                    � Community-driven boss spawn times! Help us improve accuracy by submitting your sightings using the button below.
                 </p>
                 <p class="last-updated" id="last-updated">
-                    📅 Data last updated: <span id="update-time">Loading...</span>
+                    📅 <span id="update-time">Timers refresh automatically</span> • <a href="#"
+    onclick="openAddBossTimeModal(); return false;"
+    style="color: var(--accent-color)">Contribute a time</a>
                 </p>
             </div>
             <!-- SF Calculator Message -->
@@ -166,8 +168,14 @@
             </div>
             <!-- Boss Timer View (Default) -->
             <div class="timer-layout" id="timer-layout">
-                <!-- Promotional Sidebar -->
-                <aside class="promo-sidebar" id="promo-sidebar">
+                <!-- Add Field Boss Time Button -->
+                <div class="add-boss-time-container">
+                    <button id="add-boss-time-btn"
+                            class="add-boss-time-btn"
+                            onclick="openAddBossTimeModal()">➕ Add Field Boss Time</button>
+                </div>
+                <!-- Promotional Boxes - Horizontal on top -->
+                <div class="promo-boxes-horizontal" id="promo-sidebar">
                     <!-- Street Outfit Chest Promotional Box - REMOVED (Event Ended) -->
                     <!-- NEW: Celestial x Dragon Alliance Promotional Box (BOX #2) -->
                     <div class="promo-box alliance-promo featured-promo"
@@ -217,45 +225,10 @@
                             We welcome casual but active players — message <strong>Niami Kiri</strong> (Clan Leader, Discord: <strong>Älskade Åsna</strong>).
                         </p>
                     </div>
-                </aside>
+                </div>
                 <main id="boss-container" class="tool-view active">
                     <!-- Boss regions and timers will be rendered here by JavaScript -->
-                    <!-- PATCH UPDATE: Timer code temporarily disabled - DO NOT DELETE -->
-                    <!-- <p class="loading">Loading boss schedules...</p> -->
-                    <!-- Maintenance Message -->
-                    <div class="maintenance-message"
-                         style="text-align: center;
-                                padding: 3rem 2rem;
-                                background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-                                border-radius: 12px;
-                                margin: 2rem auto;
-                                max-width: 600px;
-                                box-shadow: 0 4px 20px rgba(0,0,0,0.3)">
-                        <div style="font-size: 4rem; margin-bottom: 1rem;">🔧</div>
-                        <h2 style="color: #ffc107; margin-bottom: 1rem; font-size: 1.8rem;">
-                            ⚠️ Patch Update - Data Recollection in Progress
-                        </h2>
-                        <p style="color: #e0e0e0;
-                                  font-size: 1.1rem;
-                                  line-height: 1.6;
-                                  margin-bottom: 1rem">A new game patch has changed boss spawn times.</p>
-                        <p style="color: #b0b0b0;
-                                  font-size: 1rem;
-                                  line-height: 1.6;
-                                  margin-bottom: 1.5rem">
-                            We are currently collecting new timing data from the community. This process typically takes <strong style="color: #4fc3f7;">approximately one week</strong>.
-                        </p>
-                        <div style="background: rgba(255,193,7,0.1);
-                                    border: 1px solid #ffc107;
-                                    border-radius: 8px;
-                                    padding: 1rem;
-                                    margin-top: 1rem">
-                            <p style="color: #ffc107; margin: 0; font-size: 0.95rem;">
-                                📅 <strong>Expected Return:</strong> ~January 28, 2026
-                            </p>
-                        </div>
-                        <p style="color: #888; font-size: 0.9rem; margin-top: 1.5rem;">Thank you for your patience! 🙏</p>
-                    </div>
+                    <p class="loading">Loading boss schedules...</p>
                 </main>
             </div>
             <!-- SF Calculator View -->
@@ -417,6 +390,59 @@
         <audio id="primeval-alarm" preload="auto">
             <source src="assets/workfaster.mp3" type="audio/mpeg">
         </audio>
+        <!-- Add Boss Time Modal -->
+        <div id="add-boss-time-modal" class="modal">
+            <div class="modal-content add-boss-modal-content">
+                <span class="modal-close" onclick="closeAddBossTimeModal()">&times;</span>
+                <h2 class="modal-title">➕ Submit Field Boss Time</h2>
+                <p class="modal-subtitle">Help the community by reporting boss spawn times!</p>
+                <form id="add-boss-time-form" class="boss-time-form">
+                    <div class="form-group">
+                        <label for="boss-region-select">Region</label>
+                        <select id="boss-region-select" required>
+                            <option value="">Select Region...</option>
+                            <option value="Dawn Crest">Dawn Crest</option>
+                            <option value="Silverfrost">Silverfrost</option>
+                            <option value="Moonwater">Moonwater</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="boss-location-select">Boss Location</label>
+                        <select id="boss-location-select" required disabled>
+                            <option value="">Select Region First...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="boss-day-select">Day of Week</label>
+                        <select id="boss-day-select" required>
+                            <option value="">Select Day...</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="boss-time-input">Spawn Time (Server Time HH:MM)</label>
+                        <input type="time" id="boss-time-input" required>
+                    </div>
+                    <div class="form-info">
+                        <p>
+                            📝 <strong>Note:</strong> Your submission will be reviewed before being added to the timer.
+                        </p>
+                        <p>🔒 All submissions are securely logged and cannot be deleted by others.</p>
+                    </div>
+                    <div class="form-actions">
+                        <button type="submit" class="submit-boss-btn" id="submit-boss-btn">📤 Submit Boss Time</button>
+                        <button type="button" class="cancel-btn" onclick="closeAddBossTimeModal()">Cancel</button>
+                    </div>
+                </form>
+                <div id="submit-status" class="submit-status hidden"></div>
+            </div>
+        </div>
         <!-- Alliance Modal -->
         <div id="alliance-modal" class="modal">
             <div class="modal-content">

@@ -185,7 +185,9 @@ body {
   color: var(--text-primary);
   min-height: 100vh;
   padding: 20px;
-  transition: background 0.3s ease, color 0.3s ease;
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
@@ -204,7 +206,9 @@ header {
   border-radius: 12px;
   border: 1px solid var(--header-border);
   box-shadow: 0 4px 6px var(--shadow-color);
-  transition: background 0.3s ease, border 0.3s ease;
+  transition:
+    background 0.3s ease,
+    border 0.3s ease;
   position: relative;
   overflow: hidden;
 }
@@ -218,7 +222,8 @@ header {
   width: 0%;
   background: linear-gradient(90deg, #e74c3c, #f39c12, #3498db, #9b59b6);
   background-size: 200% 100%;
-  animation: loadingProgress 1.5s ease-out forwards,
+  animation:
+    loadingProgress 1.5s ease-out forwards,
     gradientShift 2s ease infinite;
   transition: opacity 0.3s ease;
   z-index: 10;
@@ -394,7 +399,9 @@ main {
   margin-bottom: 20px;
   border: 1px solid rgba(52, 152, 219, 0.3);
   text-align: center;
-  transition: background 0.3s ease, border 0.3s ease;
+  transition:
+    background 0.3s ease,
+    border 0.3s ease;
 }
 
 .community-message p {
@@ -497,7 +504,9 @@ main {
   padding: 20px;
   border: 1px solid var(--card-border);
   box-shadow: 0 2px 4px var(--shadow-color);
-  transition: background 0.3s ease, border 0.3s ease;
+  transition:
+    background 0.3s ease,
+    border 0.3s ease;
 }
 
 .region-section h2 {
@@ -516,7 +525,9 @@ main {
   background: rgba(243, 156, 18, 0.1);
   border-radius: 8px;
   border: 1px solid rgba(243, 156, 18, 0.3);
-  transition: background 0.3s ease, border 0.3s ease;
+  transition:
+    background 0.3s ease,
+    border 0.3s ease;
 }
 
 .region-note a {
@@ -634,7 +645,8 @@ main {
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 20px rgba(255, 105, 180, 0.6),
+    box-shadow:
+      0 0 20px rgba(255, 105, 180, 0.6),
       0 0 30px rgba(255, 105, 180, 0.3);
     transform: scale(1.01);
   }
@@ -664,7 +676,8 @@ main {
     transform: scale(1);
   }
   50% {
-    box-shadow: 0 0 25px rgba(155, 89, 182, 0.8),
+    box-shadow:
+      0 0 25px rgba(155, 89, 182, 0.8),
       0 0 40px rgba(155, 89, 182, 0.4);
     transform: scale(1.02);
   }
@@ -1107,25 +1120,59 @@ footer.sound-enabled {
   box-shadow: 0 2px 10px rgba(243, 156, 18, 0.3);
 }
 
-/* Timer Layout with Sidebar */
+/* Timer Layout with Horizontal Promo Boxes on Top */
 .timer-layout {
   display: flex;
-  gap: 1.5rem;
-  align-items: flex-start;
-}
-
-.promo-sidebar {
-  flex: 0 0 280px;
-  display: flex;
   flex-direction: column;
-  gap: 1rem;
-  /* Make sidebar static so promo boxes don't follow the viewport while scrolling */
-  position: static;
-  top: auto;
+  gap: 1.5rem;
 }
 
-/* Hide promo sidebar when not on timer tab */
-.promo-sidebar.hidden {
+/* Add Boss Time Button Container */
+.add-boss-time-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 0.5rem;
+}
+
+.add-boss-time-btn {
+  background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+}
+
+.add-boss-time-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+  background: linear-gradient(135deg, #00cec9 0%, #00b894 100%);
+}
+
+.add-boss-time-btn:active {
+  transform: translateY(0);
+}
+
+/* Horizontal Promo Boxes */
+.promo-boxes-horizontal {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  scroll-snap-type: x mandatory;
+}
+
+.promo-boxes-horizontal .promo-box {
+  flex: 0 0 280px;
+  scroll-snap-align: start;
+}
+
+/* Hide promo boxes when not on timer tab */
+.promo-boxes-horizontal.hidden {
   display: none;
 }
 
@@ -1350,6 +1397,159 @@ footer.sound-enabled {
   margin-bottom: 2rem;
 }
 
+/* Add Boss Time Modal Specific Styles */
+.add-boss-modal-content {
+  max-width: 500px;
+}
+
+.boss-time-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.boss-time-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.boss-time-form label {
+  color: var(--text-primary);
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.boss-time-form select,
+.boss-time-form input[type="time"] {
+  background: #1a1a2e;
+  border: 2px solid var(--card-border);
+  border-radius: 8px;
+  padding: 12px;
+  color: #eee;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+/* Fix dropdown option colors for readability */
+.boss-time-form select option {
+  background: #1a1a2e;
+  color: #eee;
+  padding: 10px;
+}
+
+.boss-time-form select:focus,
+.boss-time-form input[type="time"]:focus {
+  outline: none;
+  border-color: #00b894;
+  box-shadow: 0 0 0 3px rgba(0, 184, 148, 0.2);
+}
+
+.boss-time-form select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Light theme adjustments for form */
+[data-theme="light"] .boss-time-form select,
+[data-theme="light"] .boss-time-form input[type="time"] {
+  background: #fff;
+  color: #2c3e50;
+  border-color: #ccc;
+}
+
+[data-theme="light"] .boss-time-form select option {
+  background: #fff;
+  color: #2c3e50;
+}
+
+.form-info {
+  background: rgba(52, 152, 219, 0.1);
+  border: 1px solid rgba(52, 152, 219, 0.3);
+  border-radius: 8px;
+  padding: 1rem;
+  margin-top: 0.5rem;
+}
+
+.form-info p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+  margin: 0.25rem 0;
+}
+
+.form-actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.submit-boss-btn {
+  flex: 1;
+  background: linear-gradient(135deg, #00b894 0%, #00cec9 100%);
+  color: white;
+  border: none;
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.submit-boss-btn:hover {
+  background: linear-gradient(135deg, #00cec9 0%, #00b894 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+}
+
+.submit-boss-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.cancel-btn {
+  background: transparent;
+  border: 2px solid var(--card-border);
+  color: var(--text-secondary);
+  padding: 14px 24px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cancel-btn:hover {
+  border-color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.submit-status {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.submit-status.success {
+  background: rgba(46, 204, 113, 0.2);
+  border: 1px solid rgba(46, 204, 113, 0.5);
+  color: #2ecc71;
+}
+
+.submit-status.error {
+  background: rgba(231, 76, 60, 0.2);
+  border: 1px solid rgba(231, 76, 60, 0.5);
+  color: #e74c3c;
+}
+
+.submit-status.hidden {
+  display: none;
+}
+
 /* Clan Sections */
 .clan-section {
   background: var(--header-bg);
@@ -1436,6 +1636,12 @@ footer.sound-enabled {
   border-radius: 12px;
   font-weight: bold;
   font-size: 0.85rem;
+}
+
+.rank-10 {
+  background: linear-gradient(135deg, #ffd700 0%, #ff8c00 100%);
+  color: #333;
+  box-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
 }
 
 .rank-9 {
@@ -1545,7 +1751,7 @@ footer.sound-enabled {
   }
 }
 
-/* Make boss container take remaining space */
+/* Make boss container take full width */
 .timer-layout #boss-container {
   flex: 1;
   min-width: 0;
@@ -1553,43 +1759,40 @@ footer.sound-enabled {
   width: 100%;
 }
 
-/* Ensure regions-container inside timer-layout works correctly */
+/* Ensure regions-container inside timer-layout works correctly - 3 columns for 3 regions */
 .timer-layout .regions-container {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
 
-/* Hide sidebar on smaller screens */
-@media (max-width: 1100px) {
-  .timer-layout {
-    flex-direction: column;
+/* Responsive: Hide promo boxes scrollbar and handle smaller screens */
+@media (max-width: 1200px) {
+  .timer-layout .regions-container {
+    grid-template-columns: repeat(2, 1fr);
   }
+}
 
-  .promo-sidebar {
-    flex: none;
-    width: 100%;
-    flex-direction: row;
-    position: static;
-    overflow-x: auto;
-  }
-
-  .promo-box {
-    flex: 0 0 280px;
-  }
-
-  /* Stack regions vertically on medium screens */
+@media (max-width: 900px) {
   .timer-layout .regions-container {
     grid-template-columns: 1fr;
+  }
+
+  .promo-boxes-horizontal {
+    flex-wrap: nowrap;
+  }
+
+  .promo-boxes-horizontal .promo-box {
+    flex: 0 0 260px;
   }
 }
 
 @media (max-width: 650px) {
-  .promo-sidebar {
+  .promo-boxes-horizontal {
     flex-direction: column;
   }
 
-  .promo-box {
+  .promo-boxes-horizontal .promo-box {
     flex: none;
     width: 100%;
   }
@@ -2633,7 +2836,9 @@ footer.sound-enabled {
 .street-outfit-promo.featured-promo {
   background: linear-gradient(135deg, #ffd700 0%, #ffed4e 100%);
   border: 2px solid #ffa500;
-  box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 4px 15px rgba(0, 0, 0, 0.2);
+  box-shadow:
+    0 0 20px rgba(255, 215, 0, 0.5),
+    0 4px 15px rgba(0, 0, 0, 0.2);
   animation: gentle-glow 2s ease-in-out infinite;
   position: relative;
   overflow: hidden;
@@ -2673,10 +2878,14 @@ footer.sound-enabled {
 @keyframes gentle-glow {
   0%,
   100% {
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5), 0 4px 15px rgba(0, 0, 0, 0.2);
+    box-shadow:
+      0 0 20px rgba(255, 215, 0, 0.5),
+      0 4px 15px rgba(0, 0, 0, 0.2);
   }
   50% {
-    box-shadow: 0 0 30px rgba(255, 215, 0, 0.7), 0 4px 15px rgba(0, 0, 0, 0.3);
+    box-shadow:
+      0 0 30px rgba(255, 215, 0, 0.7),
+      0 4px 15px rgba(0, 0, 0, 0.3);
   }
 }
 
