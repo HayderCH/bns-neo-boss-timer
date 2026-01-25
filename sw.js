@@ -1,8 +1,8 @@
 // BNS Neo Field Boss Timer - Service Worker
 // Provides offline functionality and caching
 
-const CACHE_NAME = "bns-timer-v1.8.4";
-const RUNTIME_CACHE = "bns-timer-runtime-v1.8.4";
+const CACHE_NAME = "bns-timer-v1.8.5";
+const RUNTIME_CACHE = "bns-timer-runtime-v1.8.5";
 
 // Determine base path (localhost vs GitHub Pages)
 const BASE_PATH =
@@ -42,15 +42,15 @@ self.addEventListener("install", (event) => {
           MEDIA_ASSETS.map((url) =>
             fetch(url)
               .then((response) => cache.put(url, response))
-              .catch((err) => console.warn("[SW] Failed to cache:", url, err))
-          )
+              .catch((err) => console.warn("[SW] Failed to cache:", url, err)),
+          ),
         );
       }),
     ])
       .then(() => self.skipWaiting())
       .catch((error) => {
         console.error("[SW] Failed to cache assets:", error);
-      })
+      }),
   );
 });
 
@@ -68,10 +68,10 @@ self.addEventListener("activate", (event) => {
               console.log("[SW] Deleting old cache:", cacheName);
               return caches.delete(cacheName);
             }
-          })
+          }),
         );
       })
-      .then(() => self.clients.claim())
+      .then(() => self.clients.claim()),
   );
 });
 
@@ -128,7 +128,7 @@ self.addEventListener("fetch", (event) => {
         .catch(() => {
           // Fallback to cached version if offline
           return caches.match(request);
-        })
+        }),
     );
     return;
   }
@@ -168,7 +168,7 @@ self.addEventListener("fetch", (event) => {
             return caches.match("/bns-neo-boss-timer/index.html");
           }
         });
-    })
+    }),
   );
 });
 
@@ -183,7 +183,7 @@ self.addEventListener("sync", (event) => {
         })
         .catch((error) => {
           console.error("[SW] Sync failed:", error);
-        })
+        }),
     );
   }
 });
@@ -200,7 +200,7 @@ self.addEventListener("push", (event) => {
   };
 
   event.waitUntil(
-    self.registration.showNotification("🗡️ BNS Field Boss Alert", options)
+    self.registration.showNotification("🗡️ BNS Field Boss Alert", options),
   );
 });
 
@@ -222,6 +222,6 @@ self.addEventListener("notificationclick", (event) => {
         if (clients.openWindow) {
           return clients.openWindow(`${BASE_PATH}/`);
         }
-      })
+      }),
   );
 });
