@@ -10,7 +10,7 @@
 const MAINTENANCE_MODE = false;
 
 // Cache Version Check - Force reload if stale CSS/JS
-const CACHE_VERSION = "1.8.5";
+const CACHE_VERSION = "1.9.0";
 // Note: Main version check is now inline in index.html <head> for reliability
 
 // State Management
@@ -474,7 +474,42 @@ function renderBossList() {
 
       const bossName = document.createElement("span");
       bossName.className = "boss-name";
-      bossName.textContent = spawn.location; // Safe: textContent escapes HTML
+
+      // Add confidence indicator if not 100% verified
+      const confidence = spawn.confidence || 100;
+      const verified = spawn.verified !== false;
+
+      // Show location from last patch + warning for ALL entries (locations changed after maintenance)
+      const locationText =
+        spawn.location === "Unknown" ? "Check all 3 spots" : spawn.location;
+      bossName.textContent = locationText;
+
+      // Add patch warning badge to ALL entries
+      const patchBadge = document.createElement("span");
+      patchBadge.className = "patch-warning-badge";
+      patchBadge.textContent = "⚠️ Loc changed";
+      patchBadge.title = "Locations changed after last patch - verify in-game";
+      bossName.appendChild(patchBadge);
+
+      // Add confidence badge for non-verified entries
+      if (!verified && confidence < 100) {
+        const confBadge = document.createElement("span");
+        confBadge.className = "confidence-badge";
+        if (confidence >= 90) {
+          confBadge.classList.add("conf-high");
+          confBadge.textContent = `${confidence}%`;
+          confBadge.title = "Time confidence - likely accurate (±5 min)";
+        } else if (confidence >= 75) {
+          confBadge.classList.add("conf-medium");
+          confBadge.textContent = `${confidence}%`;
+          confBadge.title = "Time confidence - probable spawn time";
+        } else {
+          confBadge.classList.add("conf-low");
+          confBadge.textContent = `${confidence}%`;
+          confBadge.title = "Time confidence - estimated, verify in-game";
+        }
+        bossName.appendChild(confBadge);
+      }
 
       const bossTime = document.createElement("span");
       bossTime.className = "boss-time-scheduled";

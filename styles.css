@@ -627,6 +627,73 @@ main {
   font-weight: 600;
   font-size: 1.1rem;
   color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Confidence Badge Styles */
+.confidence-badge {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  cursor: help;
+}
+
+.confidence-badge.conf-high {
+  background: rgba(241, 196, 15, 0.2);
+  color: #f1c40f;
+  border: 1px solid rgba(241, 196, 15, 0.4);
+}
+
+.confidence-badge.conf-medium {
+  background: rgba(230, 126, 34, 0.2);
+  color: #e67e22;
+  border: 1px solid rgba(230, 126, 34, 0.4);
+}
+
+.confidence-badge.conf-low {
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.4);
+}
+
+[data-theme="light"] .confidence-badge.conf-high {
+  background: rgba(241, 196, 15, 0.3);
+  color: #d4ac0d;
+}
+
+[data-theme="light"] .confidence-badge.conf-medium {
+  background: rgba(230, 126, 34, 0.3);
+  color: #ca6f1e;
+}
+
+[data-theme="light"] .confidence-badge.conf-low {
+  background: rgba(231, 76, 60, 0.3);
+  color: #c0392b;
+}
+
+/* Patch Warning Badge - shows locations changed after maintenance */
+.patch-warning-badge {
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 2px 5px;
+  margin-left: 6px;
+  border-radius: 4px;
+  background: rgba(231, 76, 60, 0.2);
+  color: #e74c3c;
+  border: 1px solid rgba(231, 76, 60, 0.4);
+  cursor: help;
+  white-space: nowrap;
+}
+
+[data-theme="light"] .patch-warning-badge {
+  background: rgba(231, 76, 60, 0.15);
+  color: #c0392b;
 }
 
 .boss-time-scheduled {

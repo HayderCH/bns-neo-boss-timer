@@ -1,0 +1,87 @@
+Day,Time,Time_Minutes,Location,Confidence,Confidence_Label,Inferred,Source,Is_Discord_Verified,Display_Label
+Sunday,06:58,418.0,Unknown,70,❓ Estimated,True,Extrapolated (no match),False,06:58 (70%)
+Sunday,08:28,508.0,Earthbreaker Mountains,75,🔶 Probable (Med),True,Extrapolated (2 sub(s)),False,08:28 (75%)
+Sunday,09:58,598.0,Unknown,80,🔶 Probable (Med),True,Extrapolated (no match),False,09:58 (80%)
+Sunday,11:28,688.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,11:28
+Sunday,13:03,783.0,Forest of Wisdom,100,✅ Verified,False,Discord (twardy),True,13:03
+Sunday,14:29,869.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,14:29
+Sunday,15:55,955.0,Divine Fist Wasteland,94,⚠️ Probable (High),True,Inferred (3 submission(s)),False,15:55 (94%)
+Sunday,17:20,1040.0,Forest of Wisdom,94,⚠️ Probable (High),True,Inferred (2 submission(s)),False,17:20 (94%)
+Sunday,18:46,1126.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,18:46
+Sunday,20:21,1221.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy/Saya),True,20:21
+Sunday,21:51,1311.0,Divine Fist Wasteland,80,🔶 Probable (Med),True,Extrapolated (1 sub(s)),False,21:51 (80%)
+Sunday,23:21,1401.0,Divine Fist Wasteland,75,🔶 Probable (Med),True,Extrapolated (2 sub(s)),False,23:21 (75%)
+Monday,06:08,368.0,Unknown,70,❓ Estimated,True,Extrapolated (no match),False,06:08 (70%)
+Monday,07:38,458.0,Unknown,75,🔶 Probable (Med),True,Extrapolated (no match),False,07:38 (75%)
+Monday,09:08,548.0,Earthbreaker Mountains,80,🔶 Probable (Med),True,Extrapolated (2 sub(s)),False,09:08 (80%)
+Monday,10:38,638.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,10:38
+Monday,12:08,728.0,Forest of Wisdom,100,✅ Verified,False,Discord (twardy),True,12:08
+Monday,13:37,817.0,Forest of Wisdom,100,✅ Verified,False,Discord (twardy),True,13:37
+Monday,15:04,904.0,Divine Fist Wasteland,100,✅ Verified,False,Discord (twardy),True,15:04
+Monday,16:34,994.0,Unknown,92,⚠️ Probable (High),True,Inferred (no submission match),False,16:34 (92%)
+Monday,18:03,1083.0,Forest of Wisdom,100,✅ Verified,False,Discord (twardy),True,18:03
+Monday,19:33,1173.0,Divine Fist Wasteland,80,🔶 Probable (Med),True,Extrapolated (1 sub(s)),False,19:33 (80%)
+Monday,21:03,1263.0,Forest of Wisdom,75,🔶 Probable (Med),True,Extrapolated (3 sub(s)),False,21:03 (75%)
+Monday,22:33,1353.0,Earthbreaker Mountains,70,❓ Estimated,True,Extrapolated (2 sub(s)),False,22:33 (70%)
+Tuesday,06:08,368.0,Unknown,70,❓ Estimated,True,Extrapolated (no match),False,06:08 (70%)
+Tuesday,07:38,458.0,Unknown,75,🔶 Probable (Med),True,Extrapolated (no match),False,07:38 (75%)
+Tuesday,09:08,548.0,Forest of Wisdom,80,🔶 Probable (Med),True,Extrapolated (1 sub(s)),False,09:08 (80%)
+Tuesday,10:38,638.0,Divine Fist Wasteland,100,✅ Verified,False,Discord (Saya),True,10:38
+Tuesday,12:10,730.0,Forest of Wisdom,100,✅ Verified,False,Discord (twardy),True,12:10
+Tuesday,13:42,822.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,13:42
+Tuesday,15:10,910.0,Earthbreaker Mountains,92,⚠️ Probable (High),True,Inferred (1 submission(s)),False,15:10 (92%)
+Tuesday,16:39,999.0,Unknown,92,⚠️ Probable (High),True,Inferred (no submission match),False,16:39 (92%)
+Tuesday,18:07,1087.0,Divine Fist Wasteland,100,✅ Verified,False,Discord (Saya),True,18:07
+Tuesday,19:37,1177.0,Forest of Wisdom,94,⚠️ Probable (High),True,Inferred (2 submission(s)),False,19:37 (94%)
+Tuesday,21:06,1266.0,Divine Fist Wasteland,92,⚠️ Probable (High),True,Inferred (1 submission(s)),False,21:06 (92%)
+Tuesday,22:36,1356.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (Saya),True,22:36
+Wednesday,06:00,360.0,Unknown,70,❓ Estimated,True,Extrapolated (no match),False,06:00 (70%)
+Wednesday,07:30,450.0,Unknown,75,🔶 Probable (Med),True,Extrapolated (no match),False,07:30 (75%)
+Wednesday,09:00,540.0,Unknown,80,🔶 Probable (Med),True,Extrapolated (no match),False,09:00 (80%)
+Wednesday,10:30,630.0,Divine Fist Wasteland,100,✅ Verified,False,Discord (twardy),True,10:30
+Wednesday,12:00,720.0,Forest of Wisdom,100,✅ Verified,False,Discord (twardy),True,12:00
+Wednesday,13:34,814.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,13:34
+Wednesday,15:09,909.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,15:09
+Wednesday,16:37,997.0,Divine Fist Wasteland,100,✅ Verified,False,Discord (twardy),True,16:37
+Wednesday,18:02,1082.0,Forest of Wisdom,100,✅ Verified,False,Discord (twardy),True,18:02
+Wednesday,19:28,1168.0,Forest of Wisdom,100,✅ Verified,False,Discord (twardy),True,19:28
+Wednesday,20:59,1259.0,Unknown,92,⚠️ Probable (High),True,Inferred (no submission match),False,20:59 (92%)
+Wednesday,22:30,1350.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (Saya),True,22:30
+Thursday,06:06,366.0,Unknown,70,❓ Estimated,True,Extrapolated (no match),False,06:06 (70%)
+Thursday,07:36,456.0,Unknown,75,🔶 Probable (Med),True,Extrapolated (no match),False,07:36 (75%)
+Thursday,09:06,546.0,Unknown,80,🔶 Probable (Med),True,Extrapolated (no match),False,09:06 (80%)
+Thursday,10:36,636.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,10:36
+Thursday,12:10,730.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,12:10
+Thursday,13:43,823.0,Forest of Wisdom,100,✅ Verified,False,Discord (twardy),True,13:43
+Thursday,15:13,913.0,Divine Fist Wasteland,100,✅ Verified,False,Discord (Saya),True,15:13
+Thursday,16:42,1002.0,Forest of Wisdom,100,✅ Verified,False,Discord (twardy),True,16:42
+Thursday,18:12,1092.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,18:12
+Thursday,19:42,1182.0,Divine Fist Wasteland,80,🔶 Probable (Med),True,Extrapolated (1 sub(s)),False,19:42 (80%)
+Thursday,21:12,1272.0,Unknown,75,🔶 Probable (Med),True,Extrapolated (no match),False,21:12 (75%)
+Thursday,22:42,1362.0,Unknown,70,❓ Estimated,True,Extrapolated (no match),False,22:42 (70%)
+Friday,05:48,348.0,Divine Fist Wasteland,70,❓ Estimated,True,Extrapolated (1 sub(s)),False,05:48 (70%)
+Friday,07:18,438.0,Earthbreaker Mountains,75,🔶 Probable (Med),True,Extrapolated (1 sub(s)),False,07:18 (75%)
+Friday,08:48,528.0,Forest of Wisdom,80,🔶 Probable (Med),True,Extrapolated (1 sub(s)),False,08:48 (80%)
+Friday,10:18,618.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,10:18
+Friday,11:45,705.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,11:45
+Friday,13:14,794.0,Forest of Wisdom,100,✅ Verified,False,Discord (Saya),True,13:14
+Friday,14:40,880.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,14:40
+Friday,16:13,973.0,Forest of Wisdom,100,✅ Verified,False,Discord (twardy),True,16:13
+Friday,17:39,1059.0,Divine Fist Wasteland,100,✅ Verified,False,Discord (twardy),True,17:39
+Friday,19:11,1151.0,Unknown,92,⚠️ Probable (High),True,Inferred (no submission match),False,19:11 (92%)
+Friday,20:42,1242.0,Earthbreaker Mountains,94,⚠️ Probable (High),True,Inferred (2 submission(s)),False,20:42 (94%)
+Friday,22:14,1334.0,Forest of Wisdom,100,✅ Verified,False,Discord (Saya),True,22:14
+Friday,23:44,1424.0,Earthbreaker Mountains,80,🔶 Probable (Med),True,Extrapolated (1 sub(s)),False,23:44 (80%)
+Saturday,05:35,335.0,Unknown,70,❓ Estimated,True,Extrapolated (no match),False,05:35 (70%)
+Saturday,07:05,425.0,Forest of Wisdom,75,🔶 Probable (Med),True,Extrapolated (2 sub(s)),False,07:05 (75%)
+Saturday,08:35,515.0,Earthbreaker Mountains,80,🔶 Probable (Med),True,Extrapolated (1 sub(s)),False,08:35 (80%)
+Saturday,10:05,605.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,10:05
+Saturday,11:38,698.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,11:38
+Saturday,13:07,787.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,13:07
+Saturday,14:40,880.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (twardy),True,14:40
+Saturday,16:14,974.0,Forest of Wisdom,100,✅ Verified,False,Discord (twardy/Ahmad),True,16:14
+Saturday,17:43,1063.0,Unknown,88,🔶 Probable (Med),True,Inferred (no submission match),False,17:43 (88%)
+Saturday,19:12,1152.0,Unknown,85,🔶 Probable (Med),True,Inferred (no submission match),False,19:12 (85%)
+Saturday,20:42,1242.0,Earthbreaker Mountains,88,🔶 Probable (Med),True,Inferred (4 submission(s)),False,20:42 (88%)
+Saturday,22:11,1331.0,Forest of Wisdom,91,⚠️ Probable (High),True,Inferred (2 submission(s)),False,22:11 (91%)
+Saturday,23:40,1420.0,Earthbreaker Mountains,100,✅ Verified,False,Discord (Dectyle),True,23:40

@@ -1,0 +1,618 @@
+{
+  "sunday": [
+    {
+      "time": "06:58",
+      "location": "Unknown",
+      "confidence": 70,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "08:28",
+      "location": "Earthbreaker Mountains",
+      "confidence": 75,
+      "verified": false,
+      "source": "Extrapolated (2 sub(s))"
+    },
+    {
+      "time": "09:58",
+      "location": "Unknown",
+      "confidence": 80,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "11:28",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "13:03",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "14:29",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "15:55",
+      "location": "Divine Fist Wasteland",
+      "confidence": 94,
+      "verified": false,
+      "source": "Inferred (3 submission(s))"
+    },
+    {
+      "time": "17:20",
+      "location": "Forest of Wisdom",
+      "confidence": 94,
+      "verified": false,
+      "source": "Inferred (2 submission(s))"
+    },
+    {
+      "time": "18:46",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "20:21",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy/Saya)"
+    },
+    {
+      "time": "21:51",
+      "location": "Divine Fist Wasteland",
+      "confidence": 80,
+      "verified": false,
+      "source": "Extrapolated (1 sub(s))"
+    },
+    {
+      "time": "23:21",
+      "location": "Divine Fist Wasteland",
+      "confidence": 75,
+      "verified": false,
+      "source": "Extrapolated (2 sub(s))"
+    }
+  ],
+  "monday": [
+    {
+      "time": "06:08",
+      "location": "Unknown",
+      "confidence": 70,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "07:38",
+      "location": "Unknown",
+      "confidence": 75,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "09:08",
+      "location": "Earthbreaker Mountains",
+      "confidence": 80,
+      "verified": false,
+      "source": "Extrapolated (2 sub(s))"
+    },
+    {
+      "time": "10:38",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "12:08",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "13:37",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "15:04",
+      "location": "Divine Fist Wasteland",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "16:34",
+      "location": "Unknown",
+      "confidence": 92,
+      "verified": false,
+      "source": "Inferred (no submission match)"
+    },
+    {
+      "time": "18:03",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "19:33",
+      "location": "Divine Fist Wasteland",
+      "confidence": 80,
+      "verified": false,
+      "source": "Extrapolated (1 sub(s))"
+    },
+    {
+      "time": "21:03",
+      "location": "Forest of Wisdom",
+      "confidence": 75,
+      "verified": false,
+      "source": "Extrapolated (3 sub(s))"
+    },
+    {
+      "time": "22:33",
+      "location": "Earthbreaker Mountains",
+      "confidence": 70,
+      "verified": false,
+      "source": "Extrapolated (2 sub(s))"
+    }
+  ],
+  "tuesday": [
+    {
+      "time": "06:08",
+      "location": "Unknown",
+      "confidence": 70,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "07:38",
+      "location": "Unknown",
+      "confidence": 75,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "09:08",
+      "location": "Forest of Wisdom",
+      "confidence": 80,
+      "verified": false,
+      "source": "Extrapolated (1 sub(s))"
+    },
+    {
+      "time": "10:38",
+      "location": "Divine Fist Wasteland",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (Saya)"
+    },
+    {
+      "time": "12:10",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "13:42",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "15:10",
+      "location": "Earthbreaker Mountains",
+      "confidence": 92,
+      "verified": false,
+      "source": "Inferred (1 submission(s))"
+    },
+    {
+      "time": "16:39",
+      "location": "Unknown",
+      "confidence": 92,
+      "verified": false,
+      "source": "Inferred (no submission match)"
+    },
+    {
+      "time": "18:07",
+      "location": "Divine Fist Wasteland",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (Saya)"
+    },
+    {
+      "time": "19:37",
+      "location": "Forest of Wisdom",
+      "confidence": 94,
+      "verified": false,
+      "source": "Inferred (2 submission(s))"
+    },
+    {
+      "time": "21:06",
+      "location": "Divine Fist Wasteland",
+      "confidence": 92,
+      "verified": false,
+      "source": "Inferred (1 submission(s))"
+    },
+    {
+      "time": "22:36",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (Saya)"
+    }
+  ],
+  "wednesday": [
+    {
+      "time": "06:00",
+      "location": "Unknown",
+      "confidence": 70,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "07:30",
+      "location": "Unknown",
+      "confidence": 75,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "09:00",
+      "location": "Unknown",
+      "confidence": 80,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "10:30",
+      "location": "Divine Fist Wasteland",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "12:00",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "13:34",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "15:09",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "16:37",
+      "location": "Divine Fist Wasteland",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "18:02",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "19:28",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "20:59",
+      "location": "Unknown",
+      "confidence": 92,
+      "verified": false,
+      "source": "Inferred (no submission match)"
+    },
+    {
+      "time": "22:30",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (Saya)"
+    }
+  ],
+  "thursday": [
+    {
+      "time": "06:06",
+      "location": "Unknown",
+      "confidence": 70,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "07:36",
+      "location": "Unknown",
+      "confidence": 75,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "09:06",
+      "location": "Unknown",
+      "confidence": 80,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "10:36",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "12:10",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "13:43",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "15:13",
+      "location": "Divine Fist Wasteland",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (Saya)"
+    },
+    {
+      "time": "16:42",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "18:12",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "19:42",
+      "location": "Divine Fist Wasteland",
+      "confidence": 80,
+      "verified": false,
+      "source": "Extrapolated (1 sub(s))"
+    },
+    {
+      "time": "21:12",
+      "location": "Unknown",
+      "confidence": 75,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "22:42",
+      "location": "Unknown",
+      "confidence": 70,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    }
+  ],
+  "friday": [
+    {
+      "time": "05:48",
+      "location": "Divine Fist Wasteland",
+      "confidence": 70,
+      "verified": false,
+      "source": "Extrapolated (1 sub(s))"
+    },
+    {
+      "time": "07:18",
+      "location": "Earthbreaker Mountains",
+      "confidence": 75,
+      "verified": false,
+      "source": "Extrapolated (1 sub(s))"
+    },
+    {
+      "time": "08:48",
+      "location": "Forest of Wisdom",
+      "confidence": 80,
+      "verified": false,
+      "source": "Extrapolated (1 sub(s))"
+    },
+    {
+      "time": "10:18",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "11:45",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "13:14",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (Saya)"
+    },
+    {
+      "time": "14:40",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "16:13",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "17:39",
+      "location": "Divine Fist Wasteland",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "19:11",
+      "location": "Unknown",
+      "confidence": 92,
+      "verified": false,
+      "source": "Inferred (no submission match)"
+    },
+    {
+      "time": "20:42",
+      "location": "Earthbreaker Mountains",
+      "confidence": 94,
+      "verified": false,
+      "source": "Inferred (2 submission(s))"
+    },
+    {
+      "time": "22:14",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (Saya)"
+    },
+    {
+      "time": "23:44",
+      "location": "Earthbreaker Mountains",
+      "confidence": 80,
+      "verified": false,
+      "source": "Extrapolated (1 sub(s))"
+    }
+  ],
+  "saturday": [
+    {
+      "time": "05:35",
+      "location": "Unknown",
+      "confidence": 70,
+      "verified": false,
+      "source": "Extrapolated (no match)"
+    },
+    {
+      "time": "07:05",
+      "location": "Forest of Wisdom",
+      "confidence": 75,
+      "verified": false,
+      "source": "Extrapolated (2 sub(s))"
+    },
+    {
+      "time": "08:35",
+      "location": "Earthbreaker Mountains",
+      "confidence": 80,
+      "verified": false,
+      "source": "Extrapolated (1 sub(s))"
+    },
+    {
+      "time": "10:05",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "11:38",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "13:07",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "14:40",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy)"
+    },
+    {
+      "time": "16:14",
+      "location": "Forest of Wisdom",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (twardy/Ahmad)"
+    },
+    {
+      "time": "17:43",
+      "location": "Unknown",
+      "confidence": 88,
+      "verified": false,
+      "source": "Inferred (no submission match)"
+    },
+    {
+      "time": "19:12",
+      "location": "Unknown",
+      "confidence": 85,
+      "verified": false,
+      "source": "Inferred (no submission match)"
+    },
+    {
+      "time": "20:42",
+      "location": "Earthbreaker Mountains",
+      "confidence": 88,
+      "verified": false,
+      "source": "Inferred (4 submission(s))"
+    },
+    {
+      "time": "22:11",
+      "location": "Forest of Wisdom",
+      "confidence": 91,
+      "verified": false,
+      "source": "Inferred (2 submission(s))"
+    },
+    {
+      "time": "23:40",
+      "location": "Earthbreaker Mountains",
+      "confidence": 100,
+      "verified": true,
+      "source": "Discord (Dectyle)"
+    }
+  ]
+}

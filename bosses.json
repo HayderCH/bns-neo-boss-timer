@@ -1,83 +1,125 @@
 {
   "Dawn Crest": {
+    "Sunday": [
+      { "time": "06:58", "location": "Unknown", "confidence": 70, "verified": false },
+      { "time": "08:28", "location": "Earthbreaker Mountains", "confidence": 75, "verified": false },
+      { "time": "09:58", "location": "Unknown", "confidence": 80, "verified": false },
+      { "time": "11:28", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "13:03", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "14:29", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "15:55", "location": "Divine Fist Wasteland", "confidence": 94, "verified": false },
+      { "time": "17:20", "location": "Forest of Wisdom", "confidence": 94, "verified": false },
+      { "time": "18:46", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "20:21", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "21:51", "location": "Divine Fist Wasteland", "confidence": 80, "verified": false },
+      { "time": "23:21", "location": "Divine Fist Wasteland", "confidence": 75, "verified": false }
+    ],
     "Monday": [
-      { "time": "09:07", "location": "Earthbreaker Mountains" },
-      { "time": "10:38", "location": "Earthbreaker Mountains" },
-      { "time": "12:08", "location": "Forest of Wisdom" },
-      { "time": "13:37", "location": "Forest of Wisdom" },
-      { "time": "15:04", "location": "Divine Fist Wasteland" },
-      { "time": "18:03", "location": "Forest of Wisdom" },
-      { "time": "21:07", "location": "Forest of Wisdom" }
+      { "time": "06:08", "location": "Unknown", "confidence": 70, "verified": false },
+      { "time": "07:38", "location": "Unknown", "confidence": 75, "verified": false },
+      { "time": "09:08", "location": "Earthbreaker Mountains", "confidence": 80, "verified": false },
+      { "time": "10:38", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "12:08", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "13:37", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "15:04", "location": "Divine Fist Wasteland", "confidence": 100, "verified": true },
+      { "time": "16:34", "location": "Unknown", "confidence": 92, "verified": false },
+      { "time": "18:03", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "19:33", "location": "Divine Fist Wasteland", "confidence": 80, "verified": false },
+      { "time": "21:03", "location": "Forest of Wisdom", "confidence": 75, "verified": false },
+      { "time": "22:33", "location": "Earthbreaker Mountains", "confidence": 70, "verified": false }
     ],
     "Tuesday": [
-      { "time": "10:38", "location": "Divine Fist Wasteland" },
-      { "time": "12:10", "location": "Forest of Wisdom" },
-      { "time": "13:42", "location": "Earthbreaker Mountains" },
-      { "time": "18:07", "location": "Divine Fist Wasteland" },
-      { "time": "22:36", "location": "Earthbreaker Mountains" }
+      { "time": "06:08", "location": "Unknown", "confidence": 70, "verified": false },
+      { "time": "07:38", "location": "Unknown", "confidence": 75, "verified": false },
+      { "time": "09:08", "location": "Forest of Wisdom", "confidence": 80, "verified": false },
+      { "time": "10:38", "location": "Divine Fist Wasteland", "confidence": 100, "verified": true },
+      { "time": "12:10", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "13:42", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "15:10", "location": "Earthbreaker Mountains", "confidence": 92, "verified": false },
+      { "time": "16:39", "location": "Unknown", "confidence": 92, "verified": false },
+      { "time": "18:07", "location": "Divine Fist Wasteland", "confidence": 100, "verified": true },
+      { "time": "19:37", "location": "Forest of Wisdom", "confidence": 94, "verified": false },
+      { "time": "21:06", "location": "Divine Fist Wasteland", "confidence": 92, "verified": false },
+      { "time": "22:36", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true }
     ],
     "Wednesday": [
-      { "time": "10:30", "location": "Divine Fist Wasteland" },
-      { "time": "12:00", "location": "Forest of Wisdom" },
-      { "time": "13:34", "location": "Earthbreaker Mountains" },
-      { "time": "15:09", "location": "Earthbreaker Mountains" },
-      { "time": "16:37", "location": "Divine Fist Wasteland" },
-      { "time": "18:02", "location": "Forest of Wisdom" },
-      { "time": "19:28", "location": "Forest of Wisdom" },
-      { "time": "22:30", "location": "Earthbreaker Mountains" }
+      { "time": "06:00", "location": "Unknown", "confidence": 70, "verified": false },
+      { "time": "07:30", "location": "Unknown", "confidence": 75, "verified": false },
+      { "time": "09:00", "location": "Unknown", "confidence": 80, "verified": false },
+      { "time": "10:30", "location": "Divine Fist Wasteland", "confidence": 100, "verified": true },
+      { "time": "12:00", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "13:34", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "15:09", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "16:37", "location": "Divine Fist Wasteland", "confidence": 100, "verified": true },
+      { "time": "18:02", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "19:28", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "20:59", "location": "Unknown", "confidence": 92, "verified": false },
+      { "time": "22:30", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true }
     ],
     "Thursday": [
-      { "time": "10:36", "location": "Earthbreaker Mountains" },
-      { "time": "12:10", "location": "Earthbreaker Mountains" },
-      { "time": "13:43", "location": "Forest of Wisdom" },
-      { "time": "15:13", "location": "Divine Fist Wasteland" },
-      { "time": "16:42", "location": "Forest of Wisdom" },
-      { "time": "18:12", "location": "Earthbreaker Mountains" }
+      { "time": "06:06", "location": "Unknown", "confidence": 70, "verified": false },
+      { "time": "07:36", "location": "Unknown", "confidence": 75, "verified": false },
+      { "time": "09:06", "location": "Unknown", "confidence": 80, "verified": false },
+      { "time": "10:36", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "12:10", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "13:43", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "15:13", "location": "Divine Fist Wasteland", "confidence": 100, "verified": true },
+      { "time": "16:42", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "18:12", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "19:42", "location": "Divine Fist Wasteland", "confidence": 80, "verified": false },
+      { "time": "21:12", "location": "Unknown", "confidence": 75, "verified": false },
+      { "time": "22:42", "location": "Unknown", "confidence": 70, "verified": false }
     ],
     "Friday": [
-      { "time": "10:18", "location": "Earthbreaker Mountains" },
-      { "time": "11:45", "location": "Earthbreaker Mountains" },
-      { "time": "13:14", "location": "Forest of Wisdom" },
-      { "time": "14:40", "location": "Earthbreaker Mountains" },
-      { "time": "16:13", "location": "Forest of Wisdom" },
-      { "time": "17:39", "location": "Divine Fist Wasteland" },
-      { "time": "22:14", "location": "Forest of Wisdom" }
+      { "time": "05:48", "location": "Divine Fist Wasteland", "confidence": 70, "verified": false },
+      { "time": "07:18", "location": "Earthbreaker Mountains", "confidence": 75, "verified": false },
+      { "time": "08:48", "location": "Forest of Wisdom", "confidence": 80, "verified": false },
+      { "time": "10:18", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "11:45", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "13:14", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "14:40", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "16:13", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "17:39", "location": "Divine Fist Wasteland", "confidence": 100, "verified": true },
+      { "time": "19:11", "location": "Unknown", "confidence": 92, "verified": false },
+      { "time": "20:42", "location": "Earthbreaker Mountains", "confidence": 94, "verified": false },
+      { "time": "22:14", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "23:44", "location": "Earthbreaker Mountains", "confidence": 80, "verified": false }
     ],
     "Saturday": [
-      { "time": "10:05", "location": "Earthbreaker Mountains" },
-      { "time": "11:38", "location": "Earthbreaker Mountains" },
-      { "time": "13:07", "location": "Earthbreaker Mountains" },
-      { "time": "14:40", "location": "Earthbreaker Mountains" },
-      { "time": "16:14", "location": "Forest of Wisdom" },
-      { "time": "23:40", "location": "Earthbreaker Mountains" }
-    ],
-    "Sunday": [
-      { "time": "11:28", "location": "Earthbreaker Mountains" },
-      { "time": "13:03", "location": "Forest of Wisdom" },
-      { "time": "14:29", "location": "Earthbreaker Mountains" },
-      { "time": "18:46", "location": "Earthbreaker Mountains" },
-      { "time": "20:21", "location": "Earthbreaker Mountains" }
+      { "time": "05:35", "location": "Unknown", "confidence": 70, "verified": false },
+      { "time": "07:05", "location": "Forest of Wisdom", "confidence": 75, "verified": false },
+      { "time": "08:35", "location": "Earthbreaker Mountains", "confidence": 80, "verified": false },
+      { "time": "10:05", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "11:38", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "13:07", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "14:40", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true },
+      { "time": "16:14", "location": "Forest of Wisdom", "confidence": 100, "verified": true },
+      { "time": "17:43", "location": "Unknown", "confidence": 88, "verified": false },
+      { "time": "19:12", "location": "Unknown", "confidence": 85, "verified": false },
+      { "time": "20:42", "location": "Earthbreaker Mountains", "confidence": 88, "verified": false },
+      { "time": "22:11", "location": "Forest of Wisdom", "confidence": 91, "verified": false },
+      { "time": "23:40", "location": "Earthbreaker Mountains", "confidence": 100, "verified": true }
     ]
   },
   "Silverfrost": {
+    "Sunday": [{ "time": "14:46", "location": "Skypetal Plains", "confidence": 100, "verified": true }],
     "Monday": [
-      { "time": "12:02", "location": "Primeval Forest" },
-      { "time": "13:46", "location": "Primeval Forest" }
+      { "time": "12:02", "location": "Primeval Forest", "confidence": 100, "verified": true },
+      { "time": "13:46", "location": "Primeval Forest", "confidence": 100, "verified": true }
     ],
     "Tuesday": [],
-    "Wednesday": [{ "time": "17:00", "location": "Skypetal Plains" }],
+    "Wednesday": [{ "time": "17:00", "location": "Skypetal Plains", "confidence": 100, "verified": true }],
     "Thursday": [
-      { "time": "18:00", "location": "Skypetal Plains" },
-      { "time": "22:32", "location": "Primeval Forest" }
+      { "time": "18:00", "location": "Skypetal Plains", "confidence": 100, "verified": true },
+      { "time": "22:32", "location": "Primeval Forest", "confidence": 100, "verified": true }
     ],
     "Friday": [
-      { "time": "03:12", "location": "Primeval Forest" },
-      { "time": "21:16", "location": "Skypetal Plains" }
+      { "time": "03:12", "location": "Primeval Forest", "confidence": 100, "verified": true },
+      { "time": "21:16", "location": "Skypetal Plains", "confidence": 100, "verified": true }
     ],
     "Saturday": [
-      { "time": "03:00", "location": "Primeval Forest" },
-      { "time": "22:42", "location": "Primeval Forest" }
-    ],
-    "Sunday": [{ "time": "14:46", "location": "Skypetal Plains" }]
+      { "time": "03:00", "location": "Primeval Forest", "confidence": 100, "verified": true },
+      { "time": "22:42", "location": "Primeval Forest", "confidence": 100, "verified": true }
+    ]
   }
 }
