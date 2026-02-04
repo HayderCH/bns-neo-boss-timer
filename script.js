@@ -2815,7 +2815,6 @@ const BOSS_LOCATIONS = {
     "Earthbreaker Mountains",
   ],
   Silverfrost: ["Primeval Forest", "Skypetal Plains"],
-  Moonwater: ["Profane", "Sajifi", "Lycan", "Kaari Lord"],
 };
 
 function openAddBossTimeModal() {

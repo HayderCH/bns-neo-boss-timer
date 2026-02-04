@@ -1911,24 +1911,20 @@ footer.sound-enabled {
   width: 100%;
 }
 
-/* Ensure regions-container inside timer-layout works correctly - 3 columns for 3 regions */
+/* Ensure regions-container inside timer-layout works correctly - 2 columns for 2 regions, centered */
 .timer-layout .regions-container {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(2, minmax(300px, 500px));
   gap: 20px;
+  justify-content: center;
 }
 
 /* Responsive: Hide promo boxes scrollbar and handle smaller screens */
-@media (max-width: 1200px) {
-  .timer-layout .regions-container {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (max-width: 900px) {
   .timer-layout .regions-container {
     grid-template-columns: 1fr;
   }
+}
 
   .promo-boxes-horizontal {
     flex-wrap: nowrap;

@@ -1,41 +1,83 @@
 {
   "Dawn Crest": {
-    "Monday": [],
-    "Tuesday": [],
-    "Wednesday": [],
-    "Thursday": [],
+    "Monday": [
+      { "time": "09:07", "location": "Earthbreaker Mountains" },
+      { "time": "10:38", "location": "Earthbreaker Mountains" },
+      { "time": "12:08", "location": "Forest of Wisdom" },
+      { "time": "13:37", "location": "Forest of Wisdom" },
+      { "time": "15:04", "location": "Divine Fist Wasteland" },
+      { "time": "18:03", "location": "Forest of Wisdom" },
+      { "time": "21:07", "location": "Forest of Wisdom" }
+    ],
+    "Tuesday": [
+      { "time": "10:38", "location": "Divine Fist Wasteland" },
+      { "time": "12:10", "location": "Forest of Wisdom" },
+      { "time": "13:42", "location": "Earthbreaker Mountains" },
+      { "time": "18:07", "location": "Divine Fist Wasteland" },
+      { "time": "22:36", "location": "Earthbreaker Mountains" }
+    ],
+    "Wednesday": [
+      { "time": "10:30", "location": "Divine Fist Wasteland" },
+      { "time": "12:00", "location": "Forest of Wisdom" },
+      { "time": "13:34", "location": "Earthbreaker Mountains" },
+      { "time": "15:09", "location": "Earthbreaker Mountains" },
+      { "time": "16:37", "location": "Divine Fist Wasteland" },
+      { "time": "18:02", "location": "Forest of Wisdom" },
+      { "time": "19:28", "location": "Forest of Wisdom" },
+      { "time": "22:30", "location": "Earthbreaker Mountains" }
+    ],
+    "Thursday": [
+      { "time": "10:36", "location": "Earthbreaker Mountains" },
+      { "time": "12:10", "location": "Earthbreaker Mountains" },
+      { "time": "13:43", "location": "Forest of Wisdom" },
+      { "time": "15:13", "location": "Divine Fist Wasteland" },
+      { "time": "16:42", "location": "Forest of Wisdom" },
+      { "time": "18:12", "location": "Earthbreaker Mountains" }
+    ],
     "Friday": [
-      { "time": "15:52", "location": "Earthbreaker Mountains" },
-      { "time": "17:20", "location": "Earthbreaker Mountains" },
-      { "time": "21:45", "location": "Divine Fist Wasteland" }
+      { "time": "10:18", "location": "Earthbreaker Mountains" },
+      { "time": "11:45", "location": "Earthbreaker Mountains" },
+      { "time": "13:14", "location": "Forest of Wisdom" },
+      { "time": "14:40", "location": "Earthbreaker Mountains" },
+      { "time": "16:13", "location": "Forest of Wisdom" },
+      { "time": "17:39", "location": "Divine Fist Wasteland" },
+      { "time": "22:14", "location": "Forest of Wisdom" }
     ],
     "Saturday": [
-      { "time": "10:35", "location": "Divine Fist Wasteland" },
-      { "time": "12:07", "location": "Forest of Wisdom" },
-      { "time": "13:37", "location": "Earthbreaker Mountains" },
-      { "time": "15:05", "location": "Divine Fist Wasteland" },
-      { "time": "18:14", "location": "Divine Fist Wasteland" },
-      { "time": "19:40", "location": "Divine Fist Wasteland" },
-      { "time": "21:09", "location": "Earthbreaker Mountains" }
+      { "time": "10:05", "location": "Earthbreaker Mountains" },
+      { "time": "11:38", "location": "Earthbreaker Mountains" },
+      { "time": "13:07", "location": "Earthbreaker Mountains" },
+      { "time": "14:40", "location": "Earthbreaker Mountains" },
+      { "time": "16:14", "location": "Forest of Wisdom" },
+      { "time": "23:40", "location": "Earthbreaker Mountains" }
     ],
-    "Sunday": []
+    "Sunday": [
+      { "time": "11:28", "location": "Earthbreaker Mountains" },
+      { "time": "13:03", "location": "Forest of Wisdom" },
+      { "time": "14:29", "location": "Earthbreaker Mountains" },
+      { "time": "18:46", "location": "Earthbreaker Mountains" },
+      { "time": "20:21", "location": "Earthbreaker Mountains" }
+    ]
   },
   "Silverfrost": {
-    "Monday": [],
+    "Monday": [
+      { "time": "12:02", "location": "Primeval Forest" },
+      { "time": "13:46", "location": "Primeval Forest" }
+    ],
     "Tuesday": [],
-    "Wednesday": [],
-    "Thursday": [],
-    "Friday": [],
-    "Saturday": [],
-    "Sunday": []
-  },
-  "Moonwater": {
-    "Monday": [],
-    "Tuesday": [],
-    "Wednesday": [],
-    "Thursday": [],
-    "Friday": [],
-    "Saturday": [],
-    "Sunday": []
+    "Wednesday": [{ "time": "17:00", "location": "Skypetal Plains" }],
+    "Thursday": [
+      { "time": "18:00", "location": "Skypetal Plains" },
+      { "time": "22:32", "location": "Primeval Forest" }
+    ],
+    "Friday": [
+      { "time": "03:12", "location": "Primeval Forest" },
+      { "time": "21:16", "location": "Skypetal Plains" }
+    ],
+    "Saturday": [
+      { "time": "03:00", "location": "Primeval Forest" },
+      { "time": "22:42", "location": "Primeval Forest" }
+    ],
+    "Sunday": [{ "time": "14:46", "location": "Skypetal Plains" }]
   }
 }
