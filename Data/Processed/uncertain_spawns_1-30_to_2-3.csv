@@ -1,0 +1,49 @@
+Day,Time,Location,Confidence,Source,Notes
+Friday,8:59,Forest of Wisdom,LOW,CSV only,Death report - no Discord validation
+Friday,8:50,Forest of Wisdom,LOW,CSV only,Announcement - no Discord validation
+Friday,23:37,Earthbreaker Mountains,LOW,CSV only,Late night - no Discord validation
+Friday,5:39,Divine Fist Wasteland,REJECT,CSV only,Early AM DFW suspicious - likely troll
+Friday,20:45,Earthbreaker Mountains,LOW,CSV only,No Discord data this slot
+Friday,20:40,Earthbreaker Mountains,LOW,CSV only,No Discord data this slot
+Friday,20:54,Earthbreaker Mountains,LOW,CSV only,Death - no Discord validation
+Saturday,7:06,Forest of Wisdom,LOW,CSV only,Early AM - no Discord validation
+Saturday,7:05,Divine Fist Wasteland,REJECT,CSV only,Early AM DFW suspicious - contradicts EM pattern
+Saturday,4:00,Earthbreaker Mountains,LOW,CSV only,Very early - no Discord validation
+Saturday,4:18,Forest of Wisdom,LOW,CSV only,Very early - no Discord validation
+Saturday,8:40,Earthbreaker Mountains,LOW,CSV only,No Discord validation
+Saturday,17:54,Divine Fist Wasteland,LOW,CSV only,Death - no Discord validation
+Saturday,20:43,Earthbreaker Mountains,MEDIUM,CSV only,Multiple submissions agree on ~20:40-20:43
+Saturday,20:40,Earthbreaker Mountains,MEDIUM,CSV only,Multiple submissions - plausible
+Saturday,20:41,Earthbreaker Mountains,MEDIUM,CSV only,Multiple submissions - plausible
+Saturday,21:43,Earthbreaker Mountains,MEDIUM,CSV only,After 20:xx cluster - plausible
+Saturday,22:11,Forest of Wisdom,LOW,CSV only,Single submission
+Saturday,22:42,Primeval Forest,LOW,CSV only,Silverfrost - different boss type
+Sunday,1:10,Forest of Wisdom,LOW,CSV only,Very early AM - no validation
+Sunday,2:23,Forest of Wisdom,LOW,CSV only,Very early AM - no validation
+Sunday,3:57,Forest of Wisdom,LOW,CSV only,Very early AM - no validation
+Sunday,5:30,Divine Fist Wasteland,REJECT,CSV only,Multiple spam submissions - likely troll
+Sunday,5:31,Divine Fist Wasteland,REJECT,CSV only,Duplicate of above
+Sunday,5:32,Divine Fist Wasteland,REJECT,CSV only,Duplicate of above
+Sunday,5:35,Divine Fist Wasteland,REJECT,CSV only,Duplicate of above
+Sunday,6:30,Divine Fist Wasteland,REJECT,CSV only,Early AM DFW spam - likely troll
+Sunday,8:30,Earthbreaker Mountains,LOW,CSV only,Multiple submissions but no Discord
+Sunday,15:54,Divine Fist Wasteland,REJECT,CSV only,Discord shows EM at 14:29 - conflict
+Sunday,15:57,Divine Fist Wasteland,REJECT,CSV only,Discord shows EM at 14:29 - conflict
+Sunday,16:00,Divine Fist Wasteland,REJECT,CSV only,Death - conflicts with pattern
+Sunday,17:20,Forest of Wisdom,LOW,CSV only,No Discord validation
+Sunday,21:00,Forest of Wisdom,LOW,CSV only,Strange time entry - suspicious
+Sunday,21:47,Divine Fist Wasteland,REJECT,CSV only,After 20:21 EM - DFW unlikely
+Sunday,23:22,Divine Fist Wasteland,REJECT,CSV only,Late DFW - contradicts EM dominance
+Monday,9:07,Earthbreaker Mountains,MEDIUM,CSV only,Plausible before 10:38 confirmed
+Monday,21:06,Forest of Wisdom,MEDIUM,CSV only,Multiple submissions agree
+Monday,21:07,Forest of Wisdom,MEDIUM,CSV only,Multiple submissions agree
+Monday,22:42,Earthbreaker Mountains,MEDIUM,CSV only,Multiple submissions agree
+Monday,18:40,Skypetal Plains,LOW,CSV only,Silverfrost death - different boss
+Monday,19:41,Divine Fist Wasteland,LOW,CSV only,Death - no Discord validation
+Tuesday,0:00,Earthbreaker Mountains,LOW,CSV only,Midnight entry - no validation
+Tuesday,1:34,Divine Fist Wasteland,LOW,CSV only,Early AM - no validation
+Tuesday,9:05,Forest of Wisdom,REJECT,CSV only,Discord shows 10:38 DFW - conflict
+Tuesday,15:08,Earthbreaker Mountains,MEDIUM,CSV only,Plausible gap after 13:42
+Tuesday,19:45,Forest of Wisdom,LOW,CSV only,Death reports - timing unclear
+Tuesday,19:40,Forest of Wisdom,LOW,CSV only,Death reports - timing unclear
+Tuesday,21:10,Divine Fist Wasteland,MEDIUM,CSV only,Between 18:07 DFW and 22:36 EM - plausible

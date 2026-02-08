@@ -479,20 +479,13 @@ function renderBossList() {
       const confidence = spawn.confidence || 100;
       const verified = spawn.verified !== false;
 
-      // Show location from last patch + warning for ALL entries (locations changed after maintenance)
+      // Show location or "Check all 3 spots" for Unknown locations
       const locationText =
         spawn.location === "Unknown" ? "Check all 3 spots" : spawn.location;
       bossName.textContent = locationText;
 
-      // Add patch warning badge to ALL entries
-      const patchBadge = document.createElement("span");
-      patchBadge.className = "patch-warning-badge";
-      patchBadge.textContent = "⚠️ Loc changed";
-      patchBadge.title = "Locations changed after last patch - verify in-game";
-      bossName.appendChild(patchBadge);
-
       // Add confidence badge for non-verified entries
-      if (!verified && confidence < 100) {
+      if (!verified || confidence < 100) {
         const confBadge = document.createElement("span");
         confBadge.className = "confidence-badge";
         if (confidence >= 90) {
